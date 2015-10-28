@@ -73,8 +73,6 @@ if($usuario == false ) {
                             }
                         ?>                                               
                 </form><br>                    
-                        
-            
             </div>
         </div>
         <div class="panel panel-default">
@@ -91,32 +89,28 @@ if($usuario == false ) {
                             <th>Upload Date</th>
                         </tr>
                     <tbody>
-                    <?php // List all files in the files table per user id
-                    
+                    <?php // List all files in the files table per user id                    
                         try {
                             $list = new Crud();
                             $list->select = '*';
                             $list->from = 'files';
-                            $list->condition = "users_id=" . $id ;
+                            $list->condition = "users_id=" . $id . ' order by upload_time DESC';
                             $list->Read();
                             $files = $list->rows;
-                            
-                                
+                                                            
                             $done = new Crud();
-                            $done->select = 'files_uuid,converted_file,error_file,stats_file';
+                            $done->select = 'files_uuid,converted_file,error_file,stats_file,time_conversion';
                             $done->from = 'conversions as c inner join files as f';
-                            $done->condition = 'f.uuid=c.files_uuid AND f.users_id=' . $id;
+                            $done->condition = 'f.uuid=c.files_uuid AND f.users_id=' . $id ;
                             $done->Read();
                             $dones = $done->rows;                                   
-                            
-                           
+                                                       
                             if (empty($files)== false AND empty($dones)== false ) { //   
                                 echo '    <div class="col-md-12">
-                                          <input type="submit" class="btn btn-danger btn-lg margin-set pull-right" value="Errors" title="Download Error File" formaction="../engine/Download_Errors.php">
-                                            <input type="submit" class="btn btn-info btn-lg margin-set pull-right" value="Stats" title="Download Statistics File" formaction="../engine/Download_Stats.php">                                                                                  
+                                          <input type="submit" class="btn btn-danger btn-lg margin-set pull-right" value="Errors" title="Download Error File" formaction="../engine/Open_ErrorFile.php">
+                                            <input type="submit" class="btn btn-info btn-lg margin-set pull-right" value="Stats" title="Download Statistics File" formaction="../engine/Open_StatsFile.php">                                                                                  
                                           <input type="submit" class="btn btn-success btn-lg margin-set pull-right" value="Download" title="Download Converted File" formaction="../engine/Download.php">
-                                         <input type="submit" class="btn btn-primary btn-lg margin-set pull-right" value=" View " title="Open Original File" formaction="OpenFile.php">
-                                                                                                                             
+                                         <input type="submit" class="btn btn-primary btn-lg margin-set pull-right" value=" View " title="Open Original File" formaction="OpenFile.php">                                                                                                                             
                                           </div><br><br><br>'; 
                                 
                                 foreach ($files as $datafiles) { 
