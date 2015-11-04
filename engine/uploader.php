@@ -5,6 +5,7 @@ require '../model/Crud.php';
 require '../model/UUID.php';
 require '../model/TimeManager.php';
 require '../model/StartSession.php';
+require '../model/Netpivot.php';
 
 $sesion = new StartSession();
 $id= $sesion->get('id');
@@ -36,7 +37,6 @@ if ($so==false) {
         $target_path = $target_path . basename( $_FILES['InputFile']['name']); 
         if(move_uploaded_file($_FILES['InputFile']['tmp_name'], $target_path)) {
             try {
-                
                 $uuid = new UUID(); //get UUID
                 $value_uudi = $uuid->v4();
                 $time = new TimeManager(); //get Date
@@ -45,21 +45,34 @@ if ($so==false) {
                 $old_name = '../dashboard/files/'. $file_name ;
                 $new_name = '../dashboard/files/'. $value_uudi;
  
-                rename($old_name, $new_name); // Rename de file with the UUID
+                //rename($old_name, $new_name); // Rename de file with the UUID
+                $prepare = new NetPivot();
+                $value = $prepare->PrepareF5File($new_name, $old_name);
                 
-                $add = new Crud();
-                $add->insertInto = 'files';
-                $add->insertColumns = 'uuid,filename,upload_time,users_id';
-                $add->insertValues = "'$value_uudi','$file_name','$date','$id'";
-                $add->Create();
+                if ($value == true ){                   
+                    $add = new Crud();
+                    $add->insertInto = 'files';
+                    $add->insertColumns = 'uuid,filename,upload_time,users_id';
+                    $add->insertValues = "'$value_uudi','$file_name','$date','$id'";
+                    $add->Create();
+                    $mensaje = $add->mensaje;
+                    if ($mensaje == true){
+                        $delete = new FileManager();
+                        $delete->file = $file_name;
+                        $delete->DeleteFile();
+                        header ('location:../dashboard/execute.php?uuid='. $value_uudi .'&filename='.$file_name);
+                    }
+                } else {
+                    header ('location:../dashboard/index.php?error_preparing');
+                }
                 } catch (Exception $ex) {
                     header ('location:../dashboard/index.php?upload_error');
             }
-            header ('location:../dashboard/execute.php?uuid='. $value_uudi .'&filename='.$file_name);
+            
         } else{
             header ('location:../dashboard/index.php?upload_error');
         }
-    } else {
+   } else {
             header ('location:../dashboard/index.php?exist_file='.$file_name.'');
     }
 ?>
