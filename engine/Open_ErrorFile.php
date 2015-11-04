@@ -33,7 +33,7 @@ if($usuario == false ) {
    <div class="col-md-10 content">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4>Conversions Errors & Warnings</h4>
+                <h4>Conversions Errors & Warnings<br><small><a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">Go back</a></small></h4>
             </div>
             <div class="panel-body">
                 

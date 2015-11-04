@@ -6,7 +6,7 @@
 	<div class="navbar-header ">
             
             <a id="titulo" class="navbar-brand" href="../dashboard/index.php">
-                <img src="../images/logo.png" width="60%">
+                <img src="../images/netpivot-logo-basic-01.png" >
             </a>
 	</div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
