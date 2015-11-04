@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS `NetPivot`.`users` (
   UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB;
 
+INSERT INTO users(id,name,password,type,max_files,max_conversions) VALUES (1,`admin`,`$2y$10$XEAw/cVMGTy4H8flaMjpLesrkZVlRo1ZVC0fm6FjHlGTWul5vh2Ae`,`Administrator`,100,100);
+
 
 -- -----------------------------------------------------
 -- Table `NetPivot`.`files`
@@ -89,15 +91,8 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 USE mysql;
-
 INSERT INTO user (Host,User,Password) VALUES('localhost','demonio',PASSWORD('password'));
-
 FLUSH PRIVILEGES;
 
- INSERT INTO db (Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv) VALUES ('localhost','NetPivot','demonio','Y','Y','Y','Y','Y','N');
-
+INSERT INTO db (Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv) VALUES ('localhost','NetPivot','demonio','Y','Y','Y','Y','Y','N');
 FLUSH PRIVILEGES;
-
-
-USE NetPivot;
-INSERT INTO users(id,name,password,type,max_files,max_conversions) VALUES (1,`admin`,`$2y$10$XEAw/cVMGTy4H8flaMjpLesrkZVlRo1ZVC0fm6FjHlGTWul5vh2Ae`,`Administrator`,100,100);
