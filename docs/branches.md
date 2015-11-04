@@ -25,7 +25,7 @@ TIP: There is no need to set a Key passphrasse.
 Once done, you can clone the **develop** branch:
 
 ```sh
-git clone -b develop git@github.com:SamanaGroup/NetPivot.git
+git clone -b develop git@github.com:SamanaGroup/NetPivot.git develop/
 ```
 
 Once that is done, you can make changes and local commits.
@@ -42,4 +42,28 @@ branch is using for Stable Testing.
 
 It is important to not commit changes to the **master** branch, as it is only
 used for merging changes coming from **develop** branch.
+
+In order to push changes from **develop** to **master** it is important to have
+the local **develop** working copy up to date.
+
+```sh
+git checkout develop
+git pull
+```
+
+TIP: You should separate **master** and **develop** in diferent directories
+
+```sh
+git clone -b master git@github.com:SamanaGroup/NetPivot.git master/
+```
+
+```sh
+git merge --no-ff origin/develop
+git push origin master
+```
+The Stable Testing server will fetch the new changes from **master** branch
+eventually.
+
+TIP: It is important to keep the **master** local copy up to date or cleanly
+clone it again.
 
