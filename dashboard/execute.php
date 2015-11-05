@@ -36,7 +36,8 @@ try {
     $model->Create();
     $msg = $model->mensaje;
     if ($msg == true) {
-        header ('location:index.php');
+        $sesion->set('uuid', $uuid);
+        header ('location:stats.php');
     }
     else {
         header ('location:command.php?error');
