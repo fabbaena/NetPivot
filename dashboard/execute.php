@@ -19,9 +19,10 @@ $uuid = htmlspecialchars($_GET['uuid']);
 $filename = htmlspecialchars($_GET['filename']);
 $c_file = $uuid.'_'.$filename.'.conf';
 
-$debug_name = $uuid . '_debug.txt';
+$error_name = $uuid . '_error.txt';
 $stats_name = $uuid . '_stats.txt';
-$command = './f5conv -f files/' . $uuid . ' > files/' . $c_file . ' -e > files/' . $debug_name . ' -S files/'. $stats_name;
+$command = './f5conv -f files/' . $uuid . ' -d 2 -e files/' . $error_name . ' -s -S files/'. $stats_name . ' -o files/' . $c_file;
+
 
 try {
     $pwd = exec($command, $pwd_out,$pwd_error); //this is the command executed on the host  
@@ -31,7 +32,7 @@ try {
     $model = new Crud();
     $model->insertInto = 'conversions';
     $model->insertColumns = 'users_id,time_conversion,files_uuid,converted_file,error_file,stats_file';
-    $model->insertValues = "'$id','$today','$uuid','$c_file','$debug_name','$stats_name'";
+    $model->insertValues = "'$id','$today','$uuid','$c_file','$error_name','$stats_name'";
     $model->Create();
     $msg = $model->mensaje;
     if ($msg == true) {
