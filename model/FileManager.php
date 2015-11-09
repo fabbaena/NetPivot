@@ -47,4 +47,10 @@ class FileManager {
             $this->message = false;
         }
     }
+    
+    public function GetNumbers($name){
+        $file = file_get_contents($name);
+        preg_match_all('!\d+!', $file, $matches);
+        return $matches;
+    }
 }
