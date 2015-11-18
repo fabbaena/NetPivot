@@ -57,12 +57,8 @@ if($usuario == false ) {
             $total_lines = $get_numbers[1];
             $converted_lines = $get_numbers[3];
         }
-        
         $percent = ($converted_lines * 100)/ $total_lines;
         $csv = 'files/'.$value.'_stats.csv';
-        
-
-        
         ?>
         
          
@@ -121,6 +117,7 @@ if($usuario == false ) {
                         </tr>
                         <tbody>
                         <?php
+                        /*
                         echo '<tr>';
                         if (($handle = fopen($csv, "r")) !== FALSE) {
                             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
@@ -135,17 +132,17 @@ if($usuario == false ) {
                             }
                         }
                        
-                        fclose($handle);
-                           /*foreach ($stats as $data) {
-                           //    echo ''
-                               . '<tr><td>Monitors</td><td>'.$data[6].'</td><td>'.$data[7].'</td><td>'.$data[8].'</tr>'
-                               . '<tr><td>Nodes</td><td>'.$data[9].'</td><td>'.$data[10].'</td><td>'.$data[11].'</tr>'
-                               . '<tr><td>Pools</td><td>'.$data[12].'</td><td>'.$data[13].'</td><td>'.$data[14].'</tr>'
-                               . '<tr><td>Virtuals</td><td>'.$data[15].'</td><td>'.$data[16].'</td><td>'.$data[17].'</tr>'
-                               . '<tr><td>Virtual Addresses</td><td>'.$data[18].'</td><td>'.$data[19].'</td><td>'.$data[20].'</tr>'
-                               . '<tr><td>Profiles</td><td>'.$data[21].'</td><td>'.$data[22].'</td><td>'.$data[23].'</tr>'
-                               . '<tr><td>Persistences</td><td>'.$data[24].'</td><td>'.$data[25].'</td><td>'.$data[26].'</tr>';
-                           }*/
+                        fclose($handle); */
+                           foreach ($stats as $data) {
+                               echo ''
+                               . '<tr><td>Monitors</td><td>'.$data[88].'</td><td>'.$data[89].'</td><td>'.$data[90].'</tr>'
+                               . '<tr><td>Nodes</td><td>'.$data[91].'</td><td>'.$data[92].'</td><td>'.$data[93].'</tr>'
+                               . '<tr><td>Pools</td><td>'.$data[94].'</td><td>'.$data[95].'</td><td>'.$data[96].'</tr>'
+                               . '<tr><td>Virtuals</td><td>'.$data[97].'</td><td>'.$data[98].'</td><td>'.$data[99].'</tr>'
+                               . '<tr><td>Virtual Addresses</td><td>'.$data[100].'</td><td>'.$data[101].'</td><td>'.$data[102].'</tr>'
+                               . '<tr><td>Profiles</td><td>'.$data[103].'</td><td>'.$data[104].'</td><td>'.$data[105].'</tr>'
+                               . '<tr><td>Persistences</td><td>'.$data[106].'</td><td>'.$data[107].'</td><td>'.$data[108].'</tr>';
+                           }
                         ?>
                         </tbody>
                     </table>
