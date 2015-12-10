@@ -19,11 +19,7 @@ ALTER ONLINE TABLE NetPivot.files
     LOCK=EXCLUSIVE;
 
 ALTER ONLINE TABLE NetPivot.stats
-<<<<<<< HEAD
     DROP FOREIGN KEY fk_stats_files1,
-=======
-    DROP FOREIGN KEY fk_stats_file1,
->>>>>>> 9874dba4d8eb73de66befd9aa7fa2509563f8ace
     ALGORITHM=DEFAULT,
     LOCK=EXCLUSIVE;
 
