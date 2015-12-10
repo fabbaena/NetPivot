@@ -162,6 +162,10 @@ git clone -b master git@github.com:SamanaGroup/NetPivot.git master/
 ```
 
 ### Merge changes from Origin/Develop in No Fast Forward
+This step can be made on Web Dashboard using a pull request, going to:
+
+https://github.com/User/Repository/pull/new/master
+
 To merge changes that are already pushed to **origin/develop** branch
 (described in Step 4):
 
