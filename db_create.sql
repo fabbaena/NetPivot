@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS NetPivot.files CASCADE;
 CREATE TABLE IF NOT EXISTS NetPivot.files (
     uuid VARCHAR(36) NOT NULL UNIQUE PRIMARY KEY,
     filename VARCHAR(255) NULL,
+    project_name VARCHAR(64) NULL,
     upload_time DATETIME(0) NULL,
     users_id INT UNSIGNED NOT NULL,
     CONSTRAINT fk_files_users

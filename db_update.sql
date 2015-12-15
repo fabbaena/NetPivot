@@ -32,6 +32,7 @@ ALTER ONLINE TABLE NetPivot.users
 
 ALTER ONLINE TABLE NetPivot.files
     MODIFY filename VARCHAR(255) NULL,
+    ADD project_name VARCHAR(64) NULL,
     MODIFY upload_time DATETIME(0) NULL,
     MODIFY users_id INT UNSIGNED NOT NULL,
     ADD CONSTRAINT fk_files_users
