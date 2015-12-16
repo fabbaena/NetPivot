@@ -8,17 +8,17 @@ files:
 
 permissions:
   - object: /var/www/html
-    pattern: "**"
     owner: www-data
     group: www-data
     mode: 0755
-    type: directory
+    type:
+      - directory
   - object: /var/www/html
-    pattern: "**"
     owner: www-data
     group: www-data
     mode: 0644
-    type: file
+    type:
+      - file
 
 #hooks:
 #  ApplicationStop:
