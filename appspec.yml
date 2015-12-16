@@ -6,19 +6,19 @@ files:
   - source: content
     destination: /var/www/html
 
-permissions:
-  - object: /var/www/html
-    owner: www-data
-    group: www-data
-    mode: 0755
-    type:
-      - directory
-  - object: /var/www/html
-    owner: www-data
-    group: www-data
-    mode: 0644
-    type:
-      - file
+#permissions:
+#  - object: /var/www/html
+#    owner: www-data
+#    group: www-data
+#    mode: 0755
+#    type:
+#      - directory
+#  - object: /var/www/html
+#    owner: www-data
+#    group: www-data
+#    mode: 0644
+#    type:
+#      - file
 
 #hooks:
 #  ApplicationStop:
