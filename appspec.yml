@@ -1,0 +1,36 @@
+version: 0.0
+
+os: linux
+
+files:
+  - source: content
+    destination: /var/www/html
+
+permissions:
+  - object: /var/www/html
+    owner: www-data
+    group: www-data
+    mode: 644
+    type:
+      - file
+  - object: /var/www/html
+    owner: www-data
+    group: www-data
+    mode: 755
+    type:
+      - directory
+
+hooks:
+  ApplicationStop:
+    - location: scripts/appstop.sh
+      timeout: 1860
+  BeforeInstall:
+    - location: scripts/before.sh
+      timeout: 1860
+#  AfterInstall:
+#    - location: scripts/after.sh
+#      timeout: 1860
+#  ApplicationStart:
+#    - location: scripts/start.sh
+#      timeout: 1860
+
