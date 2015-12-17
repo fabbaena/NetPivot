@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS NetPivot.stats (
 
 DROP TABLE IF EXISTS NetPivot.details CASCADE;
 CREATE TABLE IF NOT EXISTS NetPivot.details (
-    files_uuid VARCHAR(36) NOT NULL PRIMARY KEY,
+    files_uuid VARCHAR(36) NOT NULL,
     module VARCHAR(4) NULL,
     obj_grp VARCHAR(16) NULL,
     obj_component VARCHAR(32) NULL,
@@ -208,6 +208,7 @@ CREATE TABLE IF NOT EXISTS NetPivot.details (
     converted BOOLEAN NULL,
     omitted BOOLEAN NULL,
     line SMALLINT UNSIGNED NULL,
+    INDEX files_uuid_idx USING BTREE (files_uuid),
     CONSTRAINT fk_details_files1
 	FOREIGN KEY(files_uuid) REFERENCES NetPivot.files(uuid)
 	ON DELETE NO ACTION
