@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS NetPivot.users CASCADE;
 CREATE TABLE IF NOT EXISTS NetPivot.users (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(45) NOT NULL UNIQUE,
-    password VARCHAR(60) NULL,
+    password VARCHAR(60) NOT NULL,
     type VARCHAR(45) NULL,
     max_files TINYINT UNSIGNED NULL,
     max_conversions TINYINT UNSIGNED NULL
@@ -192,6 +192,23 @@ CREATE TABLE IF NOT EXISTS NetPivot.stats (
     total_s_chars MEDIUMINT UNSIGNED NOT NULL DEFAULT 0,
     total_s_lines SMALLINT UNSIGNED NOT NULL DEFAULT 0,
     CONSTRAINT fk_stats_files1
+	FOREIGN KEY(files_uuid) REFERENCES NetPivot.files(uuid)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
+) ENGINE = InnoDB;
+
+DROP TABLE IF EXISTS NetPivot.details CASCADE;
+CREATE TABLE IF NOT EXISTS NetPivot.details (
+    files_uuid VARCHAR(36) NOT NULL PRIMARY KEY,
+    module VARCHAR(4) NULL,
+    obj_gpo VARCHAR(16) NULL,
+    obj_component VARCHAR(32) NULL,
+    obj_name VARCHAR(128) NULL,
+    attribute VARCHAR(32) NULL,
+    converted BOOLEAN NULL,
+    omitted BOOLEAN NULL,
+    line SMALLINT UNSIGNED NULL,
+    CONSTRAINT fk_details_files1
 	FOREIGN KEY(files_uuid) REFERENCES NetPivot.files(uuid)
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION
