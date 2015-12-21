@@ -6,7 +6,8 @@ LOCK TABLES
     NetPivot.files WRITE,
     NetPivot.conversions WRITE,
     NetPivot.settings WRITE,
-    NetPivot.stats WRITE;
+    NetPivot.stats WRITE,
+    NetPivot.details WRITE;
 
 ALTER TABLE NetPivot.conversions
     DROP FOREIGN KEY fk_conversions_users1;
@@ -189,23 +190,8 @@ ALTER TABLE NetPivot.stats
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION;
 
-UNLOCK TABLES;
+ALTER TABLE NetPivot.details (
+    MODIFY obj_grp VARCHAR(32) NULL AFTER module;
 
-DROP TABLE IF EXISTS NetPivot.details CASCADE;
-CREATE TABLE IF NOT EXISTS NetPivot.details (
-    files_uuid VARCHAR(36) NOT NULL,
-    module VARCHAR(16) NULL,
-    obj_grp VARCHAR(16) NULL,
-    obj_component VARCHAR(32) NULL,
-    obj_name VARCHAR(128) NULL,
-    attribute VARCHAR(32) NULL,
-    converted BOOLEAN NULL,
-    omitted BOOLEAN NULL,
-    line SMALLINT UNSIGNED NULL,
-    INDEX files_uuid_idx USING BTREE (files_uuid),
-    CONSTRAINT fk_details_files1
-        FOREIGN KEY(files_uuid) REFERENCES NetPivot.files(uuid)
-        ON DELETE NO ACTION
-        ON UPDATE NO ACTION
-) ENGINE = InnoDB;
+UNLOCK TABLES;
 

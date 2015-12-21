@@ -201,7 +201,7 @@ DROP TABLE IF EXISTS NetPivot.details CASCADE;
 CREATE TABLE IF NOT EXISTS NetPivot.details (
     files_uuid VARCHAR(36) NOT NULL,
     module VARCHAR(16) NULL,
-    obj_grp VARCHAR(16) NULL,
+    obj_grp VARCHAR(32) NULL,
     obj_component VARCHAR(32) NULL,
     obj_name VARCHAR(128) NULL,
     attribute VARCHAR(32) NULL,
