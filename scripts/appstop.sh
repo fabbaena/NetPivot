@@ -1,13 +1,25 @@
 #!/bin/bash
 
-WWWDATA=/var/www/html
-FILELIST=( php png css map woff2 eot svg ttf woff js )
+app_stop() {
+    invoke-rc.d --quiet apache2 status
+    if [ $? -eq 0 ]; then
+        invoke-rc.d --quiet apache2 stop
+    fi
 
-if [ ! -f ${WWWDATA}/.keep ]; then
-    touch ${WWWDATA}/.keep
-fi
+    invoke-rc.d --quiet mysql status
+    if [ $? -eq 0 ]; then
+	invoke-rc.d --quiet mysql stop
+    fi
+}
 
 clean() {
+    local WWWDATA=/var/www/html
+    local FILELIST=( php png css map woff2 eot svg ttf woff js )
+
+    if [ ! -f ${WWWDATA}/.keep ]; then
+	touch ${WWWDATA}/.keep
+    fi
+
     for file in ${FILELIST[*]}; do
 	find ${WWWDATA} -name "*.${file}" -exec rm -f {} \;
     done
@@ -20,6 +32,7 @@ clean() {
     done
 }
 
+app_stop
 clean
 
 exit $?

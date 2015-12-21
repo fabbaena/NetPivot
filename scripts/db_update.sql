@@ -6,7 +6,8 @@ LOCK TABLES
     NetPivot.files WRITE,
     NetPivot.conversions WRITE,
     NetPivot.settings WRITE,
-    NetPivot.stats WRITE;
+    NetPivot.stats WRITE,
+    NetPivot.details WRITE;
 
 ALTER TABLE NetPivot.conversions
     DROP FOREIGN KEY fk_conversions_users1;
@@ -188,6 +189,9 @@ ALTER TABLE NetPivot.stats
 	FOREIGN KEY(files_uuid) REFERENCES NetPivot.files(uuid)
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION;
+
+ALTER TABLE NetPivot.details (
+    MODIFY obj_grp VARCHAR(32) NULL AFTER module;
 
 UNLOCK TABLES;
 
