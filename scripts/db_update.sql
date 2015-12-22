@@ -190,7 +190,7 @@ ALTER TABLE NetPivot.stats
 	ON DELETE NO ACTION
 	ON UPDATE NO ACTION;
 
-ALTER TABLE NetPivot.details (
+ALTER TABLE NetPivot.details
     MODIFY obj_grp VARCHAR(32) NULL AFTER module;
 
 UNLOCK TABLES;

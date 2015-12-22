@@ -59,12 +59,17 @@ fi
 
 if [ ! -d ${DBDIR} ]; then
     depends
+
+    rm -f /var/www/html/index.html
+    invoke-rc.d --quiet mysql status
+    if [ $? -gt 0 ]; then
+        invoke-rc.d --quiet mysql start
+    fi
     mysql --no-defaults --no-auto-rehash -q -s -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('s3cur3s0c');"
+
     create
 else
     backup
     alter
 fi
-
-exit $?
 
