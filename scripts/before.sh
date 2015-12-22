@@ -12,10 +12,14 @@ DBDIR=/var/lib/mysql/$DBNAME
 depends() {
     local PACKAGES=( apache2 mariadb-server mariadb-client php5 php5-mysqlnd )
 
+    DEBIAN_FRONTEND=noninteractive apt-get -y update
+    DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+    DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
+
     for i in ${PACKAGES[*]}; do
 	local INSTALLED=`dpkg-query -W --showformat='${db:Status-Abbrev}\n' $i`
 	if [ "$INSTALLED" != "ii" ]; then
-	    apt-get -y install --no-install-recommends $i
+	    DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends $i
 	fi
     done
 }
@@ -54,6 +58,7 @@ fi
 
 if [ ! -d ${DBDIR} ]; then
     depends
+    mysql --no-defaults --no-auto-rehash -q -s -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('s3cur3s0c');"
     create
 else
     backup
