@@ -15,6 +15,7 @@ depends() {
     DEBIAN_FRONTEND=noninteractive apt-get -y update
     DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
     DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
+    DEBIAN_FRONTEND=noninteractive apt-get -y autoremove
 
     for i in ${PACKAGES[*]}; do
 	local INSTALLED=`dpkg-query -W --showformat='${db:Status-Abbrev}\n' $i`
