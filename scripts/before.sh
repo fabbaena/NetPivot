@@ -9,22 +9,6 @@ DBNAME=NetPivot
 
 DBDIR=/var/lib/mysql/$DBNAME
 
-depends() {
-    local PACKAGES=( apache2 mariadb-server mariadb-client php5 php5-mysqlnd )
-
-    DEBIAN_FRONTEND=noninteractive apt-get -y update
-    DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
-    DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
-    DEBIAN_FRONTEND=noninteractive apt-get -y autoremove
-
-    for i in ${PACKAGES[*]}; do
-	local INSTALLED=`dpkg-query -W --showformat='${db:Status-Abbrev}\n' $i`
-	if [ "$INSTALLED" != "ii" ]; then
-	    DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends $i
-	fi
-    done
-}
-
 backup() {
     local DBDUMP=/home/ubuntu/netpivot/netpivot-`date +%F_%H-%M-%S%z`.sql
     if [ ! -d `dirname ${DBDUMP}` ]; then
@@ -46,6 +30,11 @@ alter() {
     mysql --defaults-file=${CONFFILE} -f -q -s < ${DBALTER}
 }
 
+invoke-rc.d --quiet mysql status
+if [ $? -gt 0 ]; then
+    invoke-rc.d --quiet mysql start
+fi
+
 if [ ! -f ${CONFFILE} ]; then
     echo "[mysqldump]" >> ${CONFFILE}
     echo "host=${HOST}" >> ${CONFFILE}
@@ -58,15 +47,9 @@ if [ ! -f ${CONFFILE} ]; then
 fi
 
 if [ ! -d ${DBDIR} ]; then
-    depends
-
     rm -f /var/www/html/index.html
-    invoke-rc.d --quiet mysql status
-    if [ $? -gt 0 ]; then
-        invoke-rc.d --quiet mysql start
-    fi
-    mysql --no-defaults --no-auto-rehash -q -s -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('s3cur3s0c');"
 
+    mysql --no-defaults --no-auto-rehash -q -s -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('s3cur3s0c');"
     create
 else
     backup

@@ -30,7 +30,7 @@ hooks:
 #  AfterInstall:
 #    - location: scripts/after.sh
 #      timeout: 0
-#  ApplicationStart:
-#    - location: scripts/appstart.sh
-#      timeout: 0
+  ApplicationStart:
+    - location: scripts/appstart.sh
+      timeout: 31
 
