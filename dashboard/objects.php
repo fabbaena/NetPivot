@@ -228,6 +228,7 @@ if($usuario == false ) {
                                             </tr>
                                             <tbody>';
                                         $t = new NetPivot();
+                                        echo $obj;
                                         $r = $t->getCNCO_Obj($value, $module, $obj);
                                         $s = count($r);
                                         for ($u=0;$u<$s;$u++){
