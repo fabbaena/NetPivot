@@ -7,13 +7,15 @@ will follow the guidelines described in:
 
 ## Process Flow
 0. Git Environment, SSH Keys and Initial Repository Creation and Branching
-1. Get a **develop** branch local copy
+1. Branching for **staging** and **develop** in local copy
 2. Make changes
 3. Commit changes
-4. Push Changes to **origin develop**
-5. Get a *Temporal* **master** branch local copy
-6. Merge Changes from **origin/develop** in **No Fast Forward**
-7. Push Changes to **origin master**
+4. Push Changes to **origin staging**
+5. **Preferred**: Make *pull requests* in `develop` or `master` branch
+5. **Optional**: Get a *Temporal* **develop** or **master** branch local copy
+6. **Optional**: Merge Changes from **origin/staging** or **origin/develop** in
+   **No Fast Forward**
+7. **Optional** Push Changes to **origin develop** or **origin master**
 
 ### Git Environment, SSH Keys and Initial Repository Creation
 #### Git Environment
@@ -52,6 +54,7 @@ Host github
     PubkeyAuthentication yes
     RequestTTY auto
     User git
+    HostName github.com
     VerifyHostKeyDNS yes
 ```
 
@@ -91,101 +94,100 @@ To test that all is set as it should be, you can try downloading again:
 git clone -b master git@github.com:User/Repository.git master/
 ```
 
-#### Branching the new Repository
-Once the master branch is downloaded, you should create the **develop** branch:
+#### Branching for **staging** and **develop** in local copy
+Once the master branch is downloaded, you should create the **staging** and
+**develop** branch:
 
 ```sh
+git branch staging
 git branch develop
 git branch -vv
-git checkout -f develop
+git checkout -f staging
 ```
 
 Inside the new branch, copy or modify the code, stage it, commit it and push
-it to the **develop** branch:
+it to the **staging** branch:
 
 ```sh
 <COPY/MODIFY the code in the local repository directory>
 git add -v -A .
 git status
-git commit -m "Initial commit in develop branch"
-git push origin develop
+git commit -m "Initial commit in staging branch"
+git push origin staging
 ```
 
 TIP: In order to start cleanly after initial commit, you can delete the local
      repository and **clone** it again. It will download to latests changes.
 
-### Get a Develop branch local copy
+### Get a Staging branch local copy
 The local environment needs the following tools:
 * `git` for Version Control
 * Latest `apache` version
 * Latest `php` version
 * Latest `mariadb` version
 
-Once done, you can clone the **develop** branch:
+Once done, you can clone the **staging** branch:
 
 ```sh
-git clone -b develop git@github.com:SamanaGroup/NetPivot.git develop/
+git clone -b staging git@github.com:SamanaGroup/NetPivot.git staging/
 ```
 
 Once that is done, you can make changes and local commits.
 
 ```sh
-git checkout develop
+git checkout staging
 git add -v -A .
 git status
 git commit -a
 ```
 
-### Push changes to Origin Develop
+### Push changes to Origin Staging
 In order to update the local copy and then push the changes to the remote
-**develop** branch:
+**staging** branch:
+
+```sh
+git checkout staging
+git pull
+git push origin staging
+git pull
+```
+
+### Get a temporal Develop or Master branch local copy
+It is important to not commit changes to the **develop** or **master** branch, as it is only used for merging changes coming from **staging** or **develop** branch.
+
+TIP: You should separate branches in diferent directories to
+     avoid changes confusions.
+
+```sh
+git clone -b [develop|master] git@github.com:SamanaGroup/NetPivot.git [develop|master]/
+```
+
+### Merge changes from Origin/Staging or Origin/Develop in No Fast Forward
+This step can be made on Web Dashboard using a pull request, going to:
+
+* https://github.com/User/Repository/pull/new/develop
+* https://github.com/User/Repository/pull/new/master
+
+To merge changes that are already pushed to **origin/staging** branch
+(described in Step 4):
 
 ```sh
 git checkout develop
 git pull
-git push origin develop
-git pull
+git merge --no-ff origin/staging
 ```
 
-### Get a temporal Master branch local copy
-The **develop** branch is using for Public testing only, and the **master**
-branch is using for Stable Testing.
-
-It is important to not commit changes to the **master** branch, as it is only
-used for merging changes coming from **develop** branch.
-
-TIP: You should separate **master** and **develop** in diferent directories to
-     avoid changes confusions.
-
-```sh
-git clone -b master git@github.com:SamanaGroup/NetPivot.git master/
-```
-
-### Merge changes from Origin/Develop in No Fast Forward
-This step can be made on Web Dashboard using a pull request, going to:
-
-https://github.com/User/Repository/pull/new/master
-
-To merge changes that are already pushed to **origin/develop** branch
-(described in Step 4):
-
-```sh
-git checkout master
-git pull
-git merge --no-ff origin/develop
-```
-
-### Push Changes to Origin Master
+### Push Changes to Origin Develop or Origin Master
 To push the already merged changes to Repository Server:
 
 ```sh
-git push origin master
+git push origin develop
 ```
-The Stable Testing server will fetch the new changes from **master** branch
+The Stable Testing server will fetch the new changes from respective branch
 eventually.
 
-TIP: It is important to keep the **master** local copy up to date or cleanly
-clone it again.
+TIP: It is important to keep the **develop** or **master** local copy up to
+date or cleanly clone it again.
 
 ## Public Testing Environment setup
 
