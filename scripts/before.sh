@@ -10,12 +10,20 @@ DBNAME=NetPivot
 DBDIR=/var/lib/mysql/$DBNAME
 
 backup() {
-    local DBDUMP=/home/ubuntu/netpivot/netpivot-`date +%F_%H-%M-%S%z`.sql
+    local DBDUMP=/home/ubuntu/netpivot/netpivot-${DEPLOYMENT_ID}.sql
+    local BACKUP=/home/ubuntu/netpivot/netpivot-${DEPLOYMENT_ID}.txz
+
     if [ ! -d `dirname ${DBDUMP}` ]; then
 	mkdir -p `dirname ${DBDUMP}`
     fi
 
-    mysqldump --defaults-file=${CONFFILE} --compact -c --delayed-insert -e -f -n -t -q --single-transaction --tz-utc --skip-quote-names ${DBNAME} > ${DBDUMP}
+    if [ ! -f ${DBDUMP} ]; then
+	mysqldump --defaults-file=${CONFFILE} --compact -c --delayed-insert -e -f -n -t -q --single-transaction --tz-utc --skip-quote-names ${DBNAME} > ${DBDUMP}
+    fi
+
+    if [ ! -f ${BACKUP} ]; then
+	tar -cJf ${BACKUP} -C /var/www/html .
+    fi
 }
 
 create() {

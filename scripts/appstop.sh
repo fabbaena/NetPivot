@@ -2,7 +2,12 @@
 
 clean() {
     local WWWDATA=/var/www/html
+    local BACKUP=/home/ubuntu/netpivot/netpivot-${DEPLOYMENT_ID}.txz
     local FILELIST=( html php png css map woff2 eot svg ttf woff js )
+
+    if [ ! -f ${BACKUP} ]; then
+	tar -cJf ${BACKUP} -C ${WWWDATA} .
+    fi
 
     if [ ! -f ${WWWDATA}/.keep ]; then
 	touch ${WWWDATA}/.keep
