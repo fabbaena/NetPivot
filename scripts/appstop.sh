@@ -5,9 +5,8 @@ clean() {
     local BACKUP=/home/ubuntu/netpivot/netpivot-${DEPLOYMENT_ID}.txz
     local FILELIST=( html php png css map woff2 eot svg ttf woff js )
 
-    if [ ! -f ${BACKUP} ]; then
-	tar -cJf ${BACKUP} -C ${WWWDATA} .
-    fi
+    rm -f ${BACKUP}
+    tar -cJf ${BACKUP} -C ${WWWDATA} .
 
     if [ ! -f ${WWWDATA}/.keep ]; then
 	touch ${WWWDATA}/.keep
