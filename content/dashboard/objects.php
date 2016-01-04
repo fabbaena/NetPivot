@@ -227,11 +227,18 @@ if($usuario == false ) {
                                             <th style="width: 20%">Actions</th>
                                             </tr>
                                             <tbody>';
-                                        $t = new NetPivot();
-                                        echo $obj;
+                                        $t = new NetPivot();                                        
                                         $r = $t->getCNCO_Obj($value, $module, $obj);
-                                        $s = count($r);
+                                        $s = count($r);                                      
                                         for ($u=0;$u<$s;$u++){
+                                            $hj = new Crud();
+                                            $hj->select='line';
+                                            $hj->from='details';
+                                            $hj->condition='files_uuid="'.$value.'" AND module="'.$module.'" AND obj_grp="'.$obj.'" AND obj_name="'.$r[$u]['name'].'"';
+                                            $hj->Read();
+                                            $uline = $hj->rows;
+                                            $linenum = $uline[0]['line'];
+                                            
                                             $total = $r[$u]['converted'] + $r[$u]['no_converted'] + $r[$u]['omitted'];
                                             $c = ($r[$u]['converted']*100)/$total;
                                             $nc = ($r[$u]['no_converted']*100)/$total;
@@ -253,7 +260,7 @@ if($usuario == false ) {
                                             } else {
                                                 echo '<td class="text_color_gray"><strong>-</strong></td>';
                                             }
-                                            echo '<td><a href="text.php?value='.$module.'&obj='.$obj.'">View Config Text</a>';
+                                            echo '<td><a href="text.php?value='.$module.'&obj='.$obj.'&line='.$linenum.'#line">View Config Text</a>';
                                             echo '</tr>';
                                         }
                                     }
