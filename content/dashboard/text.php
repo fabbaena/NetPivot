@@ -193,19 +193,20 @@ if($usuario == false ) {
                                                 $model = new Crud();
                                                 $model->select='*';
                                                 $model->from='details';
-                                                $model->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule" AND obj_name="'.$obj.'"';
+                                                $model->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule" GROUP by obj_name';
                                                 $model->Read();
                                                 $t = $model->rows;
                                                 $total_t = count($t);
                                                 if ($prep == null) {
                                                     $prep = $t[0]['line'];
-                                                }
+                                                }                                               
                                                 for($g=0;$g<$total_t;$g++){
-                                                    
-                                                        if ($t[$g]['line']== $prep){
-                                                           echo '<li class="active"><a href="text.php?value='.$module.'&obj='.$t[$g]['obj_name'].'&line='.$t[$g]['line'].'#line">'.$t[$g]['attribute'].'</a></li>';                                             
+                                                    $gf = str_replace('/Common/', '', $t[$g]['obj_name']);
+                                                    $tk = wordwrap($gf,30,"<br>",true);
+                                                        if ($t[$g]['obj_name']== $obj){
+                                                        echo '<li class="active"><a href="text.php?value='.$module.'&obj='.$t[$g]['obj_name'].'&line='.$t[$g]['line'].'#line">'.$tk.'</a></li>';                                             
                                                        } else {
-                                                            echo '<li><a href="text.php?value='.$module.'&obj='.$t[$g]['obj_name'].'&line='.$t[$g]['line'].'#line">'.$t[$g]['attribute'].'</a></li>';
+                                                            echo '<li><a href="text.php?value='.$module.'&obj='.$t[$g]['obj_name'].'&line='.$t[$g]['line'].'#line">'.$tk.'</a></li>';
                                                        }
                                                        
                                                 }
