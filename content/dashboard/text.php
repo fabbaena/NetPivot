@@ -125,7 +125,7 @@ if($usuario == false ) {
                                     echo '<li><a href="text.php?file=ns">Target NetScaler</a></li>';
                                 } elseif ($tfile=='ns') {
                                     echo '<li><a href="text.php?file=f5">Source F5</a></li>
-                                    <li class="active"><a href="text.php?file=ns">Targen NetScaler<span class="sr-only">(current)</span></a></li>';
+                                    <li class="active"><a href="text.php?file=ns">Target NetScaler<span class="sr-only">(current)</span></a></li>';
                                 }
                             ?>
                             
@@ -149,8 +149,10 @@ if($usuario == false ) {
                             $a->Read();
                             $b = $a->rows;
                             $m_found= count($b);
+                            
+                            
                             if ($tfile=='ns'){                               
-                                echo '<button type="submit" class="btn btn-default active" name="file" value="ns" formaction="text.php">LTM</button>';
+                                echo '<button type="submit" class="btn btn-default active" name="file" value="ns" formaction="text.php">LoadBalancing</button>';
                             } else {                              
                                for ($c=0;$c<$m_found;$c++){
                                 if ($b[$c][0]!='ltm' AND $module==$b[$c][0]){
@@ -267,12 +269,12 @@ if($usuario == false ) {
                                     $f->from='conversions';
                                     $f->condition='files_uuid="'.$value.'"';
                                     $f->Read();
-                                    $g = $f->rows;
-                                    
+                                    $g = $f->rows;                                    
                                     $fileopen = $g[0]['converted_file'];
                                 } else {
                                     $fileopen = $value;
                                 }
+                                
                                 if ( !($gestor = fopen("files/$fileopen", "r"))) {
                                         exit ('Unable to open the input file') ;
                                 } else {
