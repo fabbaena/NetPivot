@@ -1,0 +1,3 @@
+# Force ending lines in LF or \r (Unix)
+* text eol=lf
+
