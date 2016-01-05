@@ -139,7 +139,8 @@ if($usuario == false ) {
                                 <!-- Main Menu -->
                                 <div class="side-menu-container">
                                     
-                                    <ul class="nav nav-pills nav-stacked span2 custom-side-menu">
+                                    <ul class="nav nav-pills nav-stacked custom-side-menu">
+                                        <li class="list-group-item text-center gray_backgr"><strong>Object Group Name</strong></li>
                                         <?php
                                             
                                             $model = new Crud();
@@ -173,10 +174,13 @@ if($usuario == false ) {
                                                     $obj = $s[0][0];
                                                 }
                                                 for ($k=0;$k<$total;$k++) {
+                                                    $gf = str_replace('/Common/', '', $s[$k][0]);
+                                                    $tk = wordwrap($gf,30,"<br>",true);
+                                                    
                                                     if ($s[$k][0]== $obj){
-                                                        echo '<li class="active"><a href="objects.php?value='.$module.'&obj='.$rows[$k][0].'">'.$s[$k][0].'</a></li>';                                             
+                                                        echo '<li class="active"><a href="objects.php?value='.$module.'&obj='.$rows[$k][0].'">'.$tk.'</a></li>';                                             
                                                     } else {
-                                                         echo '<li><div style="word-wrap: break-word"><a href="objects.php?value='.$module.'&obj='.$s[$k][0].'">'.$s[$k][0].'</a></div></li>';
+                                                         echo '<li><a href="objects.php?value='.$module.'&obj='.$s[$k][0].'">'.$tk.'</a></li>';
                                                     }
                                                 }
                                             }
@@ -227,16 +231,28 @@ if($usuario == false ) {
                                             <th style="width: 20%">Actions</th>
                                             </tr>
                                             <tbody>';
-                                        $t = new NetPivot();
+                                        $t = new NetPivot();                                        
                                         $r = $t->getCNCO_Obj($value, $module, $obj);
-                                        $s = count($r);
+                                        $s = count($r);                                      
                                         for ($u=0;$u<$s;$u++){
-                                            $total = $r[$u]['converted'] + $r[$u]['no_converted'] + $r[$u]['omitted'];
+                                            $hj = new Crud();
+                                            $hj->select='line';
+                                            $hj->from='details';
+                                            $hj->condition='files_uuid="'.$value.'" AND module="'.$module.'" AND obj_grp="'.$obj.'" AND obj_name="'.$r[$u]['name'].'"';
+                                            $hj->Read();
+                                            $uline = $hj->rows;
+                                            $linenum = $uline[0]['line'];
+                                            
+                                            $total = $r[$u]['converted'] + $r[$u]['no_converted'];
                                             $c = ($r[$u]['converted']*100)/$total;
                                             $nc = ($r[$u]['no_converted']*100)/$total;
                                             $o = ($r[$u]['omitted']*100)/$total;
                                             echo '<tr>';
-                                            echo '<td><div style="word-wrap: break-word">'.$r[$u]['name'].'</div></td>';
+                                            if ($r[$u]['name'] ==''){
+                                                echo '<td><div style="word-wrap: break-word">'.$obj.'</div></td>';
+                                            } else {
+                                                echo '<td><div style="word-wrap: break-word">'.$r[$u]['name'].'</div></td>';
+                                            }
                                             if ($c!=0) {
                                                 echo '<td class="text_color_green"><strong>'.round($c).'%</strong></td>';
                                             } else {
@@ -252,7 +268,7 @@ if($usuario == false ) {
                                             } else {
                                                 echo '<td class="text_color_gray"><strong>-</strong></td>';
                                             }
-                                            echo '<td><a href="text.php?value='.$module.'&obj='.$obj.'">View Config Text</a>';
+                                            echo '<td><a href="text.php?value='.$module.'&obj='.$obj.'&line='.$linenum.'#line">View Config Text</a>';
                                             echo '</tr>';
                                         }
                                     }

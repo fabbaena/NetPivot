@@ -247,7 +247,7 @@ input.btn.margin_left-max {
     border-radius: 0px;
 }
 .custom-margin-top {
-    margin-top: 57px;
+    margin-top: 20px;
 }
 
 .custom-side-menu>li.active>a {
@@ -260,4 +260,9 @@ button-modules {
 
 no-black {
     background: #f7f7f7;
+}
+
+li.list-group-item.text-center.gray_backgr {
+    background: #d5d5d5;
+    color:gray;
 }

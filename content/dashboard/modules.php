@@ -1,3 +1,4 @@
+
 <?php
 
 /* 
@@ -151,9 +152,9 @@ if($usuario == false ) {
                                         $s = count($r);
                                         for ($u=0;$u<$s;$u++){
                                                 
-                                        $total = $r[$u]['converted'] + $r[$u]['no_converted'] + $r[$u]['omitted'];
+                                        $total = $r[$u]['converted'] + $r[$u]['no_converted'];
                                         $c = ($r[$u]['converted']*100)/$total;
-
+                                          
                                         echo '<tr>';
                                         $gf = str_replace('/Common/', '', $r[$u]['name']);
                                         echo '<td><div style="word-wrap: break-word">'.$gf.'</div></td>';
@@ -167,11 +168,11 @@ if($usuario == false ) {
                                         } else {
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
                                         }
-                                        if ($r[$u]['no_converted']!=0) {
+                                        /*if ($r[$u]['no_converted']!=0) {
                                             echo '<td class="text_color_red"><strong>'.$r[$u]['no_converted'].'</strong></td>';
-                                        } else {
+                                        } else { */
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                        }
+                                        //}
                                         if ($r[$u]['omitted']!=0) {
                                             echo '<td class="text_color_red"><strong>'.$r[$u]['omitted'].'</strong></td>';
                                         } else {
@@ -192,7 +193,7 @@ if($usuario == false ) {
                                         if ($rows[$c][0]!='rule') {        
                                             $a = new NetPivot();
                                             $b = $a->getCNCO($value, $module,$rows[$c][0],0);
-                                            $b_sum = $b[1] + $b[2] + $b[3];
+                                            $b_sum = $b[1] + $b[2];
                                             $b_c = ($b[1]*100)/$b_sum;
 
                                             echo '<tr>';
@@ -245,4 +246,3 @@ if($usuario == false ) {
 </html>
 <?php
 }
-?>

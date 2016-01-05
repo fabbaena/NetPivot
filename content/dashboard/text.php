@@ -150,11 +150,11 @@ if($usuario == false ) {
                             $b = $a->rows;
                             $m_found= count($b);
                             if ($tfile=='ns'){                               
-                                echo '<button type="submit" class="btn btn-default active">LTM</button>';
+                                echo '<button type="submit" class="btn btn-default active" name="file" value="ns" formaction="text.php">LTM</button>';
                             } else {                              
                                for ($c=0;$c<$m_found;$c++){
                                 if ($b[$c][0]!='ltm' AND $module==$b[$c][0]){
-                                    echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
+                                    echo '<button type="submit" class="btn btn-default active" >'.  strtoupper($b[$c][0]).'</button>';
                                 } elseif ($b[$c][0]!='ltm' AND $module!=$b[$c][0]){
                                     echo '<button type="submit" class="btn btn-default" name="value" value="'.$b[$c][0].'" formaction="text.php#line">'.  strtoupper($b[$c][0]).'</button>';
                                 } elseif ($b[$c][0]=='ltm' AND $module==$b[$c][0] AND $y!=null) {    
@@ -184,7 +184,8 @@ if($usuario == false ) {
                                 <!-- Main Menu -->
                                 <div class="side-menu-container">
                                     
-                                    <ul class="nav nav-pills nav-stacked span2 custom-side-menu">
+                                    <ul class="nav nav-pills nav-stacked custom-side-menu">
+                                        <li class="list-group-item text-center gray_backgr"><strong>Object Group Name</strong></li>
                                         <?php
                                             if ($module == 'rule'){
                                                 $model = new Crud();

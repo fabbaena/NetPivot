@@ -80,7 +80,7 @@ if($usuario == false ) {
         
         $modelb = new NetPivot();
         $ltmD = $modelb->getCNCO($value,'ltm','rule',1);
-        $ltmtotal = $ltmD[1] + $ltmD[2] + $ltmD[3];
+        $ltmtotal = $ltmD[1] + $ltmD[2];
         $ltmp = ($ltmD[1]*100)/$ltmtotal;
         ?>
         <title>NetPivot</title>  
@@ -173,18 +173,20 @@ if($usuario == false ) {
                                     } else {
                                         $info = $data->getCNCO($value, $rows[$c][0],'',0);
                                     }
-                                    $total_data = $info[1] + $info[2] + $info[3];
+                                                             
+                                    $total_data = $info[1] + $info[2];
                                     $t = ($total_data*100)/$total;
                                     $p_c = ($info[1]*100)/$total_data;
                                     $p_nc = ($info[2]*100)/$total_data;
                                     $p_o = ($info[3]*100)/$total_data;
+                                    $omitted_p = ($info[3]*100)/($info[1]+$info[2]+$info[3]);
                                     $module = $rows[$c][0];
                                     echo '<tr>';
                                     echo '<td>'.strtoupper($rows[$c][0]).'</td>';
                                     echo '<td class="text-center"><span class="badge badge_bkground_blue_sm">'.round($t).'%</span></td>';
                                     echo '<td class="text-center"><span class="badge badge_bkground_green_sm">'.round($p_c).'%</span></td>';
                                     echo '<td class="text-center"><span class="badge badge_bkground_red_sm">'.round($p_nc).'%</span></td>';
-                                    echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($p_o).'%</span></td>';
+                                    echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.$omitted_p.'%</span></td>';
                                     echo '<td><a href="text.php?value='.$module.'#line">View Config Text</a>&nbsp;&nbsp;&nbsp;<a href="modules.php?value='.$module.'">View Module Details</a></td>';
                                     echo '</tr>';
                                     if ($rows[$c][0]=='ltm'){
@@ -194,6 +196,7 @@ if($usuario == false ) {
                                         $p_c = ($info[1]*100)/$total_data;
                                         $p_nc = ($info[2]*100)/$total_data;
                                         $p_o = ($info[3]*100)/$total_data;
+                                        
                                         echo '<tr>';
                                         echo '<td>iRULE</td>';
                                         echo '<td class="text-center"><span class="badge badge_bkground_blue_sm">'.round($t).'%</span></td>';
