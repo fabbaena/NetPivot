@@ -80,7 +80,7 @@ if($usuario == false ) {
         
         $modelb = new NetPivot();
         $ltmD = $modelb->getCNCO($value,'ltm','rule',1);
-        $ltmtotal = $ltmD[1] + $ltmD[2] + $ltmD[3];
+        $ltmtotal = $ltmD[1] + $ltmD[2];
         $ltmp = ($ltmD[1]*100)/$ltmtotal;
         ?>
         <title>NetPivot</title>  
@@ -173,7 +173,7 @@ if($usuario == false ) {
                                     } else {
                                         $info = $data->getCNCO($value, $rows[$c][0],'',0);
                                     }
-                                    $total_data = $info[1] + $info[2] + $info[3];
+                                    $total_data = $info[1] + $info[2];
                                     $t = ($total_data*100)/$total;
                                     $p_c = ($info[1]*100)/$total_data;
                                     $p_nc = ($info[2]*100)/$total_data;
@@ -189,7 +189,7 @@ if($usuario == false ) {
                                     echo '</tr>';
                                     if ($rows[$c][0]=='ltm'){
                                         $info = $data->getCNCO($value, $rows[$c][0],'rule',0);
-                                        $total_data = $info[1] + $info[2] + $info[3];
+                                        $total_data = $info[1] + $info[2];
                                         $t = ($total_data*100)/$total;
                                         $p_c = ($info[1]*100)/$total_data;
                                         $p_nc = ($info[2]*100)/$total_data;

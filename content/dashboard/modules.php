@@ -151,7 +151,7 @@ if($usuario == false ) {
                                         $s = count($r);
                                         for ($u=0;$u<$s;$u++){
                                                 
-                                        $total = $r[$u]['converted'] + $r[$u]['no_converted'] + $r[$u]['omitted'];
+                                        $total = $r[$u]['converted'] + $r[$u]['no_converted'];
                                         $c = ($r[$u]['converted']*100)/$total;
 
                                         echo '<tr>';
@@ -192,7 +192,7 @@ if($usuario == false ) {
                                         if ($rows[$c][0]!='rule') {        
                                             $a = new NetPivot();
                                             $b = $a->getCNCO($value, $module,$rows[$c][0],0);
-                                            $b_sum = $b[1] + $b[2] + $b[3];
+                                            $b_sum = $b[1] + $b[2];
                                             $b_c = ($b[1]*100)/$b_sum;
 
                                             echo '<tr>';

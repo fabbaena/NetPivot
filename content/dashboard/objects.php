@@ -243,7 +243,7 @@ if($usuario == false ) {
                                             $uline = $hj->rows;
                                             $linenum = $uline[0]['line'];
                                             
-                                            $total = $r[$u]['converted'] + $r[$u]['no_converted'] + $r[$u]['omitted'];
+                                            $total = $r[$u]['converted'] + $r[$u]['no_converted'];
                                             $c = ($r[$u]['converted']*100)/$total;
                                             $nc = ($r[$u]['no_converted']*100)/$total;
                                             $o = ($r[$u]['omitted']*100)/$total;
