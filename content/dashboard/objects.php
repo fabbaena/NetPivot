@@ -139,7 +139,8 @@ if($usuario == false ) {
                                 <!-- Main Menu -->
                                 <div class="side-menu-container">
                                     
-                                    <ul class="nav nav-pills nav-stacked span2 custom-side-menu">
+                                    <ul class="nav nav-pills nav-stacked custom-side-menu">
+                                        <li class="list-group-item text-center gray_backgr"><strong>Object Group Name</strong></li>
                                         <?php
                                             
                                             $model = new Crud();
