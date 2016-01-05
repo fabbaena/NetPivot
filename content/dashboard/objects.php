@@ -248,7 +248,11 @@ if($usuario == false ) {
                                             $nc = ($r[$u]['no_converted']*100)/$total;
                                             $o = ($r[$u]['omitted']*100)/$total;
                                             echo '<tr>';
-                                            echo '<td><div style="word-wrap: break-word">'.$r[$u]['name'].'</div></td>';
+                                            if ($r[$u]['name'] ==''){
+                                                echo '<td><div style="word-wrap: break-word">'.$obj.'</div></td>';
+                                            } else {
+                                                echo '<td><div style="word-wrap: break-word">'.$r[$u]['name'].'</div></td>';
+                                            }
                                             if ($c!=0) {
                                                 echo '<td class="text_color_green"><strong>'.round($c).'%</strong></td>';
                                             } else {
