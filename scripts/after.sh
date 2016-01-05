@@ -1,4 +1,4 @@
 #!/bin/bash
 
-chmod 0755 /var/www/html/dashboard/f5conv*
+find /var/www/html -name "*f5conv*" -type f -exec chmod 0755 {} \;
 
