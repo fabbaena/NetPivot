@@ -193,13 +193,14 @@ if($usuario == false ) {
                                                 $model = new Crud();
                                                 $model->select='*';
                                                 $model->from='details';
-                                                $model->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule" GROUP by obj_name';
+                                                $model->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule" GROUP by obj_name order by line ASC';
                                                 $model->Read();
                                                 $t = $model->rows;
                                                 $total_t = count($t);
                                                 if ($prep == null) {
                                                     $prep = $t[0]['line'];
-                                                }                                               
+                                                }
+                                                
                                                 for($g=0;$g<$total_t;$g++){
                                                     $gf = str_replace('/Common/', '', $t[$g]['obj_name']);
                                                     $tk = wordwrap($gf,30,"<br>",true);
