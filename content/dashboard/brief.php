@@ -125,7 +125,7 @@ if($usuario == false ) {
                 <div class="col-md-4">
                     <form method="GET">   
                         <button type="submit" class="btn btn-primary btn-lg glyphicon glyphicon-home"></button><h2 class="nextto"><?php echo $objs;?></h2>
-                        <h3 class="tag"><small>MODULES FOUND</small></h3>
+                        <h3 class="tag"><small>MODULES FOUND</small></h3><BR>
                         <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag" name="value" value="gtm" formaction="modules.php"></button><h2 class="nextto"><?php echo $gslb?></h2>
                         <h3 class="tag"><small>GSLB OBJECTS FOUND</small></h3>
                     </form>
@@ -133,7 +133,7 @@ if($usuario == false ) {
                 <div class="col-md-4">
                     <form method="GET">
                         <button type="submit" class="btn btn-success btn-lg glyphicon glyphicon-signal"></button><h2 class="nextto"><?php echo round($ltmp).'%';?></h2>
-                        <h3 class="tag"><small>LTM CONVERSION</small></h3>
+                        <h3 class="tag"><small>LOADBALANCING CONVERSION</small></h3>
                         <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag" name="value" value="apm" formaction="modules.php"></button><h2 class="nextto"><?php echo $aaa;?></h2>
                         <h3 class="tag"><small>AAA OBJECTS FOUND</small></h3>
                     </form>
@@ -141,7 +141,7 @@ if($usuario == false ) {
                 <div class="col-md-4">
                     <form method="GET">
                         <button type="submit" class="btn btn-danger btn-lg glyphicon glyphicon-flash" name="value" value="rule" formaction="modules.php"></button><h2 class="nextto"><?php echo $rules;?></h2>
-                        <h3 class="tag"><small>iRULES CONFIGURED</small></h3>
+                        <h3 class="tag"><small>iRULES CONFIGURED</small></h3><br>
                         <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag" name="value" value="security" formaction="modules.php"></button><h2 class="nextto"><?php echo $acl;?></h2>
                         <h3 class="tag"><small>ACLS OBJECTS FOUND</small></h3>
                     </form>
