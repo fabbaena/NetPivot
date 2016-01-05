@@ -149,6 +149,8 @@ if($usuario == false ) {
                             $a->Read();
                             $b = $a->rows;
                             $m_found= count($b);
+                            
+                            
                             if ($tfile=='ns'){                               
                                 echo '<button type="submit" class="btn btn-default active" name="file" value="ns" formaction="text.php">LoadBalancing</button>';
                             } else {                              
