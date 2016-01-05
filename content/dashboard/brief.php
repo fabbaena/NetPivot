@@ -186,7 +186,7 @@ if($usuario == false ) {
                                     echo '<td class="text-center"><span class="badge badge_bkground_blue_sm">'.round($t).'%</span></td>';
                                     echo '<td class="text-center"><span class="badge badge_bkground_green_sm">'.round($p_c).'%</span></td>';
                                     echo '<td class="text-center"><span class="badge badge_bkground_red_sm">'.round($p_nc).'%</span></td>';
-                                    echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.$omitted_p.'%</span></td>';
+                                    echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($omitted_p).'%</span></td>';
                                     echo '<td><a href="text.php?value='.$module.'#line">View Config Text</a>&nbsp;&nbsp;&nbsp;<a href="modules.php?value='.$module.'">View Module Details</a></td>';
                                     echo '</tr>';
                                     if ($rows[$c][0]=='ltm'){

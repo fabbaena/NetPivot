@@ -14,22 +14,21 @@ require '../model/CheckUser.php';
 $username = htmlspecialchars($_POST['username']);
 $password = htmlspecialchars($_POST['password']);
 $type = htmlspecialchars($_POST['usertype']);
-$max_files = htmlspecialchars($_POST['max_files']);
-$max_conversions = htmlspecialchars($_POST['max_conversions']);
+
 
 $check = new CheckUser();
 $check->name = $username;
 $check->password = $password;
 $check->login();
 $msg = $check->mensaje;
-
+$number = 100;
 if ($msg == false) 
     {
         $hash = password_hash($password, PASSWORD_BCRYPT);
         $model = new Crud();
         $model->insertInto = 'users';
         $model->insertColumns = 'name,password,type,max_files,max_conversions';
-        $model->insertValues = "'$username','$hash','$type','$max_files','$max_conversions'";
+        $model->insertValues = "$username,$hash,'Administrator',$number,$number";
         $model->Create();
         $mensaje = $model->mensaje;
         if ($mensaje == true) {
