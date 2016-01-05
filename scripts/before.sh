@@ -4,7 +4,7 @@ CONFFILE=/home/ubuntu/.my.cnf
 
 HOST=localhost
 USER=demonio
-PASSWORD=password
+PASSWORD=s3cur3s0c
 DBNAME=NetPivot
 
 DBDIR=/var/lib/mysql/$DBNAME
