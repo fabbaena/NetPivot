@@ -174,10 +174,12 @@ if($usuario == false ) {
                                                 }
                                                 for ($k=0;$k<$total;$k++) {
                                                     $gf = str_replace('/Common/', '', $s[$k][0]);
+                                                    $tk = wordwrap($gf,30,"<br>",true);
+                                                    
                                                     if ($s[$k][0]== $obj){
-                                                        echo '<li class="active"><a href="objects.php?value='.$module.'&obj='.$rows[$k][0].'">'.$gf.'</a></li>';                                             
+                                                        echo '<li class="active"><a href="objects.php?value='.$module.'&obj='.$rows[$k][0].'">'.$tk.'</a></li>';                                             
                                                     } else {
-                                                         echo '<li><div style="word-wrap: break-word"><a href="objects.php?value='.$module.'&obj='.$s[$k][0].'">'.$gf.'</a></div></li>';
+                                                         echo '<li><a href="objects.php?value='.$module.'&obj='.$s[$k][0].'">'.$tk.'</a></li>';
                                                     }
                                                 }
                                             }
