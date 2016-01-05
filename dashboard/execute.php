@@ -9,6 +9,7 @@ require '../model/StartSession.php';
 require '../model/TimeManager.php';
 require '../model/Crud.php';
 require '../model/ConnectionBD.php';
+require '../model/Netpivot.php';
 
 $sesion = new StartSession();
 $usuario = $sesion->get('usuario');
@@ -21,8 +22,9 @@ $c_file = $uuid.'_'.$filename.'.conf';
 
 $error_name = $uuid . '_error.txt';
 $stats_name = $uuid . '_stats.txt';
-$command = './f5conv -f files/' . $uuid . ' -d 2 -e files/' . $error_name . ' -s -S files/'. $stats_name . ' -o files/' . $c_file;
-
+$csv_name = $uuid . '_stats.csv';
+$command = './f5conv.2.0.2 -f files/' . $uuid . ' -e files/' . $error_name . ' -C files/'. $csv_name . ' -O files/' . $c_file;
+$csv_file = 'files/'. $csv_name;
 
 try {
     $pwd = exec($command, $pwd_out,$pwd_error); //this is the command executed on the host  
@@ -32,12 +34,37 @@ try {
     $model = new Crud();
     $model->insertInto = 'conversions';
     $model->insertColumns = 'users_id,time_conversion,files_uuid,converted_file,error_file,stats_file';
-    $model->insertValues = "'$id','$today','$uuid','$c_file','$error_name','$stats_name'";
+    $model->insertValues = "'$id','$today','$uuid','$c_file','$error_name','$csv_name'";
     $model->Create();
     $msg = $model->mensaje;
     if ($msg == true) {
-        $sesion->set('uuid', $uuid);
-        header ('location:stats.php');
+
+        $modelo = new Crud();
+        if (($handle = fopen($csv_file, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $total = count($data);
+                $modelo->insertInto='details';
+                $modelo->insertColumns='files_uuid,module,obj_grp,obj_component,obj_name,attribute,converted,omitted,line';
+                $string ="'".$uuid."',";
+                for ($c=0;$c<$total;$c++){
+                    if ($c != $total-1){
+                        $string= $string . "'". $data[$c] ."',";
+                    } else {
+                        $string= $string . "'". $data[$c] ."'";
+                    }
+                }
+                $modelo->insertValues = $string;
+                $modelo->Create();
+                $msg2 = $modelo->mensaje;   
+            }
+        }
+        if ($msg2 == true){
+            $sesion->set('uuid', $uuid);
+            header ('location:brief.php');
+        } else {
+            echo 'error aqui';
+        }
+
     }
     else {
         header ('location:command.php?error');

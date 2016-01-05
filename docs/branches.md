@@ -42,7 +42,18 @@ Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
 ```
 
-TIP: Configure the IdentityFile at ~/.ssh/config for github Host
+TIP: Configure the IdentityFile at ~/.ssh/config like the following example:
+
+```
+Host github
+    CheckHostIP yes
+    IdentityFile ~/.ssh/github
+    PasswordAuthentication no
+    PubkeyAuthentication yes
+    RequestTTY auto
+    User git
+    VerifyHostKeyDNS yes
+```
 
 Then, you should add ~/.ssh/github.pub as Key in:
 https://github.com/settings/ssh
@@ -57,16 +68,31 @@ If it is your first repository and first commit, create the repository first
 on: https://github.com/new
 
 Set a name (no spaces), a description (optional), and **do not** initialize it.
-The repository will be complete empty, and ready to set new branches.
+The repository will be complete empty, and without any branches.
 
-By default, only the **master** branch exists, and you should clone it:
+The next step is to initialize the local repository, set the master branch and
+push it.
 
+You can initialize it with or without any source code inside the directory.
+
+```sh
+git init
+git remote set-url origin git@github.com:User/Repository.git
+git branch master
+git checkout master
+git add -v -A .
+git status
+git commit
+git push origin master
+```
+
+To test that all is set as it should be, you can try downloading again:
 ```sh
 git clone -b master git@github.com:User/Repository.git master/
 ```
 
 #### Branching the new Repository
-Once the local copy is downloaded, you should create the **develop** branch:
+Once the master branch is downloaded, you should create the **develop** branch:
 
 ```sh
 git branch develop
@@ -74,13 +100,14 @@ git branch -vv
 git checkout -f develop
 ```
 
-Inside the new branch, copy the code already done, stage it, commit it and push
+Inside the new branch, copy or modify the code, stage it, commit it and push
 it to the **develop** branch:
 
 ```sh
-<COPY the code to the local repository directory>
+<COPY/MODIFY the code in the local repository directory>
 git add -v -A .
-git commit -a -m "Initial commit"
+git status
+git commit -m "Initial commit in develop branch"
 git push origin develop
 ```
 
@@ -92,7 +119,7 @@ The local environment needs the following tools:
 * `git` for Version Control
 * Latest `apache` version
 * Latest `php` version
-* Latest `mysql` or compatible fork version
+* Latest `mariadb` version
 
 Once done, you can clone the **develop** branch:
 
@@ -104,8 +131,8 @@ Once that is done, you can make changes and local commits.
 
 ```sh
 git checkout develop
-git status
 git add -v -A .
+git status
 git commit -a
 ```
 
@@ -135,6 +162,10 @@ git clone -b master git@github.com:SamanaGroup/NetPivot.git master/
 ```
 
 ### Merge changes from Origin/Develop in No Fast Forward
+This step can be made on Web Dashboard using a pull request, going to:
+
+https://github.com/User/Repository/pull/new/master
+
 To merge changes that are already pushed to **origin/develop** branch
 (described in Step 4):
 
