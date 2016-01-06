@@ -224,12 +224,12 @@ if($usuario == false ) {
                                         
                                     } else {
                                         echo '<tr class="active">
-                                            <th style="width: 20%">Object Name</th>
+                                            <th style="width: 25%">Object Name</th>
                                             <th style="width: 13"># Attributes</th>
                                             <th style="width: 14%">% Converted</th>
                                             <th style="width: 18%">% Not Converted</th>
                                             <th style="width: 15%"># Omitted</th>
-                                            <th style="width: 20%">Actions</th>
+                                            <th style="width: 15%">Actions</th>
                                             </tr>
                                             <tbody>';
                                         $t = new NetPivot();                                        
