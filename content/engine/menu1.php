@@ -13,26 +13,10 @@
 	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">      
 
             <ul class="nav navbar-nav navbar-right">
-		
-                
-               
-                        <?php
-			  if ($user_type == 'Administrator'){
-                              echo '<li class="dropdown ">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Account<span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">';
-                              
-                              
-                              echo '<li class=""><a href="settings.php">Settings</a></li>';
-                              echo '<li class=""><a href="admin_users.php">Users</a></li>';
-                              echo '<li class="divider"></li>
-                        <li><a href="../model/EndSession.php">Log Out</a></li>
-                    </ul>
-		</li>';
-                          } else {
-                              echo '<li><a href="../model/EndSession.php">Log Out</a></li>';
-                          }
-                        ?>
+	
+                          
+             <li><a href="../model/EndSession.php">Log Out</a></li>
+                         
 			
 			
             </ul>

@@ -8,4 +8,5 @@
 *.svg binary
 *.ttf binary
 *.woff binary
+f5conv* binary
 

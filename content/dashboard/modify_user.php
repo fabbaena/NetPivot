@@ -75,43 +75,9 @@ if($usuario == false ) {
                                         }
                                     ?>                                                                                             
                                 </select></br></br>
-                                <label for="max_files">Maximum number of files allowed to upload: </label>
-                                <select name="max_files" id="usertype">
-                                    <option value="" disabled="disabled"># Files</option>
-                                    <?PHP 
-                                        for ($i=0;$i<=10;$i++) {
-                                            if ($i == $max_files) {
-                                                echo '<option value="'.$i.'" selected="selected">'.$i.'</option>';
-                                            } else {
-                                                echo '<option value="'.$i.'">'.$i.'</option>';
-                                            }
-                                        }
-                                        if ($max_files == 100) {
-                                            echo '<option value="100" selected="selected">Unlimited</option>'; 
-                                        } else {
-                                            echo '<option value="100">Unlimited</option>'; 
-                                        }                                        
-                                        echo '</select></br></br>';
-                                    ?>
+                                
 
-                                <label for="max_conversions">Maximum number of allowed conversions per file: </label>
-                                <select name="max_conversions" id="usertype">
-                                    <option value="" disabled="disabled" ># Conversions</option>
-                                    <?php 
-                                        for ($i=0;$i<=10;$i++) {
-                                            if ($i == $max_conversions) {
-                                                echo '<option value="'.$i.'" selected="selected">'.$i.'</option>';
-                                            } else {
-                                                echo '<option value="'.$i.'">'.$i.'</option>';
-                                            }
-                                        }
-                                        if ($max_conversions == 100) {
-                                            echo '<option value="100" selected="selected">Unlimited</option>'; 
-                                        } else {
-                                            echo '<option value="100">Unlimited</option>'; 
-                                        }                                        
-                                        echo '</select></br></br>';
-                                    ?>
+                                
                                    
                                 <input type="submit" value="Save">
                                 <?php 
