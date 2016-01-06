@@ -70,7 +70,7 @@ if($usuario == false ) {
         $gslb = $get_gslb->getCounters($value,'ltm','gtm');
         
         $get_acl= new NetPivot();
-        $acl = $get_acl->getCounters($value,'security','firewall');
+        $acl = $get_acl->getCounters($value,'asm','');
         
         $get_aaa = new NetPivot();
         $aaa = $get_aaa->getCounters($value,'apm','aaa');
@@ -143,7 +143,7 @@ if($usuario == false ) {
                         <button type="submit" class="btn btn-danger btn-lg glyphicon glyphicon-flash" name="value" value="rule" formaction="modules.php"></button><h2 class="nextto"><?php echo $rules;?></h2>
                         <h3 class="tag"><small>iRULES CONFIGURED</small></h3><br>
                         <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag" name="value" value="security" formaction="modules.php"></button><h2 class="nextto"><?php echo $acl;?></h2>
-                        <h3 class="tag"><small>ACLS OBJECTS FOUND</small></h3>
+                        <h3 class="tag"><small>APPFIREWALL OBJECTS FOUND</small></h3>
                     </form>
                     <br>
                 </div>
