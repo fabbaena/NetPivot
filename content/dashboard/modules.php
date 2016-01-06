@@ -171,7 +171,7 @@ if($usuario == false ) {
                                         } else {
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
                                         }
-                                            echo '<td><a href="text.php?value='.$module.'&obj='.$r[$u]['name'].'&line='.$r[$u]['line'].'#line">View Config Text</a>&nbsp;&nbsp;&nbsp;<a href="objects.php?value='.$module.'&obj='.$rows[$c][0].'">View Object</a>';
+                                            echo '<td><a href="text.php?value='.$module.'&obj='.$r[$u]['name'].'&line='.$r[$u]['line'].'#line">View Config</a>&nbsp;&nbsp;&nbsp;<a href="objects.php?value='.$module.'&obj='.$rows[$c][0].'">View Object</a>';
                                             echo '<tr>';
                                         }
                                     }
@@ -217,7 +217,7 @@ if($usuario == false ) {
                                                 echo '<td class="text_color_gray"><strong>-</strong></td>';
                                             }
 
-                                            echo '<td><a href="text.php?value='.$module.'&obj='.$rows[$c][0].'#line">View Config Text</a>&nbsp;&nbsp;&nbsp;<a href="objects.php?value='.$module.'&obj='.$rows[$c][0].'">View Object</a>';
+                                            echo '<td><a href="text.php?value='.$module.'&obj='.$rows[$c][0].'#line">View Config</a>&nbsp;&nbsp;&nbsp;<a href="objects.php?value='.$module.'&obj='.$rows[$c][0].'">View Object</a>';
                                             echo '</tr>'; 
                                         }
                                     }

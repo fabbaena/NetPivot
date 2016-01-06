@@ -217,7 +217,7 @@ if($usuario == false ) {
                                                 echo $v[$d]['attribute'];
                                                 echo '</td>';
                                                 echo '<td>'.$v[$d]['line'].'</td>';
-                                                echo '<td><a href="text.php?value=rule&obj='.$obj.'&line='.$v[$d]['line'].'#line">View Config Text</a></td>'; 
+                                                echo '<td><a href="text.php?value=rule&obj='.$obj.'&line='.$v[$d]['line'].'#line">View Config</a></td>'; 
                                                 echo '</tr>';
                                             }
                                         
@@ -270,7 +270,7 @@ if($usuario == false ) {
                                             } else {
                                                 echo '<td class="text_color_gray"><strong>-</strong></td>';
                                             }
-                                            echo '<td><a href="text.php?value='.$module.'&obj='.$obj.'&line='.$linenum.'#line">View Config Text</a>';
+                                            echo '<td><a href="text.php?value='.$module.'&obj='.$obj.'&line='.$linenum.'#line">View Config</a>';
                                             echo '</tr>';
                                         }
                                     }
