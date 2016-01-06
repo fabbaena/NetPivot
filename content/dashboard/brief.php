@@ -153,9 +153,9 @@ if($usuario == false ) {
                             <th style="width: 10%">F5 Module</th>
                             <th style="width: 15%">NetScaler Module</th> 
                             <th style="width: 13%">Total % of Config</th>                                                       
-                            <th style="width: 14%">% Converted</th>
-                            <th style="width: 15%">% Not Converted</th>
-                            <th style="width: 13%">% Omitted</th>
+                            <th style="width: 14%">Converted</th>
+                            <th style="width: 15%">Not Converted</th>
+                            <th style="width: 13%">Omitted</th>
                             <th style="width: 20%">Actions</th> 
                         </tr>
                         <tbody>
