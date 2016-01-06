@@ -249,10 +249,13 @@ if($usuario == false ) {
                                             $nc = ($r[$u]['no_converted']*100)/$total;
                                             $o = ($r[$u]['omitted']*100)/$total;
                                             echo '<tr>';
+                                            $gf = str_replace('/Common/', '', $r[$u]['name']);
+                                            $tk = wordwrap($gf,30,"<br>",true);
                                             if ($r[$u]['name'] ==''){
+                                                
                                                 echo '<td><div style="word-wrap: break-word">'.$obj.'</div></td>';
                                             } else {
-                                                echo '<td><div style="word-wrap: break-word">'.$r[$u]['name'].'</div></td>';
+                                                echo '<td><div style="word-wrap: break-word">'.$tk.'</div></td>';
                                             }
                                             echo '<td>'.$total_att.'</td>';
                                             if ($c!=0) {
