@@ -151,12 +151,12 @@ if($usuario == false ) {
                 <table class="table">
                          <tr class="active">
                             <th style="width: 10%">F5 Module</th>
-                            <th style="width: 20%">NetScaler Module</th> 
-                            <th style="width: 10%">Total % of Config</th>                                                       
-                            <th style="width: 10%">% Converted</th>
-                            <th style="width: 10%">% Not Converted</th>
-                            <th style="width: 10%">% Omitted</th>
-                            <th style="width: 30%">Actions</th> 
+                            <th style="width: 15%">NetScaler Module</th> 
+                            <th style="width: 13%">Total % of Config</th>                                                       
+                            <th style="width: 14%">% Converted</th>
+                            <th style="width: 15%">% Not Converted</th>
+                            <th style="width: 13%">% Omitted</th>
+                            <th style="width: 20%">Actions</th> 
                         </tr>
                         <tbody>
                             <?php
@@ -204,7 +204,7 @@ if($usuario == false ) {
                                     echo '<td class="text-center"><span class="badge badge_bkground_green_sm">'.round($p_c).'%</span></td>';
                                     echo '<td class="text-center"><span class="badge badge_bkground_red_sm">'.round($p_nc).'%</span></td>';
                                     echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($omitted_p).'%</span></td>';
-                                    echo '<td><a href="text.php?value='.$module.'#line">View Config Text</a>&nbsp;&nbsp;&nbsp;<a href="modules.php?value='.$module.'">View Module Details</a></td>';
+                                    echo '<td><a href="text.php?value='.$module.'#line">View Config</a>&nbsp;&nbsp;&nbsp;<a href="modules.php?value='.$module.'">View Module</a></td>';
                                     echo '</tr>';
                                     if ($rows[$c][0]=='ltm'){
                                         $info = $data->getCNCO($value, $rows[$c][0],'rule',0);
@@ -222,7 +222,7 @@ if($usuario == false ) {
                                         echo '<td class="text-center"><span class="badge badge_bkground_green_sm">'.round($p_c).'%</span></td>';
                                         echo '<td class="text-center"><span class="badge badge_bkground_red_sm">'.round($p_nc).'%</span></td>';
                                         echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($p_o).'%</span></td>';
-                                        echo '<td><a href="text.php?value=rule&line='.$tr[0]['line'].'#line">View Config Text</a>&nbsp;&nbsp;&nbsp;<a href="modules.php?value=rule">View Module Details</a></td>';
+                                        echo '<td><a href="text.php?value=rule&line='.$tr[0]['line'].'#line">View Config</a>&nbsp;&nbsp;&nbsp;<a href="modules.php?value=rule">View Module</a></td>';
                                         echo '</tr>';
                                     }
                                 }
