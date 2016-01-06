@@ -139,7 +139,8 @@ if($usuario == false ) {
                              <tr class="active">
                                 <th style="width: 20%">F5 Object Groups</th>
                                 <th style="width: 20%"># Objects Found</th>
-                                <th style="width: 15%">% Converted</th>                                
+                                <th style="width: 15%">% Converted</th>
+                                <th style="width: 15%">% No Converted</th>
                                 <th style="width: 10%"># Omitted</th>
                                 <th style="width: 25%">Actions</th>
                             </tr>
@@ -186,8 +187,9 @@ if($usuario == false ) {
                                             $a = new NetPivot();
                                             $b = $a->getCNCO($value, $module,$rows[$c][0],0);
                                             $b_sum = $b[1] + $b[2] + $b[3];
-                                            $b_c = ($b[1]*100)/$b_sum;
-                                            
+                                            $b_sum2 = $b[1] + $b[2];
+                                            $b_c = ($b[1]*100)/$b_sum2;
+                                            $b_nc = ($b[2]*100)/$b_sum2;
                                             if ($module == 'rule'){
                                                 echo '<td>'.$rows[$c][0].'</td>';
                                             } else {
@@ -201,6 +203,11 @@ if($usuario == false ) {
                                            
                                            if ($b_c !=0){
                                                 echo '<td class="text_color_green"><strong>'.round($b_c).'%</strong></td>';
+                                            } else {
+                                                echo '<td class="text_color_gray"><strong>-</strong></td>';
+                                            }
+                                            if ($b_nc !=0){
+                                                echo '<td class="text_color_red"><strong>'.round($b_nc).'%</strong></td>';
                                             } else {
                                                 echo '<td class="text_color_gray"><strong>-</strong></td>';
                                             }
