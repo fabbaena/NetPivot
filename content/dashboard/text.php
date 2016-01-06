@@ -125,7 +125,7 @@ if($usuario == false ) {
                                     echo '<li><a href="text.php?file=ns">Target NetScaler</a></li>';
                                 } elseif ($tfile=='ns') {
                                     echo '<li><a href="text.php?file=f5">Source F5</a></li>
-                                    <li class="active"><a href="text.php?file=ns">Targen NetScaler<span class="sr-only">(current)</span></a></li>';
+                                    <li class="active"><a href="text.php?file=ns">Target NetScaler<span class="sr-only">(current)</span></a></li>';
                                 }
                             ?>
                             
@@ -149,12 +149,14 @@ if($usuario == false ) {
                             $a->Read();
                             $b = $a->rows;
                             $m_found= count($b);
+                            
+                            
                             if ($tfile=='ns'){                               
-                                echo '<button type="submit" class="btn btn-default active">LTM</button>';
+                                echo '<button type="submit" class="btn btn-default active" name="file" value="ns" formaction="text.php">LoadBalancing</button>';
                             } else {                              
                                for ($c=0;$c<$m_found;$c++){
                                 if ($b[$c][0]!='ltm' AND $module==$b[$c][0]){
-                                    echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
+                                    echo '<button type="submit" class="btn btn-default active" >'.  strtoupper($b[$c][0]).'</button>';
                                 } elseif ($b[$c][0]!='ltm' AND $module!=$b[$c][0]){
                                     echo '<button type="submit" class="btn btn-default" name="value" value="'.$b[$c][0].'" formaction="text.php#line">'.  strtoupper($b[$c][0]).'</button>';
                                 } elseif ($b[$c][0]=='ltm' AND $module==$b[$c][0] AND $y!=null) {    
@@ -184,25 +186,28 @@ if($usuario == false ) {
                                 <!-- Main Menu -->
                                 <div class="side-menu-container">
                                     
-                                    <ul class="nav nav-pills nav-stacked span2 custom-side-menu">
+                                    <ul class="nav nav-pills nav-stacked custom-side-menu">
+                                        <li class="list-group-item text-center gray_backgr"><strong>Object Group Name</strong></li>
                                         <?php
                                             if ($module == 'rule'){
                                                 $model = new Crud();
                                                 $model->select='*';
                                                 $model->from='details';
-                                                $model->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule" AND obj_name="'.$obj.'"';
+                                                $model->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule" GROUP by obj_name order by line ASC';
                                                 $model->Read();
                                                 $t = $model->rows;
                                                 $total_t = count($t);
                                                 if ($prep == null) {
                                                     $prep = $t[0]['line'];
                                                 }
+                                                
                                                 for($g=0;$g<$total_t;$g++){
-                                                    
-                                                        if ($t[$g]['line']== $prep){
-                                                           echo '<li class="active"><a href="text.php?value='.$module.'&obj='.$t[$g]['obj_name'].'&line='.$t[$g]['line'].'#line">'.$t[$g]['attribute'].'</a></li>';                                             
+                                                    $gf = str_replace('/Common/', '', $t[$g]['obj_name']);
+                                                    $tk = wordwrap($gf,30,"<br>",true);
+                                                        if ($t[$g]['obj_name']== $obj){
+                                                        echo '<li class="active"><a href="text.php?value='.$module.'&obj='.$t[$g]['obj_name'].'&line='.$t[$g]['line'].'#line">'.$tk.'</a></li>';                                             
                                                        } else {
-                                                            echo '<li><a href="text.php?value='.$module.'&obj='.$t[$g]['obj_name'].'&line='.$t[$g]['line'].'#line">'.$t[$g]['attribute'].'</a></li>';
+                                                            echo '<li><a href="text.php?value='.$module.'&obj='.$t[$g]['obj_name'].'&line='.$t[$g]['line'].'#line">'.$tk.'</a></li>';
                                                        }
                                                        
                                                 }
@@ -266,12 +271,12 @@ if($usuario == false ) {
                                     $f->from='conversions';
                                     $f->condition='files_uuid="'.$value.'"';
                                     $f->Read();
-                                    $g = $f->rows;
-                                    
+                                    $g = $f->rows;                                    
                                     $fileopen = $g[0]['converted_file'];
                                 } else {
                                     $fileopen = $value;
                                 }
+                                
                                 if ( !($gestor = fopen("files/$fileopen", "r"))) {
                                         exit ('Unable to open the input file') ;
                                 } else {

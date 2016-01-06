@@ -14,14 +14,14 @@ $max_files = htmlspecialchars($_POST['max_files']);
 $user_type = htmlspecialchars($_POST['usertype']);
 $max_conversions = htmlspecialchars($_POST['max_conversions']);
 
-
+$number = 100;
     $modelo = new Crud();
     $modelo->update = 'users';
     if (empty($password)== true) {
-        $modelo->set = "type='$user_type',max_files='$max_files',max_conversions='$max_conversions'";        
+        $modelo->set = "type='$user_type',max_files='$number',max_conversions='$number'";        
     } else {
         $hash = password_hash($password, PASSWORD_BCRYPT);
-        $modelo->set = "password='$hash',type='$user_type',max_files='$max_files',max_conversions='$max_conversions'";
+        $modelo->set = "password='$hash',type='$user_type',max_files='$number',max_conversions='$number'";
     }    
     $modelo->condition = 'id='. $user_id;
     $modelo->Update();

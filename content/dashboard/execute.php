@@ -23,7 +23,7 @@ $c_file = $uuid.'_'.$filename.'.conf';
 $error_name = $uuid . '_error.txt';
 $stats_name = $uuid . '_stats.txt';
 $csv_name = $uuid . '_stats.csv';
-$command = './f5conv.2.0.2 -f files/' . $uuid . ' -e files/' . $error_name . ' -C files/'. $csv_name . ' -O files/' . $c_file;
+$command = './f5conv -f files/' . $uuid . ' -e files/' . $error_name . ' -C files/'. $csv_name . ' -O files/' . $c_file;
 $csv_file = 'files/'. $csv_name;
 
 try {

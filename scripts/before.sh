@@ -17,8 +17,9 @@ backup() {
 	mkdir -p `dirname ${DBDUMP}`
     fi
 
-    if [ ! -f ${DBDUMP} ]; then
+    if [ ! -f ${DBDUMP}.bz2 ]; then
 	mysqldump --defaults-file=${CONFFILE} --compact -c --delayed-insert -e -f -n -t -q --single-transaction --tz-utc --skip-quote-names ${DBNAME} > ${DBDUMP}
+	bzip2 -zfq9 ${DUMP}
     fi
 
     if [ ! -f ${BACKUP} ]; then
