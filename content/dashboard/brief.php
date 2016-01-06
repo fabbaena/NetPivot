@@ -150,10 +150,11 @@ if($usuario == false ) {
                 
                 <table class="table">
                          <tr class="active">
-                            <th style="width: 15%">F5 Module</th>
-                            <th style="width: 15%">Total % of Config</th>                                                       
-                            <th style="width: 15%">% Converted</th>
-                            <th style="width: 15%">% Not Converted</th>
+                            <th style="width: 10%">F5 Module</th>
+                            <th style="width: 20%">NetScaler Module</th> 
+                            <th style="width: 10%">Total % of Config</th>                                                       
+                            <th style="width: 10%">% Converted</th>
+                            <th style="width: 10%">% Not Converted</th>
                             <th style="width: 10%">% Omitted</th>
                             <th style="width: 30%">Actions</th> 
                         </tr>
@@ -172,8 +173,7 @@ if($usuario == false ) {
                                         $info = $data->getCNCO($value, $rows[$c][0],'rule',1);
                                     } else {
                                         $info = $data->getCNCO($value, $rows[$c][0],'',0);
-                                    }
-                                                             
+                                    }                                                             
                                     $total_data = $info[1] + $info[2];
                                     $t = ($total_data*100)/$total;
                                     $p_c = ($info[1]*100)/$total_data;
@@ -183,7 +183,24 @@ if($usuario == false ) {
                                     $module = $rows[$c][0];
                                     echo '<tr>';
                                     echo '<td>'.strtoupper($rows[$c][0]).'</td>';
-                                    echo '<td class="text-center"><span class="badge badge_bkground_blue_sm">'.round($t).'%</span></td>';
+                                    switch ($rows[$c][0]) {
+                                        case 'ltm':
+                                            $nsm = 'LOADBALANCING';
+                                            break;
+                                        case 'apm':
+                                            $nsm = 'AAA';
+                                            break;
+                                        case 'gtm':
+                                            $nsm = 'GSLB';
+                                            break;
+                                        case 'asm':
+                                            $nsm = 'APPFIREWALL';
+                                            break;
+                                        default:
+                                            $nsm='';
+                                    }
+                                    echo '<td>'.$nsm.'</td>';
+                                    echo '<td class="text-center"><span class="badge badge_bkground_blue_sm">'.round($t).'%</span></td>';                                   
                                     echo '<td class="text-center"><span class="badge badge_bkground_green_sm">'.round($p_c).'%</span></td>';
                                     echo '<td class="text-center"><span class="badge badge_bkground_red_sm">'.round($p_nc).'%</span></td>';
                                     echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($omitted_p).'%</span></td>';
@@ -199,7 +216,9 @@ if($usuario == false ) {
                                         
                                         echo '<tr>';
                                         echo '<td>iRULE</td>';
+                                        echo '<td>APPEXPERT</td>';
                                         echo '<td class="text-center"><span class="badge badge_bkground_blue_sm">'.round($t).'%</span></td>';
+                                        
                                         echo '<td class="text-center"><span class="badge badge_bkground_green_sm">'.round($p_c).'%</span></td>';
                                         echo '<td class="text-center"><span class="badge badge_bkground_red_sm">'.round($p_nc).'%</span></td>';
                                         echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($p_o).'%</span></td>';
