@@ -224,9 +224,10 @@ if($usuario == false ) {
                                         
                                     } else {
                                         echo '<tr class="active">
-                                            <th style="width: 25%">Object Name</th>
-                                            <th style="width: 15%">% Converted</th>
-                                            <th style="width: 20%">% Not Converted</th>
+                                            <th style="width: 20%">Object Name</th>
+                                            <th style="width: 13"># Attributes</th>
+                                            <th style="width: 14%">% Converted</th>
+                                            <th style="width: 18%">% Not Converted</th>
                                             <th style="width: 15%"># Omitted</th>
                                             <th style="width: 20%">Actions</th>
                                             </tr>
@@ -242,7 +243,7 @@ if($usuario == false ) {
                                             $hj->Read();
                                             $uline = $hj->rows;
                                             $linenum = $uline[0]['line'];
-                                            
+                                            $total_att = $r[$u]['converted'] + $r[$u]['no_converted'] + $r[$u]['omitted'];
                                             $total = $r[$u]['converted'] + $r[$u]['no_converted'];
                                             $c = ($r[$u]['converted']*100)/$total;
                                             $nc = ($r[$u]['no_converted']*100)/$total;
@@ -253,6 +254,7 @@ if($usuario == false ) {
                                             } else {
                                                 echo '<td><div style="word-wrap: break-word">'.$r[$u]['name'].'</div></td>';
                                             }
+                                            echo '<td>'.$total_att.'</td>';
                                             if ($c!=0) {
                                                 echo '<td class="text_color_green"><strong>'.round($c).'%</strong></td>';
                                             } else {
