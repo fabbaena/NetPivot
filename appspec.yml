@@ -26,7 +26,7 @@ hooks:
       timeout: 31
   BeforeInstall:
     - location: scripts/before.sh
-      timeout: 769
+      timeout: 300
   AfterInstall:
     - location: scripts/after.sh
       timeout: 31
