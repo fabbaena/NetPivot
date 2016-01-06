@@ -138,9 +138,8 @@ if($usuario == false ) {
                         <table  class="table" style="table-layout: fixed; width: 100%">
                              <tr class="active">
                                 <th style="width: 20%">F5 Object Groups</th>
-                                <th style="width: 15%">% Converted</th>
-                                <th style="width: 15%"># Converted</th>
-                                <th style="width: 15%"># Not Converted</th>
+                                <th style="width: 20%"># Objects Found</th>
+                                <th style="width: 15%">% Converted</th>                                
                                 <th style="width: 10%"># Omitted</th>
                                 <th style="width: 25%">Actions</th>
                             </tr>
@@ -154,27 +153,20 @@ if($usuario == false ) {
                                                 
                                         $total = $r[$u]['converted'] + $r[$u]['no_converted'];
                                         $c = ($r[$u]['converted']*100)/$total;
-                                          
+                                        
                                         echo '<tr>';
                                         $gf = str_replace('/Common/', '', $r[$u]['name']);
                                         echo '<td><div style="word-wrap: break-word">'.$gf.'</div></td>';
-                                        if ($c!=0) {
-                                            echo '<td class="text_color_green"><strong>'.round($c).'%</strong></td>';
+                                        if ($total!=0) {
+                                            echo '<td>'.$total.'</td>';
                                         } else {
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
                                         }
-                                        if ($r[$u]['converted']!=0) {
-                                            echo '<td class="text_color_green"><strong>'.$r[$u]['converted'].'</strong></td>';
-                                        } else {
-                                            echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                        }
-                                        /*if ($r[$u]['no_converted']!=0) {
-                                            echo '<td class="text_color_red"><strong>'.$r[$u]['no_converted'].'</strong></td>';
-                                        } else { */
-                                            echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                        //}
+                                        
+                                         echo '<td class="text_color_gray"><strong>-</strong></td>';
+                                        
                                         if ($r[$u]['omitted']!=0) {
-                                            echo '<td class="text_color_red"><strong>'.$r[$u]['omitted'].'</strong></td>';
+                                            echo '<td class="text_color_gray"><strong>'.$r[$u]['omitted'].'</strong></td>';
                                         } else {
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
                                         }
@@ -193,32 +185,27 @@ if($usuario == false ) {
                                         if ($rows[$c][0]!='rule') {        
                                             $a = new NetPivot();
                                             $b = $a->getCNCO($value, $module,$rows[$c][0],0);
-                                            $b_sum = $b[1] + $b[2];
+                                            $b_sum = $b[1] + $b[2] + $b[3];
                                             $b_c = ($b[1]*100)/$b_sum;
-
-                                            echo '<tr>';
+                                            
                                             if ($module == 'rule'){
                                                 echo '<td>'.$rows[$c][0].'</td>';
                                             } else {
                                                 echo '<td>'.$rows[$c][0].'</td>';
                                             }
-                                            if ($b_c !=0){
+                                            if ($b_sum !=0){
+                                                echo '<td>'.$b_sum.'</td>';
+                                            } else {
+                                                echo '<td class="text_color_gray"><strong>-</strong></td>';
+                                            }
+                                           
+                                           if ($b_c !=0){
                                                 echo '<td class="text_color_green"><strong>'.round($b_c).'%</strong></td>';
                                             } else {
                                                 echo '<td class="text_color_gray"><strong>-</strong></td>';
                                             }
-                                            if ($b[1] !=0){
-                                                echo '<td class="text_color_green"><strong>'.$b[1].'</strong></td>';
-                                            } else {
-                                                echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                            }
-                                           if ($b[2] !=0){
-                                                echo '<td class="text_color_red"><strong>'.$b[2].'</strong></td>';
-                                            } else {
-                                                echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                            }
                                             if ($b[3] !=0){
-                                                echo '<td class="text_color_red"><strong>'.$b[3].'</strong></td>';
+                                                echo '<td class="text_color_gray"><strong>'.$b[3].'</strong></td>';
                                             } else {
                                                 echo '<td class="text_color_gray"><strong>-</strong></td>';
                                             }
