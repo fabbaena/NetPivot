@@ -32,7 +32,7 @@ class CheckUser {
         if ($total) {
             echo 'entro al total';
             foreach ($total as $check) {
-                if (password_verify($this->password, $check['password'])){                   
+                if (password_verify($this->password, $check['password'])){
                     $this->id = $check['id'];
                     $this->user_type = $check['type'];
                     $this->max_files = $check['max_files'];

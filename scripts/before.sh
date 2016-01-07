@@ -9,34 +9,16 @@ DBNAME=NetPivot
 
 DBDIR=/var/lib/mysql/$DBNAME
 
-backup() {
-    local DBDUMP=/home/ubuntu/netpivot/netpivot-${DEPLOYMENT_ID}.sql
-    local BACKUP=/home/ubuntu/netpivot/netpivot-${DEPLOYMENT_ID}.txz
-
-    if [ ! -d `dirname ${DBDUMP}` ]; then
-	mkdir -p `dirname ${DBDUMP}`
-    fi
-
-    if [ ! -f ${DBDUMP}.bz2 ]; then
-	mysqldump --defaults-file=${CONFFILE} --compact -c --delayed-insert -e -f -n -t -q --single-transaction --tz-utc --skip-quote-names ${DBNAME} > ${DBDUMP}
-	bzip2 -zfq9 ${DBDUMP}
-    fi
-
-    if [ ! -f ${BACKUP} ]; then
-	tar -cJf ${BACKUP} -C /var/www/html .
-    fi
-}
-
 create() {
     local DBCREATE=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/db_create.sql
     #local DBCREATE=/home/ubuntu/codedeploy/scripts/db_create.sql
-    mysql --defaults-file=${CONFFILE} -f -q -s < ${DBCREATE}
+    mysql --defaults-file=${CONFFILE} -f -v -s < ${DBCREATE}
 }
 
 alter() {
     local DBALTER=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/db_update.sql
     #local DBALTER=/home/ubuntu/codedeploy/scripts/db_update.sql
-    mysql --defaults-file=${CONFFILE} -f -q -s < ${DBALTER}
+    mysql --defaults-file=${CONFFILE} -f -v -s < ${DBALTER}
 }
 
 invoke-rc.d --quiet mysql status
@@ -58,10 +40,9 @@ fi
 if [ ! -d ${DBDIR} ]; then
     rm -f /var/www/html/index.html
 
-    mysql --no-defaults --no-auto-rehash -q -s -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('s3cur3s0c');"
+    mysql --no-defaults --no-auto-rehash -v -s -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('s3cur3s0c');"
     create
 else
-    backup
     alter
 fi
 

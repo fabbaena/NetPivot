@@ -93,22 +93,9 @@ if($usuario == false ) {
   
         
         <div class="panel panel-default">
-           <div class="panel-body">
-               <?php
-               
-               ?>
-               <div class="col-md-6 content">
-                <h1 class="projectname"><?php echo $filename;?></h1>
-                <br>
-               <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">&lt; Go back</a>
-               </div>
-               
-               <div class="col-md-6 content">
-                   <br><br>
-                
-               </div> 
+            <div class="panel-body">
+               <?php include('../engine/breadcrumbs.php');//Includethe breadcrumb ?>
             </div>
-            <hr class="divider">
             <div class="panel-body">
                 <div class="col-md-12">
                     <div class="col-md-6 content">     
@@ -124,7 +111,7 @@ if($usuario == false ) {
                 </div>    
                 <div class="col-md-4">
                     <form method="GET">   
-                        <button type="submit" class="btn btn-success btn-lg glyphicon glyphicon-signal"></button><h2 class="nextto"><?php echo round($ltmp).'%';?></h2>
+                        <button type="submit" class="btn btn-success btn-lg glyphicon glyphicon-signal" name="value" value="ltm" formaction="modules.php"></button><h2 class="nextto"><?php echo round($ltmp).'%';?></h2>
                         <h3 class="tag"><small>LOADBALANCING CONVERSION</small></h3>                        
                         <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag" name="value" value="gtm" formaction="modules.php"></button><h2 class="nextto"><?php echo $gslb?></h2>
                         <h3 class="tag"><small>GSLB</small></h3>
@@ -150,13 +137,13 @@ if($usuario == false ) {
                 
                 <table class="table">
                          <tr class="active">
-                            <th style="width: 10%">F5 Module</th>
-                            <th style="width: 15%">NetScaler Module</th> 
-                            <th style="width: 13%">Total % of Config</th>                                                       
-                            <th style="width: 14%">Converted</th>
-                            <th style="width: 15%">Not Converted</th>
-                            <th style="width: 13%">Omitted</th>
-                            <th style="width: 20%">Actions</th> 
+                            <th class="text-center" style="width: 10%">F5 Module</th>
+                            <th class="text-center" style="width: 15%">NetScaler Module</th> 
+                            <th class="text-center" style="width: 13%">Total % of Config</th>                                                       
+                            <th class="text-center" style="width: 14%">Converted</th>
+                            <th class="text-center" style="width: 15%">Not Converted</th>
+                            <th class="text-center" style="width: 13%">Omitted</th>
+                            <th class="text-center" style="width: 20%">Actions</th> 
                         </tr>
                         <tbody>
                             <?php
@@ -175,7 +162,8 @@ if($usuario == false ) {
                                         $info = $data->getCNCO($value, $rows[$c][0],'',0);
                                     }                                                             
                                     $total_data = $info[1] + $info[2];
-                                    $t = ($total_data*100)/$total;
+                                    $total_F = $info[1] + $info[2] + $info[3];
+                                    $t = ($total_F*100)/$total;
                                     $p_c = ($info[1]*100)/$total_data;
                                     $p_nc = ($info[2]*100)/$total_data;
                                     $p_o = ($info[3]*100)/$total_data;

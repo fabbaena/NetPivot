@@ -87,19 +87,9 @@ if($usuario == false ) {
   
         
         <div class="panel panel-default">
-           <div class="panel-body">
-               <div class="col-md-6 content">
-                <h1 class="projectname"><?php echo $filename;?></h1>
-                <br>
-               <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">&lt; Go back</a>
-               </div>
-               
-               <div class="col-md-6 content">
-                   <br><br>
-               <!-- <button type="submit" class="btn btn-default btn-lg margin-set pull-right glyphicon glyphicon-edit" name="uuid" value="<?php //echo $value;?>" formaction="#"> Edit</button>-->
-               </div> 
+            <div class="panel-body">
+               <?php include('../engine/breadcrumbs.php');//Includethe breadcrumb ?>
             </div>
-            <hr class="divider">
             <div class="panel-body"> 
                <div class="col-md-12">
                     <div class="col-md-4 content">     
@@ -179,16 +169,17 @@ if($usuario == false ) {
                         ?>
                     </form>
                 </div>
-                
-                    <div class="col-md-3 no-padding custom-margin-top">
+                <?php
+                    if ($tfile=='f5'){
+                        echo '<div class="col-md-3 no-padding custom-margin-top">
                         <div class="side-menu">
                             <nav class="navbar navbar-default" role="navigation">
                                 <!-- Main Menu -->
                                 <div class="side-menu-container">
                                     
                                     <ul class="nav nav-pills nav-stacked custom-side-menu">
-                                        <li class="list-group-item text-center gray_backgr"><strong>Object Group Name</strong></li>
-                                        <?php
+                                        <li class="list-group-item text-center gray_backgr"><strong>Object Group Name</strong></li>';
+
                                             if ($module == 'rule'){
                                                 $model = new Crud();
                                                 $model->select='*';
@@ -232,14 +223,19 @@ if($usuario == false ) {
                                                     }   
                                                 }
                                             }
+                                        echo '
+
+                                                            </ul>
+                                                        </div><!-- /.navbar-collapse -->
+                                                    </nav>
+                                                </div>   
+                                            </div>
+                
+                    <div class="col-lg-9 no-padding">';
+                                            }   else {
+                                                echo '<div class="col-lg-12 no-padding">';
+                                            } 
                                         ?>
-                                       
-                                    </ul>
-                                </div><!-- /.navbar-collapse -->
-                            </nav>
-                        </div>   
-                    </div>
-                    <div class="col-lg-9 no-padding">
                         <br>
                         <div style="overflow:scroll; height:800px;">
                         <table class="table" style="table-layout: fixed; width: 100%">
