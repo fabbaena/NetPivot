@@ -87,20 +87,9 @@ if($usuario == false ) {
   
         
         <div class="panel panel-default">
-           <div class="panel-body">
+            <div class="panel-body">
                <?php include('../engine/breadcrumbs.php');//Includethe breadcrumb ?>
-               <div class="col-md-6 content">
-                <h1 class="projectname"><?php echo $filename;?></h1>
-                <br>
-               <a href="<?php echo $_SERVER['HTTP_REFERER']; ?>">&lt; Go back</a>
-               </div>
-               
-               <div class="col-md-6 content">
-                   <br><br>
-               <!-- <button type="submit" class="btn btn-default btn-lg margin-set pull-right glyphicon glyphicon-edit" name="uuid" value="<?php //echo $value;?>" formaction="#"> Edit</button>-->
-               </div> 
             </div>
-            <hr class="divider">
             <div class="panel-body"> 
                <div class="col-md-12">
                     <div class="col-md-4 content">     

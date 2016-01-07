@@ -5,9 +5,9 @@
     <?php
     $x = array("modules.php","objects.php","text.php");
     if($current_page == 'brief.php') {
-        echo '<li class="active">File Name - Dashboard</li>';
+        echo '<li class="active">'.$filename.'</li>';
     } elseif(in_array($current_page,$x)) {
-        echo '<li class=""><a href="brief.php">File Name - Dashboard</a></li>';
+        echo '<li class=""><a href="brief.php">'.$filename.'</a></li>';
     }
     ?>
     <?php
