@@ -162,7 +162,8 @@ if($usuario == false ) {
                                         $info = $data->getCNCO($value, $rows[$c][0],'',0);
                                     }                                                             
                                     $total_data = $info[1] + $info[2];
-                                    $t = ($total_data*100)/$total;
+                                    $total_F = $info[1] + $info[2] + $info[3];
+                                    $t = ($total_F*100)/$total;
                                     $p_c = ($info[1]*100)/$total_data;
                                     $p_nc = ($info[2]*100)/$total_data;
                                     $p_o = ($info[3]*100)/$total_data;
