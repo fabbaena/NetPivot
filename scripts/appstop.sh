@@ -31,15 +31,11 @@ backup() {
     fi
 
     if [ -d ${DBDIR} ]; then
-	if [ ! -f ${DBDUMP}.bz2 ]; then
-	    mysqldump --defaults-file=${CONFFILE} --compact -c --delayed-insert -e -f -n -t -v --single-transaction --tz-utc --skip-quote-names ${DBNAME} > ${DBDUMP}
-	    bzip2 -zfv9 ${DBDUMP}
-	fi
+	mysqldump --defaults-file=${CONFFILE} --compact -c --delayed-insert -e -f -n -t -v --single-transaction --tz-utc --skip-quote-names ${DBNAME} > ${DBDUMP}
+	bzip2 -zfv9 ${DBDUMP}
     fi
 
-    if [ ! -f ${BACKUP} ]; then
-        tar -cvJf ${BACKUP} -C /var/www/html .
-    fi
+    tar -cvJf ${BACKUP} -C /var/www/html .
 }
 
 clean() {
