@@ -9,24 +9,6 @@ DBNAME=NetPivot
 
 DBDIR=/var/lib/mysql/$DBNAME
 
-backup() {
-    local DBDUMP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.sql
-    local BACKUP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.txz
-
-    if [ ! -d `dirname ${DBDUMP}` ]; then
-	mkdir -pv `dirname ${DBDUMP}`
-    fi
-
-    if [ ! -f ${DBDUMP}.bz2 ]; then
-	mysqldump --defaults-file=${CONFFILE} --compact -c --delayed-insert -e -f -n -t -v --single-transaction --tz-utc --skip-quote-names ${DBNAME} > ${DBDUMP}
-	bzip2 -zfv9 ${DBDUMP}
-    fi
-
-    if [ ! -f ${BACKUP} ]; then
-	tar -cvJf ${BACKUP} -C /var/www/html .
-    fi
-}
-
 create() {
     local DBCREATE=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/db_create.sql
     #local DBCREATE=/home/ubuntu/codedeploy/scripts/db_create.sql
@@ -61,7 +43,6 @@ if [ ! -d ${DBDIR} ]; then
     mysql --no-defaults --no-auto-rehash -v -s -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('s3cur3s0c');"
     create
 else
-    backup
     alter
 fi
 
