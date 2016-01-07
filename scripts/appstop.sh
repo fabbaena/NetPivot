@@ -16,7 +16,6 @@ clean() {
     for file in ${FILELIST[*]}; do
 	find ${WWWDATA} -name "*.${file}" -exec rm -f {} \;
     done
-    find ${WWWDATA} -name "f5conv*" -exec rm -f {} \;
 
     for dir in ${DIRLIST[*]}; do
 	if [ ! -f $dir/.keep ]; then

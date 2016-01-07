@@ -218,7 +218,7 @@ if($usuario == false ) {
                                                 echo $v[$d]['attribute'];
                                                 echo '</td>';
                                                 echo '<td>'.$v[$d]['line'].'</td>';
-                                                echo '<td><a href="text.php?value=rule&obj='.$obj.'&line='.$v[$d]['line'].'#line">View Config Text</a></td>'; 
+                                                echo '<td><a href="text.php?value=rule&obj='.$obj.'&line='.$v[$d]['line'].'#line">View Config</a></td>'; 
                                                 echo '</tr>';
                                             }
                                         
@@ -226,10 +226,11 @@ if($usuario == false ) {
                                     } else {
                                         echo '<tr class="active">
                                             <th style="width: 25%">Object Name</th>
-                                            <th style="width: 15%">% Converted</th>
-                                            <th style="width: 20%">% Not Converted</th>
+                                            <th style="width: 13"># Attributes</th>
+                                            <th style="width: 14%">% Converted</th>
+                                            <th style="width: 18%">% Not Converted</th>
                                             <th style="width: 15%"># Omitted</th>
-                                            <th style="width: 20%">Actions</th>
+                                            <th style="width: 15%">Actions</th>
                                             </tr>
                                             <tbody>';
                                         $t = new NetPivot();                                        
@@ -243,17 +244,21 @@ if($usuario == false ) {
                                             $hj->Read();
                                             $uline = $hj->rows;
                                             $linenum = $uline[0]['line'];
-                                            
+                                            $total_att = $r[$u]['converted'] + $r[$u]['no_converted'] + $r[$u]['omitted'];
                                             $total = $r[$u]['converted'] + $r[$u]['no_converted'];
                                             $c = ($r[$u]['converted']*100)/$total;
                                             $nc = ($r[$u]['no_converted']*100)/$total;
                                             $o = ($r[$u]['omitted']*100)/$total;
                                             echo '<tr>';
+                                            $gf = str_replace('/Common/', '', $r[$u]['name']);
+                                            $tk = wordwrap($gf,30,"<br>",true);
                                             if ($r[$u]['name'] ==''){
+                                                
                                                 echo '<td><div style="word-wrap: break-word">'.$obj.'</div></td>';
                                             } else {
-                                                echo '<td><div style="word-wrap: break-word">'.$r[$u]['name'].'</div></td>';
+                                                echo '<td><div style="word-wrap: break-word">'.$tk.'</div></td>';
                                             }
+                                            echo '<td>'.$total_att.'</td>';
                                             if ($c!=0) {
                                                 echo '<td class="text_color_green"><strong>'.round($c).'%</strong></td>';
                                             } else {
@@ -269,7 +274,7 @@ if($usuario == false ) {
                                             } else {
                                                 echo '<td class="text_color_gray"><strong>-</strong></td>';
                                             }
-                                            echo '<td><a href="text.php?value='.$module.'&obj='.$obj.'&line='.$linenum.'#line">View Config Text</a>';
+                                            echo '<td><a href="text.php?value='.$module.'&obj='.$obj.'&line='.$linenum.'#line">View Config</a>';
                                             echo '</tr>';
                                         }
                                     }

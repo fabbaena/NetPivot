@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS NetPivot.users (
     max_conversions TINYINT UNSIGNED NULL
 ) ENGINE = InnoDB;
 
-INSERT INTO NetPivot.users(id,name,password,type,max_files,max_conversions) VALUES (1,'admin','$2y$10$XEAw/cVMGTy4H8flaMjpLesrkZVlRo1ZVC0fm6FjHlGTWul5vh2Ae','Administrator',100,100);
+INSERT INTO NetPivot.users(id,name,password,type,max_files,max_conversions) VALUES (1,'admin','$2y$10$G.TH1hSw9wQcQOTqZjIJNudYm1jfQIjxFthJBnbJhmSTJQrpiU2la','Administrator',100,100);
 
 -- TABLE NetPivot.files
 DROP TABLE IF EXISTS NetPivot.files CASCADE;
