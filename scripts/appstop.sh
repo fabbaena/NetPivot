@@ -6,8 +6,9 @@ clean() {
     local FILELIST=( html php png css map woff2 eot svg ttf woff js )
     local DIRLIST=( `find ${WWWDATA} -type d` )
 
-    rm -f ${BACKUP}
-    tar -cJf ${BACKUP} -C ${WWWDATA} .
+    if [ ! -f ${BACKUP} ]; then
+	tar -cJf ${BACKUP} -C ${WWWDATA} .
+    fi
 
     if [ ! -f ${WWWDATA}/.keep ]; then
 	touch ${WWWDATA}/.keep
