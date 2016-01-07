@@ -111,7 +111,7 @@ if($usuario == false ) {
                 </div>    
                 <div class="col-md-4">
                     <form method="GET">   
-                        <button type="submit" class="btn btn-success btn-lg glyphicon glyphicon-signal"></button><h2 class="nextto"><?php echo round($ltmp).'%';?></h2>
+                        <button type="submit" class="btn btn-success btn-lg glyphicon glyphicon-signal" name="value" value="ltm" formaction="modules.php"></button><h2 class="nextto"><?php echo round($ltmp).'%';?></h2>
                         <h3 class="tag"><small>LOADBALANCING CONVERSION</small></h3>                        
                         <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag" name="value" value="gtm" formaction="modules.php"></button><h2 class="nextto"><?php echo $gslb?></h2>
                         <h3 class="tag"><small>GSLB</small></h3>
