@@ -22,3 +22,4 @@
 <link rel="stylesheet" href="../css/bootstrap.min.css">
 <link rel="stylesheet" href="../css/navigation.css">
 <script type="text/javascript" src="../js/bootstrap-filestyle.min.js"></script>
+<link rel="stylesheet" href="../css/custom_netpivot.css">

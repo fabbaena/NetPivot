@@ -41,7 +41,7 @@ if($usuario == true ) {
         <link href="css/signing.css" rel="stylesheet">
         <div class="container-fluid">  
             <form class="form-signin" method="POST" action="model/LoginUser.php">
-                <h2 class="form-signin-heading"> Please Login</h2>                       
+                <h2 class="form-signin-heading"> Please Login</h2>
                     <label for="inputUsername">Username</label>
                     <input type="text" class="form-control" id="inputUsername" name="inputUsername" placeholder="Username"> 
                     <label for="inputPassword">Password</label>

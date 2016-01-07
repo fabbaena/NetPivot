@@ -94,9 +94,7 @@ if($usuario == false ) {
         
         <div class="panel panel-default">
            <div class="panel-body">
-               <?php
-               
-               ?>
+               <?php include('../engine/breadcrumbs.php');//Includethe breadcrumb ?>
                <div class="col-md-6 content">
                 <h1 class="projectname"><?php echo $filename;?></h1>
                 <br>

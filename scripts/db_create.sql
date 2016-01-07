@@ -216,7 +216,7 @@ CREATE TABLE IF NOT EXISTS NetPivot.details (
 ) ENGINE = InnoDB;
 
 -- PRIVILEGES NetPivot to demonio@localhost
-CREATE USER 'demonio'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'demonio'@'localhost' IDENTIFIED BY 's3cur3s0c';
 GRANT create,delete,insert,select,update ON NetPivot.* TO 'demonio'@'localhost';
 -- GRANT ALL PRIVILEGES ON NetPivot.* TO 'demonio'@'localhost';
 
