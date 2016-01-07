@@ -137,13 +137,13 @@ if($usuario == false ) {
                 
                 <table class="table">
                          <tr class="active">
-                            <th style="width: 10%">F5 Module</th>
-                            <th style="width: 15%">NetScaler Module</th> 
-                            <th style="width: 13%">Total % of Config</th>                                                       
-                            <th style="width: 14%">Converted</th>
-                            <th style="width: 15%">Not Converted</th>
-                            <th style="width: 13%">Omitted</th>
-                            <th style="width: 20%">Actions</th> 
+                            <th class="text-center" style="width: 10%">F5 Module</th>
+                            <th class="text-center" style="width: 15%">NetScaler Module</th> 
+                            <th class="text-center" style="width: 13%">Total % of Config</th>                                                       
+                            <th class="text-center" style="width: 14%">Converted</th>
+                            <th class="text-center" style="width: 15%">Not Converted</th>
+                            <th class="text-center" style="width: 13%">Omitted</th>
+                            <th class="text-center" style="width: 20%">Actions</th> 
                         </tr>
                         <tbody>
                             <?php
