@@ -107,7 +107,7 @@ if($usuario == false ) {
                                                        
                             if (empty($files)== false AND empty($dones)== false ) { //   
                                 echo '  <div class="col-md-12">
-                                        <input type="submit" class="btn btn-primary btn-lg margin-set pull-right" value="View Conversion" title="View Conversion" formaction="stats.php">                                                                                  
+                                        <input type="submit" class="btn btn-primary btn-lg margin-set pull-right" value="View Conversion" title="View Conversion" formaction="brief.php">                                                                                  
                                                                                                                                                                      
                                           </div><br><br><br>'; 
                                 //<input type="submit" class="btn btn-success btn-lg margin-set pull-right" value="Download" title="Download Converted File" formaction="../engine/Download.php">
@@ -130,9 +130,9 @@ if($usuario == false ) {
                                 } 
                             } else {
                                     echo '</div><div class="col-md-12">
-                                          <input type="submit" class="btn btn-primary btn-lg margin-set pull-right" value="View" disabled="disabled">
-                                          <input type="submit" class="btn btn-success btn-lg margin-set pull-right" value="Download" disabled="disabled">
-                                          <input type="submit" class="btn btn-info btn-lg margin-set pull-right" value="Stats" disabled="disabled">
+                                        <input type="submit" class="btn btn-primary btn-lg margin-set pull-right" value="View Conversion" title="View Conversion" disabled="disabled">                
+
+                                          
                                           
                                          </div><br><br><br>
                                          <p class="text-danger">No files uploaded yet.</p>';

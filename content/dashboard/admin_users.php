@@ -57,38 +57,8 @@ if($usuario == false ) {
                                     <option value="Administrator">Administrator</option>
                                     <option value="User">User</option>
                                 </select></br></br>
-                                <label for="max_files">Maximum number of files allowed to upload: </label>
-                                <select name="max_files" id="usertype" required>
-                                    <option value="" disabled="disabled" selected="selected"># Files</option>
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="100">Unlimited</option>
-                                </select></br></br>
-                                <label for="max_conversions">Maximum number of allowed conversions per file: </label>
-                                <select name="max_conversions" id="usertype">
-                                    <option value="" disabled="disabled" selected="selected"># Conversions</option>
-                                    <option value="0">0</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
-                                    <option value="100">Unlimited</option>
-                                </select><br><br>
+                               
+                                
                                 <input type="submit" value="Create">
                                 <?php 
                                     if(isset($_GET['new_done'])) {

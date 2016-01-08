@@ -1,0 +1,12 @@
+# Force ending lines in LF or \r (Unix)
+* text eol=lf
+
+# Do not touch image or fonts
+*.png binary
+*.woff2 binary
+*.eot binary
+*.svg binary
+*.ttf binary
+*.woff binary
+f5conv* binary
+
