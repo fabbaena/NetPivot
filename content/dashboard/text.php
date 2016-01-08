@@ -123,51 +123,59 @@ if($usuario == false ) {
                         </ul>
                     </nav>
                     <br>
-                    <form method="GET">
+                    <ul class="nav nav-pills">
                         <?php
-                            $z = new Crud();
-                            $z->select='*';
-                            $z->from='details';
-                            $z->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule"';
-                            $z->Read();
-                            $y= $z->rows;
-                        
-                            $a = new Crud();
-                            $a->select='DISTINCT (module)';
-                            $a->from='details';
-                            $a->condition='files_uuid="'.$value.'"';
-                            $a->Read();
-                            $b = $a->rows;
-                            $m_found= count($b);
-                            
-                            
-                            if ($tfile=='ns'){                               
-                                echo '<button type="submit" class="btn btn-default active" name="file" value="ns" formaction="text.php">LoadBalancing</button>';
-                            } else {                              
-                               for ($c=0;$c<$m_found;$c++){
+                        $z = new Crud();
+                        $z->select='*';
+                        $z->from='details';
+                        $z->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule"';
+                        $z->Read();
+                        $y= $z->rows;
+
+                        $a = new Crud();
+                        $a->select='DISTINCT (module)';
+                        $a->from='details';
+                        $a->condition='files_uuid="'.$value.'"';
+                        $a->Read();
+                        $b = $a->rows;
+                        $m_found= count($b);
+
+
+                        if ($tfile=='ns'){
+                            echo '<li role="presentation" class="active"><a href="text.php">LoadBalancing</a></li>';
+                            // echo '<button type="submit" class="btn btn-default active" name="file" value="ns" formaction="text.php">LoadBalancing</button>';
+                        } else {
+                            for ($c=0;$c<$m_found;$c++){
                                 if ($b[$c][0]!='ltm' AND $module==$b[$c][0]){
-                                    echo '<button type="submit" class="btn btn-default active" >'.  strtoupper($b[$c][0]).'</button>';
+                                    echo '<li role="presentation" class="active"><a href="text.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
+                                    // echo '<button type="submit" class="btn btn-default active" >'.  strtoupper($b[$c][0]).'</button>';
                                 } elseif ($b[$c][0]!='ltm' AND $module!=$b[$c][0]){
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="'.$b[$c][0].'" formaction="text.php#line">'.  strtoupper($b[$c][0]).'</button>';
-                                } elseif ($b[$c][0]=='ltm' AND $module==$b[$c][0] AND $y!=null) {    
-                                    echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="text.php#line">iRULES</button>';
+                                    echo '<li role="presentation" class=""><a href="text.php?value='.$b[$c][0].'#line">'.  strtoupper($b[$c][0]).'</a></li>';
+                                    // echo '<button type="submit" class="btn btn-default" name="value" value="'.$b[$c][0].'" formaction="text.php#line">'.  strtoupper($b[$c][0]).'</button>';
+                                } elseif ($b[$c][0]=='ltm' AND $module==$b[$c][0] AND $y!=null) {
+                                    echo '<li role="presentation" class="active"><a href="text.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
+                                    echo '<li role="presentation" class=""><a href="text.php?value=rule#line">iRULES</a></li>';
+                                    // echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
+                                    // echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="text.php#line">iRULES</button>';
                                 } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module!='rule'){
-                                  
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="text.php#line">LTM</button>';
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="text.php#line">iRULES</button>';
+                                    echo '<li role="presentation" class=""><a href="text.php?value=ltm#line">LTM</a></li>';
+                                    echo '<li role="presentation" class=""><a href="text.php?value=rule#line">iRULES</a></li>';
+                                    // echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="text.php#line">LTM</button>';
+                                    // echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="text.php#line">iRULES</button>';
                                 } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module=='rule') {
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="text.php#line">LTM</button>';
-                                    echo '<button type="submit" class="btn btn-default active" name="value" value="rule" formaction="text.php#line">iRULES</button>';
+                                    echo '<li role="presentation" class=""><a href="text.php?value=ltm#line">LTM</a></li>';
+                                    echo '<li role="presentation" class="active"><a href="text.php?value=rule#line">iRULES</a></li>';
+                                    // echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="text.php#line">LTM</button>';
+                                    // echo '<button type="submit" class="btn btn-default active" name="value" value="rule" formaction="text.php#line">iRULES</button>';
                                 } elseif ($module == null) {
                                     echo 'Any module selected';
                                 }
-                                
-                            } 
+
                             }
-                            
+                        }
+
                         ?>
-                    </form>
+                    </ul>
                 </div>
                 <?php
                     if ($tfile=='f5'){

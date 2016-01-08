@@ -86,41 +86,48 @@ if($usuario == false ) {
                     </div>
                 </div>
                 <div class="col-md-12"><br><br>
-                    <form method="GET">
+                    <ul class="nav nav-pills">
                         <?php
-                            $z = new Crud();
-                            $z->select='*';
-                            $z->from='details';
-                            $z->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule"';
-                            $z->Read();
-                            $y= $z->rows;
-                        
-                            $a = new Crud();
-                            $a->select='DISTINCT (module)';
-                            $a->from='details';
-                            $a->condition='files_uuid="'.$value.'"';
-                            $a->Read();
-                            $b = $a->rows;
-                            $m_found= count($b);
-                            for ($c=0;$c<$m_found;$c++){
-                                if ($b[$c][0]!='ltm' AND $module==$b[$c][0]){
-                                    echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
-                                } elseif ($b[$c][0]!='ltm' AND $module!=$b[$c][0]){
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="'.$b[$c][0].'" formaction="objects.php">'.  strtoupper($b[$c][0]).'</button>';
-                                } elseif ($b[$c][0]=='ltm' AND $module==$b[$c][0] AND $y!=null) {    
-                                    echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="objects.php">iRULES</button>';
-                                } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module!='rule'){
-                                  
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="objects.php">LTM</button>';
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="objects.php">iRULES</button>';
-                                } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module=='rule') {
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="objects.php">LTM</button>';
-                                    echo '<button type="submit" class="btn btn-default active" name="value" value="rule" formaction="objects.php">iRULES</button>';
-                                }
+                        $z = new Crud();
+                        $z->select='*';
+                        $z->from='details';
+                        $z->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule"';
+                        $z->Read();
+                        $y= $z->rows;
+
+                        $a = new Crud();
+                        $a->select='DISTINCT (module)';
+                        $a->from='details';
+                        $a->condition='files_uuid="'.$value.'"';
+                        $a->Read();
+                        $b = $a->rows;
+                        $m_found= count($b);
+                        for ($c=0;$c<$m_found;$c++){
+                            if ($b[$c][0]!='ltm' AND $module==$b[$c][0]){
+                                echo '<li role="presentation" class="active"><a href="objects.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
+                                // echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
+                            } elseif ($b[$c][0]!='ltm' AND $module!=$b[$c][0]){
+                                echo '<li role="presentation" class=""><a href="objects.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
+                                // echo '<button type="submit" class="btn btn-default" name="value" value="'.$b[$c][0].'" formaction="objects.php">'.  strtoupper($b[$c][0]).'</button>';
+                            } elseif ($b[$c][0]=='ltm' AND $module==$b[$c][0] AND $y!=null) {
+                                echo '<li role="presentation" class="active"><a href="modules.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
+                                echo '<li role="presentation" class=""><a href="objects.php?value=rule">iRULES</a></li>';
+                                // echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
+                                // echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="objects.php">iRULES</button>';
+                            } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module!='rule'){
+                                echo '<li role="presentation" class=""><a href="objects.php?value=ltm">LTM</a></li>';
+                                echo '<li role="presentation" class=""><a href="objects.php?value=rule">iRULES</a></li>';
+                                // echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="objects.php">LTM</button>';
+                                // echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="objects.php">iRULES</button>';
+                            } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module=='rule') {
+                                echo '<li role="presentation" class=""><a href="objects.php?value=ltm">LTM</a></li>';
+                                echo '<li role="presentation" class="active"><a href="objects.php?value=rule">iRULES</a></li>';
+                                // echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="objects.php">LTM</button>';
+                                // echo '<button type="submit" class="btn btn-default active" name="value" value="rule" formaction="objects.php">iRULES</button>';
                             }
+                        }
                         ?>
-                    </form>
+                    </ul>
                 </div>
                 
                     <div class="col-md-3 no-padding custom-margin-top">
