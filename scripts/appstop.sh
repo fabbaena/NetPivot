@@ -1,5 +1,7 @@
 #!/bin/bash
 
+WWWDATA=/var/www/html
+
 backup() {
     local CONFFILE=/home/ubuntu/.my.cnf
     local HOST=localhost
@@ -35,16 +37,12 @@ backup() {
 	bzip2 -zfv9 ${DBDUMP}
     fi
 
-    tar -cvJf ${BACKUP} -C /var/www/html .
+    tar -cvJf ${BACKUP} -C ${WWWDATA} .
 }
 
 clean() {
-    local WWWDATA=/var/www/html
-    local BACKUP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.txz
     local FILELIST=( html php png css map woff2 eot svg ttf woff js )
     local DIRLIST=( `find ${WWWDATA} -type d` )
-
-    tar -cvJf ${BACKUP} -C ${WWWDATA} .
 
     if [ ! -f ${WWWDATA}/.keep ]; then
 	touch ${WWWDATA}/.keep

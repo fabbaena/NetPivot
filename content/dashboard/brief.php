@@ -97,11 +97,11 @@ if($usuario == false ) {
                <?php include('../engine/breadcrumbs.php');//Includethe breadcrumb ?>
             </div>
             <div class="panel-body">
-                <div class="col-md-12">
-                    <div class="col-md-6 content">     
+                <div class="row">
+                    <div class="col-xs-6 content">
                         <h2 class="filename">Dashboard</h2>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-xs-6">
                         <form method="POST">      
                             <button type="submit" class="btn btn-primary" formaction="modules.php?value=ltm">View Module Details</button>                          
                             <button type="submit" class="btn btn-primary" formaction="objects.php">View Objects</button>                                           
@@ -111,26 +111,46 @@ if($usuario == false ) {
                 </div>    
                 <div class="col-md-4">
                     <form method="GET">   
-                        <button type="submit" class="btn btn-success btn-lg glyphicon glyphicon-signal" name="value" value="ltm" formaction="modules.php"></button><h2 class="nextto"><?php echo round($ltmp).'%';?></h2>
-                        <h3 class="tag"><small>LOADBALANCING CONVERSION</small></h3>                        
-                        <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag" name="value" value="gtm" formaction="modules.php"></button><h2 class="nextto"><?php echo $gslb?></h2>
+                        <div class="col-md-2"><br>
+                            <button type="submit" class="btn btn-success btn-lg glyphicon glyphicon-signal mybutton" name="value" value="ltm" formaction="modules.php"></button><br><br><br><BR><br><BR>
+                        <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag mybutton" name="value" value="gtm" formaction="modules.php"></button>
+                        </div>
+                        <div class="col-md-2">
+                        <h3 class="nextto"><?php echo round($ltmp).'%';?></h3>                                                
+                        <h3 class="tag"><small>LOADBALANCING CONVERSION</small></h3><br>
+                        <h3 class="nextto"><?php echo $gslb?></h3>
                         <h3 class="tag"><small>GSLB</small></h3>
+                        </div>
+                        
+                       
                     </form>
                 </div>
                 <div class="col-md-4">
                     <form method="GET">
-                        <button type="submit" class="btn btn-primary btn-lg glyphicon glyphicon-home"></button><h2 class="nextto"><?php echo $objs;?></h2>
+                        <div class="col-md-2"><br>
+                            <button type="submit" class="btn btn-primary btn-lg glyphicon glyphicon-home mybutton"></button><br><br><br><br><br><BR>
+                        <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag mybutton" name="value" value="apm" formaction="modules.php"></button>
+                        </div>
+                        <div class="col-md-2">
+                        <h3 class="nextto"><?php echo $objs;?></h3>
                         <h3 class="tag"><small>MODULES FOUND</small></h3><BR>
-                        <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag" name="value" value="apm" formaction="modules.php"></button><h2 class="nextto"><?php echo $aaa;?></h2>
+                        <h3 class="nextto"><?php echo $aaa;?></h3>
                         <h3 class="tag"><small>AAA</small></h3>
+                        </div>
                     </form>
                 </div>
                 <div class="col-md-4">
                     <form method="GET">
-                        <button type="submit" class="btn btn-danger btn-lg glyphicon glyphicon-flash" name="value" value="rule" formaction="modules.php"></button><h2 class="nextto"><?php echo $rules;?></h2>
-                        <h3 class="tag"><small>iRULES</small></h3><br>
-                        <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag" name="value" value="asm" formaction="modules.php"></button><h2 class="nextto"><?php echo $acl;?></h2>
+                        <div class="col-md-2"><br>
+                            <button type="submit" class="btn btn-danger btn-lg glyphicon glyphicon-flash mybutton" name="value" value="rule" formaction="modules.php"></button><br><br><br><br><br><BR>
+                        <button type="submit" class="btn btn-warning btn-lg glyphicon glyphicon-flag mybutton" name="value" value="asm" formaction="modules.php"></button>
+                        </div>
+                        <div class="col-md-2">
+                        <h3 class="nextto"><?php echo $rules;?></h3>
+                        <h3 class="tag"><small>iRULES</small></h3><br><BR>
+                        <h3 class="nextto"><?php echo $acl;?></h3>
                         <h3 class="tag"><small>APPFIREWALL</small></h3>
+                        </div>
                     </form>
                     <br>
                 </div>
@@ -200,8 +220,7 @@ if($usuario == false ) {
                                         $t = ($total_data*100)/$total;
                                         $p_c = ($info[1]*100)/$total_data;
                                         $p_nc = ($info[2]*100)/$total_data;
-                                        $p_o = ($info[3]*100)/$total_data;
-                                        
+                                        $p_o = ($info[3]*100)/$total_data;                                       
                                         echo '<tr>';
                                         echo '<td>iRULE</td>';
                                         echo '<td>APPEXPERT</td>';

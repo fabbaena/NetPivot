@@ -92,10 +92,10 @@ if($usuario == false ) {
             </div>
             <div class="panel-body"> 
                <div class="col-md-12">
-                    <div class="col-md-4 content">     
+                    <div class="col-xs-4 content">
                         <h2 class="filename">Configuration File</h2>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-xs-8">
                         <form method="POST">      
                             <button type="submit" class="btn btn-primary" formaction="brief.php">View Summary</button>                          
                             <button type="submit" class="btn btn-primary" formaction="modules.php">View Module Details</button>
@@ -123,55 +123,63 @@ if($usuario == false ) {
                         </ul>
                     </nav>
                     <br>
-                    <form method="GET">
+                    <ul class="nav nav-pills">
                         <?php
-                            $z = new Crud();
-                            $z->select='*';
-                            $z->from='details';
-                            $z->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule"';
-                            $z->Read();
-                            $y= $z->rows;
-                        
-                            $a = new Crud();
-                            $a->select='DISTINCT (module)';
-                            $a->from='details';
-                            $a->condition='files_uuid="'.$value.'"';
-                            $a->Read();
-                            $b = $a->rows;
-                            $m_found= count($b);
-                            
-                            
-                            if ($tfile=='ns'){                               
-                                echo '<button type="submit" class="btn btn-default active" name="file" value="ns" formaction="text.php">LoadBalancing</button>';
-                            } else {                              
-                               for ($c=0;$c<$m_found;$c++){
+                        $z = new Crud();
+                        $z->select='*';
+                        $z->from='details';
+                        $z->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule"';
+                        $z->Read();
+                        $y= $z->rows;
+
+                        $a = new Crud();
+                        $a->select='DISTINCT (module)';
+                        $a->from='details';
+                        $a->condition='files_uuid="'.$value.'"';
+                        $a->Read();
+                        $b = $a->rows;
+                        $m_found= count($b);
+
+
+                        if ($tfile=='ns'){
+                            echo '<li role="presentation" class="active"><a href="text.php">LoadBalancing</a></li>';
+                            // echo '<button type="submit" class="btn btn-default active" name="file" value="ns" formaction="text.php">LoadBalancing</button>';
+                        } else {
+                            for ($c=0;$c<$m_found;$c++){
                                 if ($b[$c][0]!='ltm' AND $module==$b[$c][0]){
-                                    echo '<button type="submit" class="btn btn-default active" >'.  strtoupper($b[$c][0]).'</button>';
+                                    echo '<li role="presentation" class="active"><a href="text.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
+                                    // echo '<button type="submit" class="btn btn-default active" >'.  strtoupper($b[$c][0]).'</button>';
                                 } elseif ($b[$c][0]!='ltm' AND $module!=$b[$c][0]){
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="'.$b[$c][0].'" formaction="text.php#line">'.  strtoupper($b[$c][0]).'</button>';
-                                } elseif ($b[$c][0]=='ltm' AND $module==$b[$c][0] AND $y!=null) {    
-                                    echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="text.php#line">iRULES</button>';
+                                    echo '<li role="presentation" class=""><a href="text.php?value='.$b[$c][0].'#line">'.  strtoupper($b[$c][0]).'</a></li>';
+                                    // echo '<button type="submit" class="btn btn-default" name="value" value="'.$b[$c][0].'" formaction="text.php#line">'.  strtoupper($b[$c][0]).'</button>';
+                                } elseif ($b[$c][0]=='ltm' AND $module==$b[$c][0] AND $y!=null) {
+                                    echo '<li role="presentation" class="active"><a href="text.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
+                                    echo '<li role="presentation" class=""><a href="text.php?value=rule#line">iRULES</a></li>';
+                                    // echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
+                                    // echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="text.php#line">iRULES</button>';
                                 } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module!='rule'){
-                                  
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="text.php#line">LTM</button>';
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="text.php#line">iRULES</button>';
+                                    echo '<li role="presentation" class=""><a href="text.php?value=ltm#line">LTM</a></li>';
+                                    echo '<li role="presentation" class=""><a href="text.php?value=rule#line">iRULES</a></li>';
+                                    // echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="text.php#line">LTM</button>';
+                                    // echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="text.php#line">iRULES</button>';
                                 } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module=='rule') {
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="text.php#line">LTM</button>';
-                                    echo '<button type="submit" class="btn btn-default active" name="value" value="rule" formaction="text.php#line">iRULES</button>';
+                                    echo '<li role="presentation" class=""><a href="text.php?value=ltm#line">LTM</a></li>';
+                                    echo '<li role="presentation" class="active"><a href="text.php?value=rule#line">iRULES</a></li>';
+                                    // echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="text.php#line">LTM</button>';
+                                    // echo '<button type="submit" class="btn btn-default active" name="value" value="rule" formaction="text.php#line">iRULES</button>';
                                 } elseif ($module == null) {
                                     echo 'Any module selected';
                                 }
-                                
-                            } 
+
                             }
-                            
+                        }
+
                         ?>
-                    </form>
+                    </ul>
                 </div>
                 <?php
                     if ($tfile=='f5'){
-                        echo '<div class="col-md-3 no-padding custom-margin-top">
+                        echo '<div class="col-xs-3 no-padding custom-margin-top">
                         <div class="side-menu">
                             <nav class="navbar navbar-default" role="navigation">
                                 <!-- Main Menu -->
@@ -231,7 +239,7 @@ if($usuario == false ) {
                                                 </div>   
                                             </div>
                 
-                    <div class="col-lg-9 no-padding">';
+                    <div class="col-xs-9 no-padding">';
                                             }   else {
                                                 echo '<div class="col-lg-12 no-padding">';
                                             } 

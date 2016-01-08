@@ -74,10 +74,10 @@ if($usuario == false ) {
             </div>
             <div class="panel-body"> 
                <div class="col-md-12">
-                    <div class="col-md-6 content">     
+                    <div class="col-xs-6 content">
                         <h2 class="filename">Object Details</h2>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-xs-6">
                         <form method="POST">      
                             <button type="submit" class="btn btn-primary" formaction="brief.php">View Summary</button>                          
                             <button type="submit" class="btn btn-primary" formaction="modules.php">View Module Details</button>                                           
@@ -86,44 +86,51 @@ if($usuario == false ) {
                     </div>
                 </div>
                 <div class="col-md-12"><br><br>
-                    <form method="GET">
+                    <ul class="nav nav-pills">
                         <?php
-                            $z = new Crud();
-                            $z->select='*';
-                            $z->from='details';
-                            $z->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule"';
-                            $z->Read();
-                            $y= $z->rows;
-                        
-                            $a = new Crud();
-                            $a->select='DISTINCT (module)';
-                            $a->from='details';
-                            $a->condition='files_uuid="'.$value.'"';
-                            $a->Read();
-                            $b = $a->rows;
-                            $m_found= count($b);
-                            for ($c=0;$c<$m_found;$c++){
-                                if ($b[$c][0]!='ltm' AND $module==$b[$c][0]){
-                                    echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
-                                } elseif ($b[$c][0]!='ltm' AND $module!=$b[$c][0]){
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="'.$b[$c][0].'" formaction="objects.php">'.  strtoupper($b[$c][0]).'</button>';
-                                } elseif ($b[$c][0]=='ltm' AND $module==$b[$c][0] AND $y!=null) {    
-                                    echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="objects.php">iRULES</button>';
-                                } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module!='rule'){
-                                  
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="objects.php">LTM</button>';
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="objects.php">iRULES</button>';
-                                } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module=='rule') {
-                                    echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="objects.php">LTM</button>';
-                                    echo '<button type="submit" class="btn btn-default active" name="value" value="rule" formaction="objects.php">iRULES</button>';
-                                }
+                        $z = new Crud();
+                        $z->select='*';
+                        $z->from='details';
+                        $z->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule"';
+                        $z->Read();
+                        $y= $z->rows;
+
+                        $a = new Crud();
+                        $a->select='DISTINCT (module)';
+                        $a->from='details';
+                        $a->condition='files_uuid="'.$value.'"';
+                        $a->Read();
+                        $b = $a->rows;
+                        $m_found= count($b);
+                        for ($c=0;$c<$m_found;$c++){
+                            if ($b[$c][0]!='ltm' AND $module==$b[$c][0]){
+                                echo '<li role="presentation" class="active"><a href="objects.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
+                                // echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
+                            } elseif ($b[$c][0]!='ltm' AND $module!=$b[$c][0]){
+                                echo '<li role="presentation" class=""><a href="objects.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
+                                // echo '<button type="submit" class="btn btn-default" name="value" value="'.$b[$c][0].'" formaction="objects.php">'.  strtoupper($b[$c][0]).'</button>';
+                            } elseif ($b[$c][0]=='ltm' AND $module==$b[$c][0] AND $y!=null) {
+                                echo '<li role="presentation" class="active"><a href="modules.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
+                                echo '<li role="presentation" class=""><a href="objects.php?value=rule">iRULES</a></li>';
+                                // echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
+                                // echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="objects.php">iRULES</button>';
+                            } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module!='rule'){
+                                echo '<li role="presentation" class=""><a href="objects.php?value=ltm">LTM</a></li>';
+                                echo '<li role="presentation" class=""><a href="objects.php?value=rule">iRULES</a></li>';
+                                // echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="objects.php">LTM</button>';
+                                // echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="objects.php">iRULES</button>';
+                            } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module=='rule') {
+                                echo '<li role="presentation" class=""><a href="objects.php?value=ltm">LTM</a></li>';
+                                echo '<li role="presentation" class="active"><a href="objects.php?value=rule">iRULES</a></li>';
+                                // echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="objects.php">LTM</button>';
+                                // echo '<button type="submit" class="btn btn-default active" name="value" value="rule" formaction="objects.php">iRULES</button>';
                             }
+                        }
                         ?>
-                    </form>
+                    </ul>
                 </div>
                 
-                    <div class="col-md-3 no-padding custom-margin-top">
+                    <div class="col-xs-3 no-padding custom-margin-top">
                         <div class="side-menu">
                             <nav class="navbar navbar-default no-black" role="navigation">
                                 <!-- Main Menu -->
@@ -181,7 +188,7 @@ if($usuario == false ) {
                             </nav>
                         </div>   
                     </div>
-                    <div class="col-lg-9 no-padding">
+                    <div class="col-xs-9 no-padding">
                         <br>
                         <table class="table" style="table-layout: fixed; width: 100%">
                              

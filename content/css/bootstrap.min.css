@@ -129,13 +129,13 @@ input.btn.margin_left-max {
 .nextto {
     display: inline-block;
     font-size: 60px;
-    margin-left: 20px;
+    margin-left: 45px;
     margin-bottom: 0px;
 }
 
 .tag {
     margin-top: 0px;
-    margin-left: 80px;
+    margin-left: 45px;
     color: #ccc;
 }
 
@@ -265,4 +265,8 @@ no-black {
 li.list-group-item.text-center.gray_backgr {
     background: #d5d5d5;
     color:gray;
+}
+
+button.btn.btn-lg.glyphicon.mybutton {
+    font-size: 40px;
 }
