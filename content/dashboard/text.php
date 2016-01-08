@@ -92,10 +92,10 @@ if($usuario == false ) {
             </div>
             <div class="panel-body"> 
                <div class="col-md-12">
-                    <div class="col-md-4 content">     
+                    <div class="col-xs-4 content">
                         <h2 class="filename">Configuration File</h2>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-xs-8">
                         <form method="POST">      
                             <button type="submit" class="btn btn-primary" formaction="brief.php">View Summary</button>                          
                             <button type="submit" class="btn btn-primary" formaction="modules.php">View Module Details</button>
@@ -179,7 +179,7 @@ if($usuario == false ) {
                 </div>
                 <?php
                     if ($tfile=='f5'){
-                        echo '<div class="col-md-3 no-padding custom-margin-top">
+                        echo '<div class="col-xs-3 no-padding custom-margin-top">
                         <div class="side-menu">
                             <nav class="navbar navbar-default" role="navigation">
                                 <!-- Main Menu -->
@@ -239,7 +239,7 @@ if($usuario == false ) {
                                                 </div>   
                                             </div>
                 
-                    <div class="col-lg-9 no-padding">';
+                    <div class="col-xs-9 no-padding">';
                                             }   else {
                                                 echo '<div class="col-lg-12 no-padding">';
                                             } 

@@ -97,11 +97,11 @@ if($usuario == false ) {
                <?php include('../engine/breadcrumbs.php');//Includethe breadcrumb ?>
             </div>
             <div class="panel-body">
-                <div class="col-md-12">
-                    <div class="col-md-6 content">     
+                <div class="row">
+                    <div class="col-xs-6">
                         <h2 class="filename">Dashboard</h2>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-xs-6">
                         <form method="POST">      
                             <button type="submit" class="btn btn-primary" formaction="modules.php?value=ltm">View Module Details</button>                          
                             <button type="submit" class="btn btn-primary" formaction="objects.php">View Objects</button>                                           

@@ -69,10 +69,10 @@ if($usuario == false ) {
             </div>
             <div class="panel-body"> 
                 <div class="col-md-12">
-                    <div class="col-md-6 content">     
+                    <div class="col-xs-6 content">
                         <h2 class="filename">Module Details</h2>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-xs-6">
                         <form method="POST">      
                             <button type="submit" class="btn btn-primary" formaction="brief.php">View Summary</button>                          
                             <button type="submit" class="btn btn-primary" formaction="objects.php">View Objects</button>                                           

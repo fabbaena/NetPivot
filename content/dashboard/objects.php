@@ -74,10 +74,10 @@ if($usuario == false ) {
             </div>
             <div class="panel-body"> 
                <div class="col-md-12">
-                    <div class="col-md-6 content">     
+                    <div class="col-xs-6 content">
                         <h2 class="filename">Object Details</h2>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-xs-6">
                         <form method="POST">      
                             <button type="submit" class="btn btn-primary" formaction="brief.php">View Summary</button>                          
                             <button type="submit" class="btn btn-primary" formaction="modules.php">View Module Details</button>                                           
@@ -130,7 +130,7 @@ if($usuario == false ) {
                     </ul>
                 </div>
                 
-                    <div class="col-md-3 no-padding custom-margin-top">
+                    <div class="col-xs-3 no-padding custom-margin-top">
                         <div class="side-menu">
                             <nav class="navbar navbar-default no-black" role="navigation">
                                 <!-- Main Menu -->
@@ -188,7 +188,7 @@ if($usuario == false ) {
                             </nav>
                         </div>   
                     </div>
-                    <div class="col-lg-9 no-padding">
+                    <div class="col-xs-9 no-padding">
                         <br>
                         <table class="table" style="table-layout: fixed; width: 100%">
                              
