@@ -98,7 +98,7 @@ if($usuario == false ) {
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-xs-6">
+                    <div class="col-xs-6 content">
                         <h2 class="filename">Dashboard</h2>
                     </div>
                     <div class="col-xs-6">
