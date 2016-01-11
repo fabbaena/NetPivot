@@ -158,7 +158,17 @@ if($usuario == false ) {
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
                                         }
                                         
-                                         echo '<td class="text_color_gray"><strong>-</strong></td>';
+                                        if ($r[$u]['converted']!=0) {
+                                            echo '<td>'.$r[$u]['converted'].'</td>';
+                                        } else {
+                                            echo '<td class="text_color_gray"><strong>-</strong></td>';
+                                        }
+                                        
+                                        if ($r[$u]['no_converted']!=0 and $r[$u]['omitted']==0) {
+                                            echo '<td>'.$r[$u]['no_converted'].'</td>';
+                                        } else {
+                                            echo '<td class="text_color_gray"><strong>-</strong></td>';
+                                        }
                                         
                                         if ($r[$u]['omitted']!=0) {
                                             echo '<td class="text_color_gray"><strong>'.$r[$u]['omitted'].'</strong></td>';
