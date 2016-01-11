@@ -55,11 +55,11 @@ if($usuario == false ) {
                 <form enctype="multipart/form-data" action='../engine/uploader.php?id='<?php $id;?> method="POST">
                         <input type="hidden" name="MAX_FILE_SIZE" value="10000000" /> <!--This value establish the size of the file to upload -->
                         <div class="form-group ">
-                            <div class="col-md-7 ">                                
+                            <div class="col-md-9 ">                                
                                 <input type="file" class="filestyle" name="InputFile" id="InputFile" data-size="lg" required><br>                                                       
                             </div>
-                            <div class="col-md-5">
-                                <input type="submit" value="Convert" class="btn btn-default btn-lg">                            
+                            <div class="col-md-3">
+                                <input type="submit" value="Convert" class="btn btn-default btn-lg" style="margin-left: 30px">                            
                             </div>  
                         </div>    
                         <?php 
