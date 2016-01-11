@@ -23,9 +23,9 @@ $path_pivot = '/opt/netpivot/';
 $path_files = '/var/www/html/dashboard/files/';
 
 $error_name = $uuid . '_error.txt';
-$stats_name = $uuid . '_stats.txt';
+// $stats_name = $uuid . '_stats.txt';
 $csv_name = $uuid . '_stats.csv';
-$command = $path_pivot. './f5conv -f '.$path_files . $uuid . ' -e ' .$path_files. $error_name . ' -C '. $path_files.$csv_name . ' -O ' .$path_files. $c_file;
+$command = $path_pivot. 'f5conv -f '.$path_files . $uuid . ' -e ' .$path_files. $error_name . ' -C '. $path_files.$csv_name . ' -O ' .$path_files. $c_file;
 $csv_file = 'files/'. $csv_name;
 
 try {
