@@ -59,7 +59,7 @@ if($usuario == false ) {
                                 <input type="file" class="filestyle" name="InputFile" id="InputFile" data-size="lg" required><br>                                                       
                             </div>
                             <div class="col-md-3">
-                                <input type="submit" value="Convert" class="btn btn-default btn-lg" style="margin-left: 30px">                            
+                                <input type="submit" value="Convert" class="btn btn-default btn-lg" style="margin-left: 100px">                            
                             </div>  
                         </div>    
                         <?php 
