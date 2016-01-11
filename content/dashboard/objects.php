@@ -137,9 +137,14 @@ if($usuario == false ) {
                                 <div class="side-menu-container">
                                     
                                     <ul class="nav nav-pills nav-stacked custom-side-menu">
-                                        <li class="list-group-item text-center gray_backgr"><strong>Object Group Name</strong></li>
+                                        
                                         <?php
-                                            
+                                            if ($module == 'rule'){
+                                                 echo '<li class="list-group-item text-center gray_backgr"><strong>iRule Name</strong></li>';
+                                            } else {
+                                                 echo '<li class="list-group-item text-center gray_backgr"><strong>Object Group Name</strong></li>';
+                                            }
+                                                                                           
                                             $model = new Crud();
                                             $model->select='DISTINCT (obj_grp)';
                                             $model->from='details';
