@@ -10,7 +10,7 @@ backup() {
     local DBNAME=NetPivot
     local DBDIR=/var/lib/mysql/$DBNAME
     local DBDUMP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.sql
-    local BACKUP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.txz
+    local BACKUP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.tbz2
 
     invoke-rc.d --quiet mysql status
     if [ $? -gt 0 ]; then
@@ -37,7 +37,7 @@ backup() {
 	bzip2 -zfv9 ${DBDUMP}
     fi
 
-    tar -cvJf ${BACKUP} -C ${WWWDATA} .
+    tar -cvjf ${BACKUP} -C ${WWWDATA} .
 }
 
 clean() {
