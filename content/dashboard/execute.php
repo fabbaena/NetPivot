@@ -18,7 +18,7 @@ $user_type = $sesion->get('type');
 
 $uuid = htmlspecialchars($_GET['uuid']);
 $filename = htmlspecialchars($_GET['filename']);
-$c_file = $uuid.'_'.$filename.'.conf';
+$c_file = $uuid.'_.conf';
 $path_pivot = '/opt/netpivot/';
 $path_files = '/var/www/html/dashboard/files/';
 

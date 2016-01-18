@@ -86,7 +86,9 @@ if($usuario == false ) {
                         <tr class="active">
                            <th>Select</th>
                             <th>File Name</th>                            
+                            <th>Options</th>
                             <th>Upload Date</th>
+                            
                         </tr>
                     <tbody>
                     <?php // List all files in the files table per user id                    
@@ -122,7 +124,8 @@ if($usuario == false ) {
                                     }      
                                     if ($is == true) {
                                             echo '<td style="width: 5%"><input type="radio" name="uuid" value="'.$download .'" required />';                                            
-                                            echo '<td style="width: 50%"> '.  $datafiles['filename'] . " </td>";
+                                            echo '<td style="width: 60%"> '.  $datafiles['filename'] . " </td>";
+                                            echo '<td style="width: 15%"><a href="rename.php?file='.$datafiles['uuid'].'">Rename</a></td>';
                                             echo '<td style="width: 20%">'. $datafiles['upload_time'] . "</td>";                                            
                                             echo '</tr>';
                                         
