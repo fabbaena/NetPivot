@@ -185,9 +185,19 @@ if($usuario == false ) {
                                     $model->condition='files_uuid="'.$value.'" AND module="'.$module.'"';
                                     $model->Read();
                                     $rows = $model->rows;
+                                    
+                                    
                                     $total2 = count ($rows);
                                     for ($c=0;$c<$total2;$c++){
-                                        if ($rows[$c][0]!='rule') {        
+                                        if ($rows[$c][0]!='rule') {
+                                            $del = new Crud();
+                                            $del-> select ='DISTINCT (obj_name)';
+                                            $del->from='details';
+                                            $del->condition='files_uuid="'.$value.'" AND module="'.$module.'" AND obj_grp="'.$rows[$c][0].'"';
+                                            $del->Read();
+                                            $p = $del->rows;
+                                            $t_p = count($p);
+                                            
                                             $a = new NetPivot();
                                             $b = $a->getCNCO($value, $module,$rows[$c][0],0);
                                             $b_sum = $b[1] + $b[2] + $b[3];
@@ -200,7 +210,7 @@ if($usuario == false ) {
                                                 echo '<td>'.$rows[$c][0].'</td>';
                                             }
                                             if ($b_sum !=0){
-                                                echo '<td>'.$b_sum.'</td>';
+                                                echo '<td>'.$t_p.'</td>';
                                             } else {
                                                 echo '<td class="text_color_gray"><strong>-</strong></td>';
                                             }
