@@ -14,17 +14,6 @@ class NetPivot {
             return false;
         }
     }
-    /*
-    public function csv_to_array($filename) { //Mete todo el contenido del csv a un array 
-        $stats = array();
-        if (($handle = fopen($filename, "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                $stats = array_merge($stats,$data);
-            }
-        }
-        return $stats;
-    }
-    */
     
     public function getCounters ($uuid,$module,$obj) { //Get all the distinct objects for a specific module + object group
         $model = new Crud();
@@ -39,43 +28,7 @@ class NetPivot {
         $output = $model->rows;
         return $total = count($output);
     }
-    /*
-    public function getTotalRowsDetails ($uuid) { //Get total config rows for a specific file
-        $model = new Crud();
-        $model->select='*';
-        $model->from='details';
-        $model->condition='files_uuid="'.$uuid .'"';
-        $model->Read();
-        $output = $model->rows;
-        return $total = count($output);
-    } 
-    
-    public function getTotalModule ($uuid,$module,$obj){ //Get all objects for a specific module + object group (optional)
-        $model = new Crud();
-        $model->select='*';
-        $model->from='details';
-       if ($obj !=''){
-            $model->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND obj_grp="'.$obj.'"';
-        } else {
-            $model->condition='files_uuid="'.$uuid.'" AND module="'.$module.'"';
-        }
-        $model->Read();
-        $output = $model->rows;
-        return $total = count($output);
-    }
-    
-    public function getTotalModuleException ($uuid,$module,$obj){ //Get all objects for a specific module + object group as exception (optional)
-        $model = new Crud();
-        $model->select='*';
-        $model->from='details';
-        $model->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND obj_grp!="'.$obj.'"';
-        $model->Read();
-        $output = $model->rows;
-        return $total = count($output);
-    }
-    
 
-    */
     public function getCNCO ($uuid,$module,$obj,$exception) {
         $model = new Crud();
         $model->select='*';
@@ -90,7 +43,6 @@ class NetPivot {
         $model->Read();
         $rows = $model->rows;
         $converted = count($rows);
-
 
         $model2 = new Crud();
         $model2->select='*';
