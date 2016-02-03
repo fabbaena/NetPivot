@@ -50,7 +50,7 @@ if($usuario == false ) {
         $tt = new Crud();
         $tt->select='line';
         $tt->from='details';
-        $tt->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule" order by line ASC LIMIT 1';
+        $tt->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule" AND attribute<> order by line ASC LIMIT 1';
         $tt->Read();
         $tr = $tt->rows;
         
@@ -58,7 +58,7 @@ if($usuario == false ) {
         $get_obj = new Crud(); //Total object found into the file
         $get_obj->select='DISTINCT (module)';
         $get_obj->from='details';
-        $get_obj->condition='files_uuid="'.$value .'"';
+        $get_obj->condition='files_uuid="'.$value .'" AND attribute<>';
         $get_obj->Read();
         $obj_res = $get_obj->rows;
         $objs = count($obj_res);
@@ -187,7 +187,7 @@ if($usuario == false ) {
                                     $p_c = ($info[1]*100)/$total_data;
                                     $p_nc = ($info[2]*100)/$total_data;
                                     $p_o = ($info[3]*100)/$total_data;
-                                    $omitted_p = ($info[3]*100)/($info[1]+$info[2]+$info[3]);
+                                    $omitted_p = $info[3];
                                     $module = $rows[$c][0];
                                     echo '<tr>';
                                     echo '<td>'.strtoupper($rows[$c][0]).'</td>';
@@ -220,7 +220,7 @@ if($usuario == false ) {
                                         $t = ($total_data*100)/$total;
                                         $p_c = ($info[1]*100)/$total_data;
                                         $p_nc = ($info[2]*100)/$total_data;
-                                        $p_o = ($info[3]*100)/$total_data;                                       
+                                        $p_o = $info[3];                                       
                                         echo '<tr>';
                                         echo '<td>iRULE</td>';
                                         echo '<td>APPEXPERT</td>';
