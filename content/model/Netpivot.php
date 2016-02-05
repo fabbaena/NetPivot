@@ -20,9 +20,9 @@ class NetPivot {
         $model->select='DISTINCT (obj_name)';
         $model->from='details';
         if ($obj !=''){
-            $model->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND obj_grp="'.$obj.'" AND attribute<>""';
+            $model->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND obj_grp="'.$obj.'"';
         } else {
-            $model->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND attribute<>""';
+            $model->condition='files_uuid="'.$uuid.'" AND module="'.$module.'"';
         }
         $model->Read();
         $output = $model->rows;
