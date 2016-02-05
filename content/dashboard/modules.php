@@ -169,9 +169,9 @@ if($usuario == false ) {
                                         } else {
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
                                         }
-                                        
+                                        $total_o = $r[$u]['omitted'] - $total;
                                         if ($r[$u]['omitted']!=0) {
-                                            echo '<td class="text_color_gray"><strong>'.$r[$u]['omitted'].'</strong></td>';
+                                            echo '<td class="text_color_gray"><strong>'.$total_o.'</strong></td>';
                                         } else {
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
                                         }
@@ -225,6 +225,7 @@ if($usuario == false ) {
                                             } else {
                                                 echo '<td class="text_color_gray"><strong>-</strong></td>';
                                             }
+                                           
                                             if ($b[3] !=0){
                                                 echo '<td class="text_color_gray"><strong>'.$b[3].'</strong></td>';
                                             } else {

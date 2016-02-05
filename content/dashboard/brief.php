@@ -187,7 +187,7 @@ if($usuario == false ) {
                                     $p_c = ($info[1]*100)/$total_data;
                                     $p_nc = ($info[2]*100)/$total_data;
                                     $p_o = ($info[3]*100)/$total_data;
-                                    $omitted_p = $info[3] -1 ;
+                                    $omitted_p = $info[3];
                                     $module = $rows[$c][0];
                                     echo '<tr>';
                                     echo '<td>'.strtoupper($rows[$c][0]).'</td>';
@@ -216,11 +216,11 @@ if($usuario == false ) {
                                     echo '</tr>';
                                     if ($rows[$c][0]=='ltm'){
                                         $info = $data->getCNCO($value, $rows[$c][0],'rule',0);
-                                        $total_data = $info[1] + $info[2] + $info[3];
+                                        $total_data = $info[1] + $info[2];
                                         $t = ($total_data*100)/$total;
                                         $p_c = ($info[1]*100)/$total_data;
                                         $p_nc = ($info[2]*100)/$total_data;
-                                        $p_o = $info[3] -1;                                       
+                                        $p_o = $info[3];                                       
                                         echo '<tr>';
                                         echo '<td>iRULE</td>';
                                         echo '<td>APPEXPERT</td>';
