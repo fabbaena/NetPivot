@@ -133,8 +133,8 @@ if($usuario == false ) {
                              <tr class="active">
                                 <th style="width: 20%">F5 Object Groups</th>
                                 <th style="width: 20%"># Objects Found</th>
-                                <th style="width: 15%">% Converted</th>
-                                <th style="width: 15%">% No Converted</th>
+                                <th style="width: 15%"># Converted</th>
+                                <th style="width: 15%"># Not Converted</th>
                                 <th style="width: 10%"># Omitted</th>
                                 <th style="width: 25%">Actions</th>
                             </tr>
@@ -164,12 +164,12 @@ if($usuario == false ) {
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
                                         }
                                         
-                                        if ($r[$u]['no_converted']!=0 and $r[$u]['omitted']==0) {
+                                        if ($r[$u]['no_converted']!=0) {
                                             echo '<td>'.$r[$u]['no_converted'].'</td>';
                                         } else {
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
                                         }
-                                        $total_o = $r[$u]['omitted'] - $total;
+                                        $total_o = $r[$u]['omitted'] -1 ;
                                         if ($r[$u]['omitted']!=0) {
                                             echo '<td class="text_color_gray"><strong>'.$total_o.'</strong></td>';
                                         } else {

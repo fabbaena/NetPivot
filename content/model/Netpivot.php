@@ -101,7 +101,7 @@ class NetPivot {
                     if ($ts[$h]['converted']==1){
                         $total_c = $total_c +1;
                     } 
-                    if ($ts[$h]['converted']==0) {
+                    if ($ts[$h]['converted']==0 AND $ts[$h]['omitted']== 0) {
                         $total_nc = $total_nc+1;
                     }
                     if ($ts[$h]['omitted']==1) {
