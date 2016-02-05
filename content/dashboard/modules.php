@@ -133,8 +133,8 @@ if($usuario == false ) {
                              <tr class="active">
                                 <th style="width: 20%">F5 Object Groups</th>
                                 <th style="width: 20%"># Objects Found</th>
-                                <th style="width: 15%"># Converted</th>
-                                <th style="width: 15%"># Not Converted</th>
+                                <th style="width: 15%">% Converted</th>
+                                <th style="width: 15%">% Not Converted</th>
                                 <th style="width: 10%"># Omitted</th>
                                 <th style="width: 25%">Actions</th>
                             </tr>
@@ -159,13 +159,13 @@ if($usuario == false ) {
                                         }
                                         
                                         if ($r[$u]['converted']!=0) {
-                                            echo '<td>'.$r[$u]['converted'].'</td>';
+                                            echo '<td class="text_color_red"><strong>'.($r[$u]['converted'] *100) / $total.'%</strong></td>';
                                         } else {
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
                                         }
                                         
                                         if ($r[$u]['no_converted']!=0) {
-                                            echo '<td>'.$r[$u]['no_converted'].'</td>';
+                                            echo '<td class="text_color_red"><strong>'.($r[$u]['no_converted'] *100) / $total.'%</strong></td>';
                                         } else {
                                             echo '<td class="text_color_gray"><strong>-</strong></td>';
                                         }
