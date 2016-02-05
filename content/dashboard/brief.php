@@ -50,7 +50,7 @@ if($usuario == false ) {
         $tt = new Crud();
         $tt->select='line';
         $tt->from='details';
-        $tt->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule" AND attribute<> order by line ASC LIMIT 1';
+        $tt->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule" AND attribute<>"" order by line ASC LIMIT 1';
         $tt->Read();
         $tr = $tt->rows;
         
@@ -58,7 +58,7 @@ if($usuario == false ) {
         $get_obj = new Crud(); //Total object found into the file
         $get_obj->select='DISTINCT (module)';
         $get_obj->from='details';
-        $get_obj->condition='files_uuid="'.$value .'" AND attribute<>';
+        $get_obj->condition='files_uuid="'.$value .'" AND attribute<>""';
         $get_obj->Read();
         $obj_res = $get_obj->rows;
         $objs = count($obj_res);
@@ -162,7 +162,7 @@ if($usuario == false ) {
                             <th class="text-center" style="width: 13%">Total % of Config</th>                                                       
                             <th class="text-center" style="width: 14%">Converted</th>
                             <th class="text-center" style="width: 15%">Not Converted</th>
-                            <th class="text-center" style="width: 13%">Omitted</th>
+                            <th class="text-center" style="width: 13%">Omitted Lines</th>
                             <th class="text-center" style="width: 20%">Actions</th> 
                         </tr>
                         <tbody>
@@ -211,7 +211,7 @@ if($usuario == false ) {
                                     echo '<td class="text-center"><span class="badge badge_bkground_blue_sm">'.round($t).'%</span></td>';                                   
                                     echo '<td class="text-center"><span class="badge badge_bkground_green_sm">'.round($p_c).'%</span></td>';
                                     echo '<td class="text-center"><span class="badge badge_bkground_red_sm">'.round($p_nc).'%</span></td>';
-                                    echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($omitted_p).'%</span></td>';
+                                    echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($omitted_p).'</span></td>';
                                     echo '<td><a href="text.php?value='.$module.'#line">View Config</a>&nbsp;&nbsp;&nbsp;<a href="modules.php?value='.$module.'">View Module</a></td>';
                                     echo '</tr>';
                                     if ($rows[$c][0]=='ltm'){
@@ -228,7 +228,7 @@ if($usuario == false ) {
                                         
                                         echo '<td class="text-center"><span class="badge badge_bkground_green_sm">'.round($p_c).'%</span></td>';
                                         echo '<td class="text-center"><span class="badge badge_bkground_red_sm">'.round($p_nc).'%</span></td>';
-                                        echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($p_o).'%</span></td>';
+                                        echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($p_o).'</span></td>';
                                         echo '<td><a href="text.php?value=rule&line='.$tr[0]['line'].'#line">View Config</a>&nbsp;&nbsp;&nbsp;<a href="modules.php?value=rule">View Module</a></td>';
                                         echo '</tr>';
                                     }
