@@ -58,7 +58,7 @@ if($usuario == false ) {
         $get_obj = new Crud(); //Total object found into the file
         $get_obj->select='DISTINCT (module)';
         $get_obj->from='details';
-        $get_obj->condition='files_uuid="'.$value .'"';
+        $get_obj->condition='files_uuid="'.$value .'" ';
         $get_obj->Read();
         $obj_res = $get_obj->rows;
         $objs = count($obj_res);
@@ -162,7 +162,7 @@ if($usuario == false ) {
                             <th class="text-center" style="width: 13%">Total % of Config</th>                                                       
                             <th class="text-center" style="width: 14%">Converted</th>
                             <th class="text-center" style="width: 15%">Not Converted</th>
-                            <th class="text-center" style="width: 13%">Omitted</th>
+                            <th class="text-center" style="width: 13%">Omitted Lines</th>
                             <th class="text-center" style="width: 20%">Actions</th> 
                         </tr>
                         <tbody>
@@ -187,7 +187,7 @@ if($usuario == false ) {
                                     $p_c = ($info[1]*100)/$total_data;
                                     $p_nc = ($info[2]*100)/$total_data;
                                     $p_o = ($info[3]*100)/$total_data;
-                                    $omitted_p = ($info[3]*100)/($info[1]+$info[2]+$info[3]);
+                                    $omitted_p = $info[3];
                                     $module = $rows[$c][0];
                                     echo '<tr>';
                                     echo '<td>'.strtoupper($rows[$c][0]).'</td>';
@@ -211,16 +211,16 @@ if($usuario == false ) {
                                     echo '<td class="text-center"><span class="badge badge_bkground_blue_sm">'.round($t).'%</span></td>';                                   
                                     echo '<td class="text-center"><span class="badge badge_bkground_green_sm">'.round($p_c).'%</span></td>';
                                     echo '<td class="text-center"><span class="badge badge_bkground_red_sm">'.round($p_nc).'%</span></td>';
-                                    echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($omitted_p).'%</span></td>';
+                                    echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($omitted_p).'</span></td>';
                                     echo '<td><a href="text.php?value='.$module.'#line">View Config</a>&nbsp;&nbsp;&nbsp;<a href="modules.php?value='.$module.'">View Module</a></td>';
                                     echo '</tr>';
                                     if ($rows[$c][0]=='ltm'){
                                         $info = $data->getCNCO($value, $rows[$c][0],'rule',0);
-                                        $total_data = $info[1] + $info[2] + $info[3];
+                                        $total_data = $info[1] + $info[2];
                                         $t = ($total_data*100)/$total;
                                         $p_c = ($info[1]*100)/$total_data;
                                         $p_nc = ($info[2]*100)/$total_data;
-                                        $p_o = ($info[3]*100)/$total_data;                                       
+                                        $p_o = $info[3];                                       
                                         echo '<tr>';
                                         echo '<td>iRULE</td>';
                                         echo '<td>APPEXPERT</td>';
@@ -228,7 +228,7 @@ if($usuario == false ) {
                                         
                                         echo '<td class="text-center"><span class="badge badge_bkground_green_sm">'.round($p_c).'%</span></td>';
                                         echo '<td class="text-center"><span class="badge badge_bkground_red_sm">'.round($p_nc).'%</span></td>';
-                                        echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($p_o).'%</span></td>';
+                                        echo '<td class="text-center"><span class="badge badge_bkground_gray_sm">'.round($p_o).'</span></td>';
                                         echo '<td><a href="text.php?value=rule&line='.$tr[0]['line'].'#line">View Config</a>&nbsp;&nbsp;&nbsp;<a href="modules.php?value=rule">View Module</a></td>';
                                         echo '</tr>';
                                     }
