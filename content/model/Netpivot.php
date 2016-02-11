@@ -22,7 +22,7 @@ class NetPivot {
         if ($obj !=''){
             $model->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND obj_grp="'.$obj.'"';
         } else {
-            $model->condition='files_uuid="'.$uuid.'" AND module="'.$module.'"';
+            $model->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" ';
         }
         $model->Read();
         $output = $model->rows;
@@ -62,9 +62,9 @@ class NetPivot {
         $model3->select='*';
         $model3->from='details';
         if ($exception==1 AND $obj!=''){    
-            $model3->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND obj_grp!="'.$obj.'" AND omitted=1';
+            $model3->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND obj_grp!="'.$obj.'" AND omitted=1 ';
         } elseif ($exception==0 AND $obj!='') {    
-            $model3->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND obj_grp="'.$obj.'" AND omitted=1';
+            $model3->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND obj_grp="'.$obj.'" AND omitted=1 ';
         } elseif ($exception==0 AND $obj=='') {    
             $model3->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND omitted=1';
         }
@@ -81,7 +81,7 @@ class NetPivot {
         $model = new Crud();
         $model->select='*';
         $model->from='details';
-        $model->condition='files_uuid="'.$uuid.'" AND module="'.$module .'" AND obj_grp="'.$obj.'" GROUP BY obj_name';
+        $model->condition='files_uuid="'.$uuid.'" AND module="'.$module .'" AND obj_grp="'.$obj.'"  GROUP BY obj_name';
         $model->Read();
         $t = $model->rows;
         $total = count($t);
@@ -89,7 +89,7 @@ class NetPivot {
             $tt = new Crud();
             $tt->select='*';
             $tt->from='details';
-            $tt->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND obj_grp="'.$obj.'" AND obj_name="'.$t[$c]['obj_name'].'"';
+            $tt->condition='files_uuid="'.$uuid.'" AND module="'.$module.'" AND obj_grp="'.$obj.'" AND obj_name="'.$t[$c]['obj_name'].'" ';
             $tt->Read();
             $ts = $tt->rows;
             $tstt= count($ts);
@@ -101,7 +101,7 @@ class NetPivot {
                     if ($ts[$h]['converted']==1){
                         $total_c = $total_c +1;
                     } 
-                    if ($ts[$h]['converted']==0) {
+                    if ($ts[$h]['converted']==0 AND $ts[$h]['omitted']== 0) {
                         $total_nc = $total_nc+1;
                     }
                     if ($ts[$h]['omitted']==1) {
@@ -120,7 +120,7 @@ class NetPivot {
         $model=new Crud();
         $model->select='*';
         $model->from='details';
-        $model->condition='files_uuid="'.$uuid.'"';
+        $model->condition='files_uuid="'.$uuid.'" ';
         $model->Read();
         $lines = $model->rows;
         $total = count($lines);
