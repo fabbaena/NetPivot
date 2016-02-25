@@ -34,6 +34,13 @@ CREATE TABLE IF NOT EXISTS NetPivot.files (
 	ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
+DROP TABLE IF EXISTS NetPivot.settings CASCADE;
+CREATE TABLE IF NOT EXISTS NetPivot.settings (
+    host_name TINYINT UNSIGNED NOT NULL PRIMARY KEY,
+    timezone VARCHAR(45) NOT NULL DEFAULT 'US/Eastern',
+    files_path VARCHAR(255) NULL
+) ENGINE = InnoDB;
+
 -- TABLE NetPivot.conversions
 DROP TABLE IF EXISTS NetPivot.conversions CASCADE;
 CREATE TABLE IF NOT EXISTS NetPivot.conversions (

@@ -14,7 +14,7 @@ $target_path = "../dashboard/files/";
 
 $file_name = $_FILES['InputFile']['name'];
 
-
+/*
 $get_tz = new Crud();
 $get_tz->select = '*';
 $get_tz->from = 'settings';
@@ -27,7 +27,7 @@ foreach ($total as $get) {
 $utc = new TimeManager();
 $utc->set_timezone = $its;
 $utc->SetTimeZone();
-
+*/
 $model = new FileManager;
 $model->file = $file_name;
 $model->CheckFile(); 
