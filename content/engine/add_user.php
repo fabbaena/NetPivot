@@ -22,22 +22,30 @@ $check->password = $password;
 $check->login();
 $msg = $check->mensaje;
 $number = 100;
+
+echo $username.'<br>';
+echo $password.'<br>';
+echo $type.'<br>';
 if ($msg == false) 
     {
         $hash = password_hash($password, PASSWORD_BCRYPT);
+        echo $hash;
         $model = new Crud();
         $model->insertInto = 'users';
         $model->insertColumns = 'name,password,type,max_files,max_conversions';
-        $model->insertValues = "$username,$hash,'Administrator',$number,$number";
+        $model->insertValues = "'$username','$hash','Administrator',$number,$number";
         $model->Create();
         $mensaje = $model->mensaje;
         if ($mensaje == true) {
-            header ('location:../dashboard/admin_users.php?new_done');
+            echo 'usuario creado';
+            //header ('location:../dashboard/admin_users.php?new_done');
         } else {
-            header ('location:../dashboard/admin_users.php?new_error');
+            echo 'usuario error';
+            //header ('location:../dashboard/admin_users.php?new_error');
         }    
     } elseif ($msg == true) {
-        header ('location:../dashboard/admin_users.php?user_exists');
+        echo 'usuario existe';
+        //header ('location:../dashboard/admin_users.php?user_exists');
     }   
 
 
