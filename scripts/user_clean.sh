@@ -10,17 +10,24 @@ select user in ${USERS[*]}; do
     USER_ID=`mysql -bsNL -e "SELECT id FROM NetPivot.users WHERE name = '$user' ORDER BY name ASC;"`
     FILE_UUID=( `mysql -bsNL -e "SELECT uuid FROM NetPivot.files WHERE users_id = '$USER_ID' ORDER BY uuid ASC;"` )
     for file in ${FILE_UUID[*]}; do
-	echo -ne "Deleting details for file ($file)... "
+	echo -ne "\rDeleting details for file ($file)... "
 	    mysql -bsNL -e "DELETE FROM NetPivot.details WHERE files_uuid = '$file';"
-	echo -ne "Done\n"
-	echo -ne "Deleting conversions for file ($file)... "
+	echo -ne "Done"
+	echo -ne "\rDeleting conversions for file ($file)... "
 	    mysql -bsNL -e "DELETE FROM NetPivot.conversions WHERE files_uuid = '$file';"
-	echo -ne "Done\n"
-	echo -ne "Deleting files ($file)... "
+	echo -ne "Done"
+	echo -ne "\rDeleting files ($file)... "
 	    mysql -bsNL -e "DELETE FROM NetPivot.files WHERE uuid = '$file';"
 	    sudo rm -fr ${FILES}/$file*
-	echo -ne "Done\n"
+	echo -ne "Done"
     done
+    echo -ne "\nWould you like to delete the user too? (Y/N): "
+    read answer
+    if [ "$answer" == Y ] || [ "$answer" == y ]; then
+	mysql -bsNL -e "DELETE FROM NetPivot.users WHERE name = '$user';"
+	echo -ne "Done\n"
+    fi
+    echo "Finished."
     break;
 done
 
