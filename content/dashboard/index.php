@@ -18,6 +18,7 @@ $usuario = $sesion->get('usuario'); //Get username
 $id= $sesion->get('id'); //Get user id
 $user_type = $sesion->get('type'); //Get user type = administrator or user
 $max_files = $sesion->get('max_files');
+$sesion->set('filename', '');
 
 if($usuario == false ) {
     header('location:../index.php');
