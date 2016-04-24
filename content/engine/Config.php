@@ -1,7 +1,7 @@
 <?php
 
 $path_pivot = '/opt/netpivot/';
-$path_files = '/var/www/np/np/content/dashboard/files/';
+$path_files = '/var/www/html/dashboard/files/';
 
 $f5conv       = $path_pivot. 'f5conv';
 $f5_file      = $uuid;
@@ -17,3 +17,4 @@ $p_csv_name   = $path_files. $csv_name;
 $command   = "$f5conv -f $p_f5_file -e $p_error_name -C $p_csv_name -O $p_ns_file";
 
 ?>
+
