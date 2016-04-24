@@ -25,6 +25,8 @@ class Crud {
     public $deleteFrom;
     public $tabla2;
     public $id;
+    public $filename;
+    public $uuid;
     
     
     public function Create(){
@@ -97,6 +99,24 @@ class Crud {
         } else {
             $consulta->execute();
             $this->mensaje = TRUE;
+        }
+    }
+
+    public function Load(){
+        $model = new ConnectionBD();
+        $conexion = $model->conectar();
+        $filename = $this->filename;
+        $uuid = $this->uuid;
+        $sql = "load data infile '$filename' ".
+                "into table details fields terminated by ',' ".
+                "(module, obj_grp, obj_component, obj_name, attribute, converted, omitted, line, files_uuid) ".
+                "set files_uuid=\"$uuid\";";
+        $consulta = $conexion->prepare($sql);
+        if (!$consulta) {
+            $this->mensaje = $consulta->errorInfo();
+        } else {
+            $consulta->execute();
+            $this->mensaje = $consulta->errorInfo();
         }
     }
     

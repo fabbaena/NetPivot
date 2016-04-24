@@ -1,7 +1,11 @@
-<?php $current_page = basename($_SERVER['PHP_SELF']); echo $_GET['link']; ?>
+<?php 
+$current_page = basename($_SERVER['PHP_SELF']);  
+$filename = $sesion->get('filename');
+
+?>
 
 <ol class="breadcrumb">
-    <li class=""><a href="/index.php">Conversion Manager</a></li>
+    <li class=""><a href="index.php">Conversion Manager</a></li>
     <?php
     $x = array("modules.php","objects.php","text.php");
     if($current_page == 'brief.php') {
