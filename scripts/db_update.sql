@@ -128,3 +128,7 @@ BEGIN
 END $$
 DELIMITER ;
 
+REVOKE ALL PRIVILEGES ON *.* FROM 'demonio'@'localhost';
+GRANT file,reload ON *.* TO 'demonio'@'localhost';
+GRANT ALL PRIVILEGES ON NetPivot.* TO 'demonio'@'localhost';
+
