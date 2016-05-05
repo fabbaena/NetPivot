@@ -18,6 +18,7 @@ $usuario = $sesion->get('usuario'); //Get username
 $id= $sesion->get('id'); //Get user id
 $user_type = $sesion->get('type'); //Get user type = administrator or user
 $max_files = $sesion->get('max_files');
+$npmodules = $sesion->get('npmodules');
 
 if($usuario == false ) {
     header('location:../index.php');
@@ -40,15 +41,26 @@ if($usuario == false ) {
         } else {
             $module='ltm';
         }
-        $info = new Crud();
-        $info->select ='filename';
-        $info->from='files';
-        $info->condition='uuid="'.$value.'"';
-        $info->Read();
-        $data = $info->rows;
-        foreach ($data as $file){
-            $filename = $file['filename'];
+
+        $npo = new Crud();
+        $npo->select='*';
+        if($module != 'rule') {
+            $npo->from='obj_grps_view';
+            $npo->condition='module_id='.$npmodules[$module]["id"];
+        } else {
+            $npo->from='obj_names_view';
+            $npo->condition='obj_grp_id='.$npmodules[$module]["id"];
         }
+        $npo->Read();
+
+        foreach ($npo->rows as $v) {
+            $npobjgrp[$v["name"]] = $v;
+            if($module == 'rule') {
+                $npobjgrp[$v["name"]]["object_count"] = $npobjgrp[$v["name"]]["attribute_count"];
+            }
+        }
+
+
         ?>
         
         <title>NetPivot</title>  
@@ -56,26 +68,23 @@ if($usuario == false ) {
     <body>
     
     <?php include ('../engine/menu1.php');//Include the first part of the nav bar ?>
-    
-	
-    <?php include ('../engine/menu2.php');//Include the second part of the nav bar?>				
+    <?php include ('../engine/menu2.php');//Include the second part of the nav bar?>	
     <div class="col-md-1"></div>
     <div class="col-md-10 content">
-  
-        
         <div class="panel panel-default">
             <div class="panel-body">
                <?php include('../engine/breadcrumbs.php');//Includethe breadcrumb ?>
             </div>
             <div class="panel-body"> 
-                <div class="col-md-12">
+                <div class="row">
                     <div class="col-xs-6 content">
                         <h2 class="filename">Module Details</h2>
                     </div>
                     <div class="col-xs-6">
-                        <form method="POST">      
-                            <button type="submit" class="btn btn-primary" formaction="brief.php">View Summary</button>                          
-                            <button type="submit" class="btn btn-primary" formaction="objects.php">View Objects</button>                                           
+                        <form method="GET">
+                            <button type="submit" class="btn btn-primary" formaction="brief.php">Summary</button>
+                            <button type="submit" class="btn btn-primary" formaction="modules.php">Module Details</button>
+                            <button type="submit" class="btn btn-primary" formaction="objects.php">Objects</button>
                             <button type="submit" class="btn btn-success" name="uuid" value="<?php echo $value;?>" formaction="../engine/Download.php">Download Target</button>
                         </form><br>
                     </div>
@@ -83,45 +92,12 @@ if($usuario == false ) {
                 <div class="col-md-12"><br><br>
                     <ul class="nav nav-pills">
                         <?php
-                        $z = new Crud();
-                        $z->select='*';
-                        $z->from='details';
-                        $z->condition='files_uuid="'.$value.'" AND module="ltm" AND obj_grp="rule" GROUP BY obj_name';
-                        $z->Read();
-                        $y= $z->rows;
-                        $r = count($y);
-
-
-                        $a = new Crud();
-                        $a->select='DISTINCT (module)';
-                        $a->from='details';
-                        $a->condition='files_uuid="'.$value.'"';
-                        $a->Read();
-                        $b = $a->rows;
-                        $m_found= count($b);
-                        for ($c=0;$c<$m_found;$c++){
-                            if ($b[$c][0]!='ltm' AND $module==$b[$c][0]){
-                                echo '<li role="presentation" class="active"><a href="modules.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
-                                // echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
-                            } elseif ($b[$c][0]!='ltm' AND $module!=$b[$c][0]){
-                                echo '<li role="presentation"><a href="modules.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
-                                // echo '<button type="submit" class="btn btn-default" name="value" value="'.$b[$c][0].'" formaction="modules.php">'.  strtoupper($b[$c][0]).'</button>';
-                            } elseif ($b[$c][0]=='ltm' AND $module==$b[$c][0] AND $y!=null) {
-                                echo '<li role="presentation" class="active"><a href="modules.php?value='.$b[$c][0].'">'.  strtoupper($b[$c][0]).'</a></li>';
-                                echo '<li role="presentation"><a href="modules.php?value=rule">iRules</a></li>';
-                                // echo '<button type="submit" class="btn btn-default active">'.  strtoupper($b[$c][0]).'</button>';
-                                // echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="modules.php">iRULES</button>';
-                            } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module!='rule'){
-                                echo '<li role="presentation"><a href="modules.php?value=ltm">LTM</a></li>';
-                                echo '<li role="presentation"><a href="modules.php?value=rule">iRules</a></li>';
-                                // echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="modules.php">LTM</button>';
-                                // echo '<button type="submit" class="btn btn-default" name="value" value="rule" formaction="modules.php">iRULES</button>';
-                            } elseif ($b[$c][0]=='ltm' AND $module!=$b[$c][0] AND $module=='rule') {
-                                echo '<li role="presentation"><a href="modules.php?value=ltm">LTM</a></li>';
-                                echo '<li role="presentation" class="active"><a href="modules.php?value=rule">iRules</a></li>';
-                                // echo '<button type="submit" class="btn btn-default" name="value" value="ltm" formaction="modules.php">LTM</button>';
-                                // echo '<button type="submit" class="btn btn-default active" name="value" value="rule" formaction="modules.php">iRULES</button>';
-                            }
+                        foreach($npmodules as $mname => $m) {
+                            if($mname == $module)
+                                echo '<li role="presentation" class="active">';
+                            else 
+                                echo '<li role="presentation">';
+                            echo '<a href="modules.php?value='. $mname. '">'. strtoupper($m["friendly_name"]). '</a></li>';
                         }
                         ?>
                     </ul>
@@ -131,8 +107,8 @@ if($usuario == false ) {
                         <br>
                         <table  class="table" style="table-layout: fixed; width: 100%">
                              <tr class="active">
-                                <th style="width: 20%">F5 Object Groups</th>
-                                <th style="width: 20%"># Objects Found</th>
+                                <th style="width: 30%">F5 Object Groups</th>
+                                <th style="width: 10%"># Objects Found</th>
                                 <th style="width: 15%">% Converted</th>
                                 <th style="width: 15%">% Not Converted</th>
                                 <th style="width: 10%"># Omitted</th>
@@ -140,101 +116,23 @@ if($usuario == false ) {
                             </tr>
                             <tbody>
                                 <?php
-                                    if ($module == "rule"){
-                                        $t = new NetPivot();
-                                        $r = $t->getCNCO_Obj($value,'ltm','rule');
-                                        $s = count($r);
-                                        for ($u=0;$u<$s;$u++){
-                                                
-                                        $total = $r[$u]['converted'] + $r[$u]['no_converted'];
-                                        $c = ($r[$u]['converted']*100)/$total;
-                                        
+                                    foreach ($npobjgrp as $ogname => $ogvalues) {
+                                        if($ogname == 'rule') continue;
+                                        if(isset($ogvalues["attribute_count"]) && $ogvalues["attribute_count"] > 0) {
+                                            $p_c  = round(100 * $ogvalues["attribute_converted"] / $ogvalues["attribute_count"]);
+                                            $p_nc = 100 - $p_c;
+                                        } else {
+                                            $p_c  = "-";
+                                            $p_nc = "-";
+                                        }
                                         echo '<tr>';
-                                        $gf = str_replace('/Common/', '', $r[$u]['name']);
-                                        echo '<td><div style="word-wrap: break-word">'.$gf.'</div></td>';
-                                        if ($total!=0) {
-                                            echo '<td>'.$total.'</td>';
-                                        } else {
-                                            echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                        }
-                                        
-                                        if ($r[$u]['converted']!=0) {
-                                            echo '<td class="text_color_red"><strong>'.($r[$u]['converted'] *100) / $total.'%</strong></td>';
-                                        } else {
-                                            echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                        }
-                                        
-                                        if ($r[$u]['no_converted']!=0) {
-                                            echo '<td class="text_color_red"><strong>'.($r[$u]['no_converted'] *100) / $total.'%</strong></td>';
-                                        } else {
-                                            echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                        }
-                                        $total_o = $r[$u]['omitted'] -1 ;
-                                        if ($r[$u]['omitted']!=0) {
-                                            echo '<td class="text_color_gray"><strong>'.$total_o.'</strong></td>';
-                                        } else {
-                                            echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                        }
-                                            echo '<td><a href="text.php?value='.$module.'&obj='.$r[$u]['name'].'&line='.$r[$u]['line'].'#line">View Config</a>&nbsp;&nbsp;&nbsp;<a href="objects.php?value='.$module.'&obj='.$rows[$c][0].'">View Object</a>';
-                                            echo '<tr>';
-                                        }
-                                    }
-                                    $model = new Crud();
-                                    $model->select='DISTINCT (obj_grp)';
-                                    $model->from='details';
-                                    $model->condition='files_uuid="'.$value.'" AND module="'.$module.'"';
-                                    $model->Read();
-                                    $rows = $model->rows;
-                                    
-                                    
-                                    $total2 = count ($rows);
-                                    for ($c=0;$c<$total2;$c++){
-                                        if ($rows[$c][0]!='rule') {
-                                            $del = new Crud();
-                                            $del-> select ='DISTINCT (obj_name)';
-                                            $del->from='details';
-                                            $del->condition='files_uuid="'.$value.'" AND module="'.$module.'" AND obj_grp="'.$rows[$c][0].'"';
-                                            $del->Read();
-                                            $p = $del->rows;
-                                            $t_p = count($p);
-                                            
-                                            $a = new NetPivot();
-                                            $b = $a->getCNCO($value, $module,$rows[$c][0],0);
-                                            $b_sum = $b[1] + $b[2] + $b[3];
-                                            $b_sum2 = $b[1] + $b[2];
-                                            $b_c = ($b[1]*100)/$b_sum2;
-                                            $b_nc = ($b[2]*100)/$b_sum2;
-                                            if ($module == 'rule'){
-                                                echo '<td>'.$rows[$c][0].'</td>';
-                                            } else {
-                                                echo '<td>'.$rows[$c][0].'</td>';
-                                            }
-                                            if ($b_sum !=0){
-                                                echo '<td>'.$t_p.'</td>';
-                                            } else {
-                                                echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                            }
-                                           
-                                           if ($b_c !=0){
-                                                echo '<td class="text_color_green"><strong>'.round($b_c).'%</strong></td>';
-                                            } else {
-                                                echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                            }
-                                            if ($b_nc !=0){
-                                                echo '<td class="text_color_red"><strong>'.round($b_nc).'%</strong></td>';
-                                            } else {
-                                                echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                            }
-                                           
-                                            if ($b[3] !=0){
-                                                echo '<td class="text_color_gray"><strong>'.$b[3].'</strong></td>';
-                                            } else {
-                                                echo '<td class="text_color_gray"><strong>-</strong></td>';
-                                            }
-
-                                            echo '<td><a href="text.php?value='.$module.'&obj='.$rows[$c][0].'#line">View Config</a>&nbsp;&nbsp;&nbsp;<a href="objects.php?value='.$module.'&obj='.$rows[$c][0].'">View Object</a>';
-                                            echo '</tr>'; 
-                                        }
+                                        echo '<td><div style="word-wrap: break-word">'.$ogvalues["name"].'</div></td>';
+                                        echo '<td>'.$ogvalues["object_count"]."</td>";
+                                        echo '<td class="text_color_green"><strong>'.$p_c."%</strong></td>";
+                                        echo '<td class="text_color_red"><strong>'.$p_nc."%</strong></td>";
+                                        echo '<td class="text_color_gray"><strong>'.$ogvalues["attribute_omitted"]."</strong></td>";
+                                        echo '<td><a href="objects.php?value='.$module.'&obj='.$ogname.'">View Object</a>';
+                                        echo '<tr>';
                                     }
                                 ?>
                                 
