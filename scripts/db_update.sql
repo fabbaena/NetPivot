@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS attributes (
            ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
+DROP VIEW IF EXISTS obj_names_view CASCADE;
 CREATE VIEW obj_names_view AS
     SELECT
         obj_names.obj_grp_id AS obj_grp_id,
@@ -78,6 +79,7 @@ CREATE VIEW obj_names_view AS
     FROM
         obj_names;
 
+DROP VIEW IF EXISTS obj_grps_view CASCADE;
 CREATE VIEW obj_grps_view AS
     SELECT
         obj_grps.module_id AS module_id,
@@ -90,6 +92,7 @@ CREATE VIEW obj_grps_view AS
     FROM
         obj_grps;
 
+DROP VIEW IF EXISTS modules_view CASCADE;
 CREATE VIEW modules_view AS
     SELECT
        modules.files_uuid AS files_uuid,
@@ -103,6 +106,7 @@ CREATE VIEW modules_view AS
     FROM
        modules;
 
+DROP TRIGGER IF EXISTS new_detail_record;
 DELIMITER $$
 CREATE TRIGGER new_detail_record BEFORE INSERT ON details FOR EACH ROW
 BEGIN
