@@ -18,7 +18,7 @@ create() {
 alter() {
     local DBALTER=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/db_update.sql
     #local DBALTER=/home/ubuntu/codedeploy/scripts/db_update.sql
-    mysql --defaults-file=${CONFFILE} -f -v -s < ${DBALTER}
+    mysql --defaults-file=${CONFFILE} -f -v -s < ${DBALTER} && exit 0
 }
 
 invoke-rc.d --quiet mysql status
