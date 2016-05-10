@@ -18,10 +18,11 @@ $id= $sesion->get('id'); //Get user id
 $user_type = $sesion->get('type'); //Get user type = administrator or user
 $max_files = $sesion->get('max_files');
 
-if($usuario == false ) {
-    header('location:../index.php');
-} else {
-    ?>
+if($usuario == false ) { 
+    header('location: /'); 
+    exit();
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -321,6 +322,3 @@ if($usuario == false ) {
          </footer>
 </body>
 </html>
-<?php
-}
-?>
