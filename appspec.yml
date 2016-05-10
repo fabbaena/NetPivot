@@ -19,6 +19,12 @@ permissions:
     mode: 755
     type:
       - directory
+  - object: /var/www/html/dashboard/f5conv
+    owner: www-data
+    group: www-data
+    mode: 755
+    type: 
+      - file
 
 hooks:
   ApplicationStop:
