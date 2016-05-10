@@ -1,6 +1,6 @@
 <?php
 
-$path_pivot = '/opt/netpivot/';
+$path_pivot = '/var/www/html/dashboard/';
 $path_files = '/var/www/html/dashboard/files/';
 
 $f5conv       = $path_pivot. 'f5conv';
