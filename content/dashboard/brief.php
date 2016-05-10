@@ -33,11 +33,12 @@ if(!isset($filename) || $filename == "" ) {
     $sesion->set('filename', $filename);
 }
 
+if($usuario == false ) { 
+    header('location: /'); 
+    exit();
+}
 
-if($usuario == false ) {
-    header('location:../index.php');
-} else {
-    ?>
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -200,7 +201,11 @@ if($usuario == false ) {
                                     echo '<td>'.strtoupper($value["friendly_name"]).'</td>';
                                     if(isset($value["attribute_count"])) {
                                         $p_t  = 100 * $value["attribute_count"]     / $totalattributes;
-                                        $p_c  = 100 * $value["attribute_converted"] / $value["attribute_count"];
+                                        if(isset($value["attribute_count"]) && $value["attribute_count"] > 0) {
+                                            $p_c  = 100 * $value["attribute_converted"] / $value["attribute_count"];
+                                        } else {
+                                            $p_c = 0;
+                                        }
                                         $p_nc = 100 - $p_c;
                                         $p_t  = $p_t<1?($p_t==0?"0":"<1"):round($p_t);
                                         $p_c  = $p_c<1?($p_c==0?"0":"<1"):round($p_c);
@@ -232,6 +237,3 @@ if($usuario == false ) {
          </footer>
 </body>
 </html>
-<?php
-}
-?>

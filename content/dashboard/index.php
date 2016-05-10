@@ -20,10 +20,11 @@ $user_type = $sesion->get('type'); //Get user type = administrator or user
 $max_files = $sesion->get('max_files');
 $sesion->set('filename', '');
 
-if($usuario == false ) {
-    header('location:../index.php');
-} else {
-    ?>
+if($usuario == false ) { 
+    header('location: /'); 
+    exit();
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -125,8 +126,8 @@ if($usuario == false ) {
                                     }      
                                     if ($is == true) {
                                             echo '<td style="width: 5%"><input type="radio" name="uuid" value="'.$download .'" required />';                                            
-                                            echo '<td style="width: 60%"> '.  $datafiles['filename'] . " </td>";
-                                            echo '<td style="width: 15%"><a href="rename.php?file='.$datafiles['uuid'].'">Rename</a></td>';
+                                            echo '<td style="width: 55%"> '.  $datafiles['filename'] . " </td>";
+                                            echo '<td style="width: 20%"><a href="rename.php?file='.$datafiles['uuid'].'">Rename</a>&nbsp;<a href="reprocess.php?file='.$datafiles['uuid'].'">Reprocess</a></td>';
                                             echo '<td style="width: 20%">'. $datafiles['upload_time'] . "</td>";                                            
                                             echo '</tr>';
                                         
@@ -159,6 +160,3 @@ if($usuario == false ) {
          </footer>
 </body>
 </html>
-<?php
-}
-?>
