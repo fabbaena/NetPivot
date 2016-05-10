@@ -18,10 +18,11 @@ if ($user_type != 'Administrator') {
     header('location:../index.php');
 }
         
-if($usuario == false ) {
-    header('location:../index.php');
-} else {
-    ?>
+if($usuario == false ) { 
+    header('location: /'); 
+    exit();
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -87,6 +88,3 @@ if($usuario == false ) {
          </footer>
 </body>
 </html>
-<?php
-}
-?>

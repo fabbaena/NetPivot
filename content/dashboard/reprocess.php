@@ -21,8 +21,7 @@ if($usuario == false ) {
     exit();
 }
 
-$uuid      = htmlspecialchars($_GET['uuid']);
-$filename  = htmlspecialchars($_GET['filename']);
+$uuid  = htmlspecialchars($_GET['file']);
 
 include '../engine/Config.php';
 
@@ -31,12 +30,16 @@ try {
     $pwd = exec($command, $pwd_out,$pwd_error); //this is the command executed on the host  
     $time = new TimeManager();
     $time->Today_Date();
-    $today = $time->full_date;                        
+    $today = $time->full_date;
+
     $model = new Crud();
-    $model->insertInto = 'conversions';
-    $model->insertColumns = 'users_id,time_conversion,files_uuid,converted_file,error_file,stats_file';
-    $model->insertValues = "'$id','$today','$uuid','$ns_file','$error_name','$csv_name'";
-    $model->Create();
+    $model->deleteFrom = 'details';
+    $model->condition = "files_uuid='$uuid'";
+    $model->Delete();
+
+    $model->deleteFrom = 'modules';
+    $model->Delete();
+
     $msg = $model->mensaje;
     if ($msg == true) {
         $load = new Crud();

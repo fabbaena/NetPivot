@@ -18,10 +18,11 @@ if (isset($_GET['file'])) {
     $filename = htmlspecialchars($_GET['file']);
 }
 
-if($usuario == false ) {
-    header('location:../index.php');
-} else {
-    ?>
+if($usuario == false ) { 
+    header('location: /'); 
+    exit();
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -84,7 +85,3 @@ if($usuario == false ) {
 
 </body>
 </html>
-
-<?php
-    }
-?>

@@ -19,7 +19,11 @@ $filename = $sesion->get('filename');
     if($current_page == 'modules.php') {
         echo '<li class="active">Modules</li>';
     } elseif(in_array($current_page,$x)) {
-        $url_value = "value=".$_GET['value'];
+        if(isset($_GET['value'])) {
+            $url_value = "value=".$_GET['value'];
+        } else {
+            $url_value = "";
+        }
         echo '<li class=""><a href="modules.php?'.$url_value.'">Modules</a></li>';
     }
     ?>

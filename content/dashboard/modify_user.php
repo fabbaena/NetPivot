@@ -15,10 +15,11 @@ $usuario = $sesion->get('usuario'); //Got username
 $id= $sesion->get('id'); //Got user id
 $user_type = $sesion->get('type'); //Got user type = administrator or user
 
-if($usuario == false ) {
-    header('location:../index.php');
-} else {
-    ?>
+if($usuario == false ) { 
+    header('location: /'); 
+    exit();
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -104,6 +105,3 @@ if($usuario == false ) {
          </footer>
 </body>
 </html>
-<?php
-}
-?>
