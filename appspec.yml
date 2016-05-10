@@ -5,6 +5,8 @@ os: linux
 files:
   - source: content
     destination: /var/www/html
+  - source: netpivot_kernel
+    destination: /opt/netpivot_kernel
 
 permissions:
   - object: /var/www/html
@@ -19,7 +21,13 @@ permissions:
     mode: 755
     type:
       - directory
-  - object: /var/www/html/dashboard/f5conv
+  - object: /opt/netpivot_kernel
+    owner: www-data
+    group: www-data
+    mode: 644
+    type: 
+      - directory
+  - object: /opt/netpivot_kernel
     owner: www-data
     group: www-data
     mode: 755
