@@ -28,6 +28,69 @@ if($usuario == false ) {
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <script src="/js/jquery.min.js"></script>
+        <script language="javascript">
+        var curobjid;
+        var s;
+        var e;
+        function loadattrs(data) {
+            $("#" + curobjid).html("");
+            curobjid = data;
+            $.getJSON("ajax/loadattrs.php", { "objid": data }, showdata);
+        }
+        function showdata(data) {
+            var attributelist = $("<table>");
+            var row = $("<tr>")
+                .append(
+                    $("<th>")
+                        .html("Converted")
+                        .width("100px"))
+                .append(
+                    $("<th>").html("Attribute Name"));
+
+            attributelist.append(row);
+            s = data["_linestart"];
+            delete(data["_linestart"]);
+            e = data["_lineend"];
+            delete(data["lineend"]);
+
+            for(var attributename in data) {
+                if(attributename.substring(0, 1) == '_') { continue; }
+                var converted = data[attributename]["converted"]==1?"YES":"NO";
+                var color = data[attributename]["converted"]==1?"green":"red";
+                var bgcolor = data[attributename]["converted"]==1?"rgb(177, 239, 177)":"rgb(251, 198, 196)";
+                row = $("<tr>");
+                row.append($("<td>")
+                        .html(converted)
+                        .css("background-color", bgcolor)
+                        .css("color", color))
+                    .append($("<td>")
+                        .html(attributename)
+                        .css("background-color", bgcolor)
+                        .css("color", color));
+                attributelist.append(row);
+            }
+            $("#" + curobjid)
+                .html(attributelist)
+                .append(
+                    $("<a>")
+                        .click(loadsource)
+                        .text("Source")
+                    );
+
+        }
+        function loadsource() {
+            $.getJSON("ajax/getlinefile.php", { "s": s, "e": e }, showsource);
+        }
+        function showsource(data) {
+            $("#" + curobjid).append($("<br>"));
+            for(var line in data) {
+                $("#" + curobjid)
+                    .append(data[line])
+                    .append($("<br>"));
+            }
+        }
+        </script>
         <?php 
         include ('../engine/css.php');//Include links to stylesheets and js scripts 
         if (isset($_POST['uuid'])) {
@@ -80,8 +143,9 @@ if($usuario == false ) {
             }
             $npon->Read();
 
-            foreach ($npon->rows as $o) {
+            foreach ($npon->rows as $key => $o) {
                 $npobj[$o["name"]] = $o;
+                unset($npobj[$key]);
             }            
         }
 
@@ -179,11 +243,9 @@ if($usuario == false ) {
                                         }
                                     } else {
                                         echo '<tr class="active">
-                                            <th style="width: 25%">Object Name</th>
-                                            <th style="width: 13"># Attributes</th>
-                                            <th style="width: 14%">% Converted</th>
-                                            <th style="width: 18%">% Not Converted</th>
-                                            <th style="width: 15%"># Omitted</th>
+                                            <th style="width: 61%">Object Name</th>
+                                            <th style="width: 12%">Attributes</th>
+                                            <th style="width: 12%">Converted</th>
                                             <th style="width: 15%">Actions</th>
                                             </tr>
                                             <tbody>';
@@ -192,18 +254,18 @@ if($usuario == false ) {
                                                 if(isset($ovalues["attribute_count"]) && $ovalues["attribute_count"] > 0) {
                                                     $p_c  = round(100 * $ovalues["attribute_converted"] / $ovalues["attribute_count"]);
                                                     $p_nc = 100 - $p_c;
+                                                    $color = $p_c < 100 ? "text_color_red" : "text_color_green";
                                                 } else {
                                                     $p_c  = "-";
                                                     $p_nc = "-";
                                                 }
                                                 echo '<tr>';
-                                                echo '<td><div style="word-wrap: break-word">'.$oname.'</div></td>';
+                                                echo '<td><div style="word-wrap: break-word"><a onclick="loadattrs('.$ovalues["id"].');">'.$oname.'</a></div></td>';
                                                 echo '<td><div style="word-wrap: break-word">'.$ovalues["attribute_count"].'</div></td>';
-                                                echo '<td><div class="text_color_green"><strong>'.$p_c.'%</strong></div></td>';
-                                                echo '<td><div class="text_color_red"><strong>'.$p_nc.'%</strong></div></td>';
-                                                echo '<td class="text_color_gray"><strong>'.$ovalues["attribute_omitted"].'</strong></td>';
+                                                echo '<td><div class="'. $color. '"><strong>'.$p_c.'%</strong></div></td>';
                                                 echo '<td><a href="text.php?value='.$module.'&obj='.$obj.'&line='.$ovalues["line"].'#line">View Config</a>';
                                                 echo '</tr>';
+                                                echo '<tr><td colspan=4 style="border-top: none" id="'. $ovalues["id"]. '"></td></tr>';
                                             }
                                         }
                                     }
