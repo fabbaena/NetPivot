@@ -34,7 +34,15 @@ if($usuario == false ) {
         var s;
         var e;
         function loadattrs(data) {
+            $("#b_details_" + curobjid)
+                .addClass("glyphicon-expand")
+                .removeClass("glyphicon-collapse-down");
             $("#" + curobjid).html("");
+            curoffset = $("#b_details_" + curobjid).height();
+            if(data==curobjid) {
+                curobjid = 0 ;
+                return;
+            }
             curobjid = data;
             $.getJSON("ajax/loadattrs.php", { "objid": data }, showdata);
         }
@@ -43,10 +51,10 @@ if($usuario == false ) {
             var row = $("<tr>")
                 .append(
                     $("<th>")
-                        .html("Converted")
-                        .width("100px"))
+                        .html("Line")
+                        .width("50px"))
                 .append(
-                    $("<th>").html("Attribute Name"));
+                    $("<th>").html("F5 Source Code"));
 
             attributelist.append(row);
             s = data["_linestart"];
@@ -54,29 +62,42 @@ if($usuario == false ) {
             e = data["_lineend"];
             delete(data["lineend"]);
 
+            var color;
+            var bgcolor;
             for(var attributename in data) {
                 if(attributename.substring(0, 1) == '_') { continue; }
-                var converted = data[attributename]["converted"]==1?"YES":"NO";
-                var color = data[attributename]["converted"]==1?"green":"red";
-                var bgcolor = data[attributename]["converted"]==1?"rgb(177, 239, 177)":"rgb(251, 198, 196)";
+
+                switch(data[attributename]["converted"]) {
+                    case "1":
+                        color = "green";
+                        bgcolor = "rgb(177, 239, 177)";
+                        break;
+                    case "0":
+                        color = "red";
+                        bgcolor = "rgb(251, 198, 196)";
+                        break;
+                    case "-2":
+                        color = "black";
+                        bgcolor = "white";
+                        break;
+                }
+
                 row = $("<tr>");
                 row.append($("<td>")
-                        .html(converted)
+                        .html(attributename)
                         .css("background-color", bgcolor)
                         .css("color", color))
                     .append($("<td>")
-                        .html(attributename)
+                        .html(data[attributename]["source"].replace(/ /g, "&nbsp;"))
                         .css("background-color", bgcolor)
                         .css("color", color));
                 attributelist.append(row);
             }
+            $("#b_details_" + curobjid)
+                .addClass("glyphicon-collapse-down")
+                .removeClass("glyphicon-expand");
             $("#" + curobjid)
-                .html(attributelist)
-                .append(
-                    $("<a>")
-                        .click(loadsource)
-                        .text("Source")
-                    );
+                .html(attributelist);
 
         }
         function loadsource() {
@@ -260,7 +281,7 @@ if($usuario == false ) {
                                                     $p_nc = "-";
                                                 }
                                                 echo '<tr>';
-                                                echo '<td><div style="word-wrap: break-word"><a onclick="loadattrs('.$ovalues["id"].');">'.$oname.'</a></div></td>';
+                                                echo '<td><div style="word-wrap: break-word"><div id="b_details_'.$ovalues["id"].'" class="glyphicon glyphicon-expand" onclick="loadattrs('.$ovalues["id"].');"></div>'.$oname.'</div></td>';
                                                 echo '<td><div style="word-wrap: break-word">'.$ovalues["attribute_count"].'</div></td>';
                                                 echo '<td><div class="'. $color. '"><strong>'.$p_c.'%</strong></div></td>';
                                                 echo '<td><a href="text.php?value='.$module.'&obj='.$obj.'&line='.$ovalues["line"].'#line">View Config</a>';
