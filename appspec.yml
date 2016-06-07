@@ -12,8 +12,6 @@ files:
 
 permissions:
   - object: /var/www/html
-    pattern: "**"
-    except: [f5conv]
     owner: www-data
     group: www-data
     mode: 644
@@ -25,13 +23,6 @@ permissions:
     mode: 755
     type:
       - directory
-  - object: /var/www/html/dashboard
-    pattern: "f5conv"
-    owner: www-data
-    group: www-data
-    mode: 755
-    type: 
-      - file
 
 hooks:
   ApplicationStop:

@@ -8,3 +8,8 @@
 
 # ln -snvf ${LAST} /opt/netpivot/f5conv
 
+if [ -f /var/www/html/dashboard/f5conv ]; then
+    chown -c www-data.www-data /var/www/html/dashboard/f5conv
+    chmod -c 0755 /var/www/html/dashboard/f5conv
+fi
+
