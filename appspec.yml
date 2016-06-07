@@ -12,6 +12,8 @@ files:
 
 permissions:
   - object: /var/www/html
+    pattern: "**"
+    except: "f5conv*"
     owner: www-data
     group: www-data
     mode: 644
