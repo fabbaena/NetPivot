@@ -6,9 +6,9 @@ files:
   - source: content
     destination: /var/www/html
   - source: netpivot_kernel/f5conv
-    destination: /var/www/html/dashboard/f5conv
+    destination: /var/www/html/dashboard/
   - source: scripts/user_clean.sh
-    destination: /home/ubuntu/user_clean.sh
+    destination: /home/ubuntu/
 
 permissions:
   - object: /var/www/html
