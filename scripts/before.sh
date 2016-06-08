@@ -14,10 +14,10 @@ create() {
     #local DBCREATE=/home/ubuntu/codedeploy/scripts/db_create.sql
     mysql --defaults-file=${CONFFILE} -f -v -s < ${DBCREATE}
 
-    if [ ! -d /opt/netpivot_kernel ]; then
-	mkdir -p -m 0755 /opt/netpivot_kernel
-	chown -R www-data.www-data /opt/netpivot_kernel
-    fi
+#    if [ ! -d /opt/netpivot_kernel ]; then
+#	mkdir -p -m 0755 /opt/netpivot_kernel
+#	chown -R www-data.www-data /opt/netpivot_kernel
+#    fi
 }
 
 alter() {
