@@ -10,7 +10,7 @@ DBNAME=NetPivot
 DBDIR=/var/lib/mysql/$DBNAME
 
 create() {
-    local DBCREATE=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/db_create.sql
+    local DBCREATE=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/mariadb_create.sql
     #local DBCREATE=/home/ubuntu/codedeploy/scripts/db_create.sql
     mysql --defaults-file=${CONFFILE} -f -v -s < ${DBCREATE}
 
@@ -21,7 +21,7 @@ create() {
 }
 
 alter() {
-    local DBALTER=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/db_update.sql
+    local DBALTER=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/mariadb_update.sql
     #local DBALTER=/home/ubuntu/codedeploy/scripts/db_update.sql
     mysql --defaults-file=${CONFFILE} -f -v -s < ${DBALTER} && exit 0
 }
