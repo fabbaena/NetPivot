@@ -31,8 +31,7 @@ if (isset($_POST['uuid'])) {
     <div class="col-md-10 content">
         <div class="panel panel-default">
             <div class="panel-body">
-				<ol class="breadcrumb">
-				</ol>
+				<ol class="breadcrumb"></ol>
 				<hr>
             </div>
 	        <div class="panel-body" id="content">

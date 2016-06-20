@@ -23,6 +23,7 @@ if($usuario == false || !isset($roles[1])) {
     header('location: ../');
     exit();
 }
+include '../engine/Config.php';
 
 $userlist = new UserList();
 

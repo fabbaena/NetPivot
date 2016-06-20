@@ -1,5 +1,6 @@
 <?php
 
+$uuid = $sesion->get('uuid');
 $path_pivot = '/var/www/html/dashboard/';
 $path_files = '/var/www/html/dashboard/files/';
 

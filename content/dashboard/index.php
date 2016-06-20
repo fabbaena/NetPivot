@@ -122,7 +122,7 @@ $dones = $done->rows;
                                             <td style="width: 55%"><?= $datafiles['filename'] ?></td>
                                             <td style="width: 20%">
                                                 <a href="rename.php?file=<?= $datafiles['uuid'] ?>">Rename</a>&nbsp;
-                                                <a href="reprocess.php?file=<?= $datafiles['uuid'] ?>">Reprocess</a>
+                                                <a href="../engine/reprocess.php?file=<?= $datafiles['uuid'] ?>">Reprocess</a>
                                             </td>
                                             <td style="width: 20%"><?= $datafiles['upload_time'] ?></td>
                                         </tr>

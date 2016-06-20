@@ -87,7 +87,9 @@ try {
         $load->Load();
         $sesion->set('uuid', $uuid);
 
-        $string = file_get_contents("../dashboard/files/$uuid.json");
+        $string = file_get_contents($p_json_name
+
+            );
         $json_a = json_decode($string, true);
 
         $conn = new Crud();

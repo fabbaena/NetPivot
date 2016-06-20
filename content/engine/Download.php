@@ -17,8 +17,9 @@ if($usuario == false || !isset($uuid)) {
     header('location: /'); 
     exit();
 }
+require 'Config.php';
 
-$file = "../dashboard/files/${uuid}_.conf";
+$file = "$path_files${uuid}_.conf";
 
 
 header( "Content-Type: application/octet-stream");

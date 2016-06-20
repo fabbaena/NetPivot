@@ -5,10 +5,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 require '../model/StartSession.php';
 require '../model/TimeManager.php';
 require '../model/Crud.php';
-require '../model/Netpivot.php';
 
 $sesion    = new StartSession();
 $usuario   = $sesion->get('usuario');
@@ -20,10 +20,7 @@ if($usuario == false ) {
     exit();
 }
 
-$uuid      = htmlspecialchars($_GET['uuid']);
-$filename  = htmlspecialchars($_GET['filename']);
-
-include '../engine/Config.php';
+include 'Config.php';
 
 try {
     $pwd = exec($command, $pwd_out,$pwd_error); //this is the command executed on the host  
@@ -42,7 +39,7 @@ try {
         );
     $model->Create2();
 
-    $string = file_get_contents("../dashboard/files/$uuid.json");
+    $string = file_get_contents($p_json_name);
     $json_a = json_decode($string, true);
 
     $conn = new Crud();
@@ -58,7 +55,7 @@ try {
         $load->uuid = $uuid;
         $load->Load();
         $sesion->set('uuid', $uuid);
-        header ('location:content.php');
+        header ('location:../dashboard/content.php');
     }
     else {
         header ('location:command.php?error');
