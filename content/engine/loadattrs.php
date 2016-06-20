@@ -11,7 +11,7 @@ if($usuario == false || !isset($_GET["objid"])) {
 $uuid = $sesion->get('uuid');
 $objid = $_GET["objid"];
 
-include '../../engine/Config.php';
+include 'Config.php';
 
 $objname = new Crud();
 $objname->select='line';
