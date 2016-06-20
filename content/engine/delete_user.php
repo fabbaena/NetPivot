@@ -6,7 +6,6 @@
  * and open the template in the editor.
  */
 require '../model/Crud.php';
-require '../model/ConnectionBD.php';
 
 $user_id = htmlspecialchars($_GET['id']);
 try {
@@ -23,7 +22,7 @@ try {
         $modelo1->Delete();
         $mensaje1 = $modelo1->mensaje;
     } else {
-        header ('location:../dashboard/admin_users.php?delete_error');
+        header ('location:../admin/admin_users.php?delete_error');
     }
     
     if ($mensaje1 == true) {
@@ -33,15 +32,15 @@ try {
         $modelo2->Delete();
         $mensaje3 = $modelo2->mensaje;
     } else {
-         header ('location:../dashboard/admin_users.php?delete_error');
+         header ('location:../admin/admin_users.php?delete_error');
     }
     
     if ($mensaje3 == true) {
-         header ('location:../dashboard/admin_users.php?delete_ok');
+         header ('location:../admin/admin_users.php?delete_ok');
     } else {
-         header ('location:../dashboard/admin_users.php?delete_error');
+         header ('location:../admin/admin_users.php?delete_error');
     }
 } catch (Exception $ex) {
-    header ('location:../dashboard/admin_users.php?delete_error');
+    header ('location:../admin/admin_users.php?delete_error');
 }
 

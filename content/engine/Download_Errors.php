@@ -7,7 +7,6 @@
  */
 
 require '../model/Crud.php';
-require '../model/ConnectionBD.php';
 
 $value = htmlspecialchars($_POST['uuid']);
 

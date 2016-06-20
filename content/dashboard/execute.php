@@ -8,7 +8,6 @@
 require '../model/StartSession.php';
 require '../model/TimeManager.php';
 require '../model/Crud.php';
-require '../model/ConnectionBD.php';
 require '../model/Netpivot.php';
 
 $sesion    = new StartSession();
@@ -26,7 +25,6 @@ $filename  = htmlspecialchars($_GET['filename']);
 
 include '../engine/Config.php';
 
-
 try {
     $pwd = exec($command, $pwd_out,$pwd_error); //this is the command executed on the host  
     $time = new TimeManager();
@@ -34,9 +32,25 @@ try {
     $today = $time->full_date;                        
     $model = new Crud();
     $model->insertInto = 'conversions';
-    $model->insertColumns = 'users_id,time_conversion,files_uuid,converted_file,error_file,stats_file';
-    $model->insertValues = "'$id','$today','$uuid','$ns_file','$error_name','$csv_name'";
-    $model->Create();
+    $model->data = array(
+        "users_id"        => $id,
+        "time_conversion" => $today,
+        "files_uuid"      => $uuid,
+        "converted_file"  => $ns_file,
+        "error_file"      => $error_name,
+        "stats_file"      => $csv_name
+        );
+    $model->Create2();
+
+    $string = file_get_contents("../dashboard/files/$uuid.json");
+    $json_a = json_decode($string, true);
+
+    $conn = new Crud();
+    foreach($json_a as $objectgroup => $obj) {
+        $conn->uploadJSON($uuid, $objectgroup, $obj);
+
+    }
+
     $msg = $model->mensaje;
     if ($msg == true) {
         $load = new Crud();
@@ -44,7 +58,7 @@ try {
         $load->uuid = $uuid;
         $load->Load();
         $sesion->set('uuid', $uuid);
-        header ('location:brief.php');
+        header ('location:content.php');
     }
     else {
         header ('location:command.php?error');

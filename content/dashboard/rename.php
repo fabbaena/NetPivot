@@ -6,9 +6,7 @@
  * and open the template in the editor.
  */
 require '../model/StartSession.php';
-require '../model/FileManager.php';
 require '../model/Crud.php';
-require '../model/ConnectionBD.php';
 
 $sesion = new StartSession();
 $usuario = $sesion->get('usuario'); //Get username

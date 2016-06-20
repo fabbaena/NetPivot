@@ -1,7 +1,213 @@
 /* Will be used for future custom CSS needed for NetPivot. Particularly, any CSS needed to override the base bootstrap style */
 body {
-    min-width: 1250px;
+    min-width: 1205px; 
     width: auto !important;  /* Firefox will set width as auto */
     overflow-x: scroll;
 }
 
+input.btn.margin-set {
+    margin-right: 2%;
+}
+
+input.btn.margin_left-max {
+    
+    margin-left: 43%;
+}
+.number {
+    font-size: 80px;
+    /*font-weight: 700;*/
+}
+
+.nextto {
+    display: inline-block;
+    font-size: 60px;
+    margin-left: 45px;
+    margin-bottom: 0px;
+}
+
+.tag {
+    margin-top: 0px;
+    margin-left: 45px;
+    color: #ccc;
+}
+
+.filename {
+    margin-top: 0px;
+}
+
+.projectname {
+    margin-bottom: 0px;
+}
+
+.buttonmargin {
+    margin-right: 10px;
+}
+
+.text_color_blue {
+    color: #42ABEA;
+}
+
+.text_color_green {
+    color: #5cb85c;
+}
+.text_color_red {
+    color: #d43f3a;
+}
+.text_color_gray {
+    color: #999;
+}
+
+.badge_bkground_blue_sm {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 18px;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: #42abea;
+    border-radius: 30px;
+}
+
+.tr_big {
+   height: 60px;
+}
+
+.center_vertically {
+    display : table-cell;
+    vertical-align : middle;
+    float:none;
+}
+
+.td.ver_center {
+    vertical-align: middle;
+}
+
+.badge_bkground_red_sm {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 18px;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: #d43f3a;
+    border-radius: 30px;
+}
+
+.badge_bkground_green_sm {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 18px;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: #5cb85c;
+    border-radius: 30px;
+}
+
+.badge_bkground_gray_sm {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 18px;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: #999;
+    border-radius: 30px;
+}
+
+.no-padding {
+    position: relative;
+    min-height: 1px;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.custom-side-menu {
+    background-color: #ebebeb;
+    border-radius: 0px;
+    width: 100%;
+}
+.custom-margin-top {
+    margin-top: 20px;
+}
+
+.custom-side-menu>li.active>a {
+    border-radius: 0px;   
+}
+
+button-modules {
+    margin-right: 10px;
+}
+
+no-black {
+    background: #f7f7f7;
+}
+
+.db-perc {
+	font-size: 60px;
+	font-weight: 500;
+}
+.db-title {
+	font-size: 16px;
+	font-weight: 400;
+}
+.db-button {
+    font-size: 40px;
+	margin-top: 20px;
+}
+
+.navbuttons {
+	margin-right: 20px;
+}
+
+li.list-group-item.text-center.gray_backgr {
+    background: #d5d5d5;
+    color:gray;
+}
+
+.mybutton {
+    font-size: 40px;
+}
+.np-navbar-brand{
+	height: 50px;
+	font-size: 18px;
+	line-height:20px;
+	margin-left:-15px;
+} //float:left;padding:15px 15px;
+
+.expand {
+    clip: rect(0px,14px,15px,0px);
+    position: absolute;
+}
+.retract {
+    clip: rect(15px,14px,30px,0px);
+    position: absolute;
+}
+.converted_line {
+    color: green;
+    background-color: rgb(177, 239, 177);
+}
+.notconverted_line {
+    color: red;
+    background-color: rgb(251, 198, 196);
+}
+.ignored_line {
+    color: black;
+    background-color: white;
+}
+.linked_line {
+    color: black;
+    background-color: #ffff99;
+}

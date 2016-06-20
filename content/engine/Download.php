@@ -6,35 +6,23 @@
  * and open the template in the editor.
  */
 
-require '../model/Crud.php';
-require '../model/ConnectionBD.php';
-
-$value = htmlspecialchars($_POST['uuid']);
+require '../model/StartSession.php';
 
 
-$model = new Crud();
-$model->select ='*';
-$model->from = 'conversions';
-$model->condition = 'files_uuid="'.$value.'"' ;
-$model->Read();
-$rows = $model->rows;
-$mensaje = $model->mensaje;
-
-
-foreach ($rows as $info){
-    $file = $info['converted_file'];
+$sesion = new StartSession();
+$usuario = $sesion->get('usuario'); //Get username
+$uuid = $sesion->get('uuid');
+$filename  = $sesion->get('filename');
+if($usuario == false || !isset($uuid)) { 
+    header('location: /'); 
+    exit();
 }
 
+$file = "../dashboard/files/${uuid}_.conf";
 
-
-$file = '../dashboard/files/'. $file;
-
-
-
-$basefichero = basename($file);
 
 header( "Content-Type: application/octet-stream");
 header( "Content-Length: ".filesize($file));
-header( "Content-Disposition: attachment; filename=".$basefichero."");
+header( "Content-Disposition: attachment; filename=${filename}_ns.conf");
 readfile($file);
         

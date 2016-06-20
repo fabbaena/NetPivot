@@ -1,6 +1,5 @@
 <?php
 require '../model/FileManager.php';
-require '../model/ConnectionBD.php';
 require '../model/Crud.php';
 require '../model/UUID.php';
 require '../model/TimeManager.php';
@@ -8,26 +7,17 @@ require '../model/StartSession.php';
 require '../model/Netpivot.php';
 
 $sesion = new StartSession();
+$usuario = $sesion->get('usuario');
 $id= $sesion->get('id');
+if($usuario == false ) { 
+    header('location: /'); 
+    exit();
+}
 
 $target_path = "../dashboard/files/";
 
 $file_name = $_FILES['InputFile']['name'];
 
-/*
-$get_tz = new Crud();
-$get_tz->select = '*';
-$get_tz->from = 'settings';
-$get_tz->Read();
-$total = $get_tz->rows;
-foreach ($total as $get) {
-    $its = $get['timezone'];
-}
-
-$utc = new TimeManager();
-$utc->set_timezone = $its;
-$utc->SetTimeZone();
-*/
 $model = new FileManager;
 $model->file = $file_name;
 $model->CheckFile(); 
@@ -52,9 +42,13 @@ if ($so==false) {
                 if ($value == true ){                   
                     $add = new Crud();
                     $add->insertInto = 'files';
-                    $add->insertColumns = 'uuid,filename,upload_time,users_id';
-                    $add->insertValues = "'$value_uudi','$file_name','$date','$id'";
-                    $add->Create();
+                    $add->data = array(
+                        "uuid"        => $value_uudi,
+                        "filename"    => $file_name, 
+                        "upload_time" => $date, 
+                        "users_id"    => $id
+                        );
+                    $add->Create2();
                     $mensaje = $add->mensaje;
                     if ($mensaje == true){
                         $delete = new FileManager();

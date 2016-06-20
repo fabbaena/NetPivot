@@ -6,7 +6,6 @@
  * and open the template in the editor.
  */
 require '../model/Crud.php';
-require '../model/ConnectionBD.php';
 
 $user_id = htmlspecialchars($_GET['id']);
 $password = htmlspecialchars($_POST['password']);

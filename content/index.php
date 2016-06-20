@@ -12,11 +12,15 @@ $usuario = $sesion->get('usuario'); //Get username
 $id= $sesion->get('id'); //Get user id
 $user_type = $sesion->get('type'); //Get user type = administrator or user
 $max_files = $sesion->get('max_files');
+$roles = $sesion->get('roles');
+$starturl = $sesion->get('starturl');
 
-if($usuario == true ) {
-    header('location:dashboard/index.php');
-} else {
-    ?>
+if($usuario == true && $roles == true) {
+    $sesion->termina_sesion();  
+    header('location: '. $starturl);
+    exit();
+}
+?>
 
 
 <!DOCTYPE html>
@@ -34,10 +38,8 @@ if($usuario == true ) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
             <!-- CSS de Bootstrap -->
         <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <script src="ccs/jquery.js"></script>
     </head>
     <body>
-        <script src="http://code.jquery.com/jquery.js"></script>
         <link href="css/signing.css" rel="stylesheet">
         <div class="container-fluid">  
             <form class="form-signin" method="POST" action="model/LoginUser.php">
@@ -57,6 +59,3 @@ if($usuario == true ) {
         </div> 
     </body>
 </html>
-       <?php
-}
-?>         
