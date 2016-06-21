@@ -39,25 +39,27 @@ try {
         );
     $model->Create2();
 
-    $string = file_get_contents($p_json_name);
-    $json_a = json_decode($string, true);
-
-    $conn = new Crud();
-    foreach($json_a as $objectgroup => $obj) {
-        $conn->uploadJSON($uuid, $objectgroup, $obj);
-
-    }
-
     $msg = $model->mensaje;
     if ($msg == true) {
+
+        /****** Loads CSV *****/
         $load = new Crud();
         $load->filename = $p_csv_name;
         $load->uuid = $uuid;
         $load->Load();
         $sesion->set('uuid', $uuid);
+
+        /***** Loads JSON *****/
+        $string = file_get_contents($p_json_name);
+        $json_a = json_decode($string, true);
+        $conn = new Crud();
+        foreach($json_a as $objectgroup => $obj) {
+            $conn->uploadJSON($uuid, $objectgroup, $obj);
+
+        }
+
         header ('location:../dashboard/content.php');
-    }
-    else {
+    } else {
         header ('location:command.php?error');
     }
 } catch (Exception $ex) {

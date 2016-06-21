@@ -43,7 +43,7 @@ if ($so==false) {
                     );
                 $add->Create2();
                 header ('location:execute.php');
-                } catch (Exception $ex) {
+            } catch (Exception $ex) {
                     header ('location:../dashboard/index.php?upload_error');
             }
             

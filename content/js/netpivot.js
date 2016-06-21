@@ -553,7 +553,10 @@ function clickObjectOG(data) {
 }
 
 function showObjectTable() {
-    $(".objectsData").html($("<table>")
+    $(".objectsData")
+        .css("overflow", "scroll")
+        .css("height", "800px")
+        .html($("<table>")
         .addClass("table")
         .addClass("objectObjectsTable")
         .css("table-layout", "fixed")
@@ -672,6 +675,7 @@ function showObjectData() {
 function clickObjectAttributes(event) {
     var target_id   = $(event.target).attr("id").substring(10);
     var target_name = $(event.target).attr("objname");
+    breadcrumbs = [];
 
     loadObjectAttributes(target_id, target_name);
 }
@@ -680,6 +684,7 @@ function loadObjectAttributes(target_id, target_name) {
     $("#b_details_" + target_id)
         .addClass("glyphicon-collapse-down")
         .removeClass("glyphicon-collapse-up");
+
     $("#div_details_" + curobjid).html("");
     if(curobjid != target_id) {
         curobjid = target_id;
@@ -690,6 +695,7 @@ function loadObjectAttributes(target_id, target_name) {
             "oid": curobjid,
             "on": curobjname
         });
+
         $.getJSON("../engine/loadattrs.php", { "objid": target_id }, showdata);
     } else {
         curobjid = 0;
@@ -697,13 +703,13 @@ function loadObjectAttributes(target_id, target_name) {
         breadcrumbs = [];
     }
     showBreadcrumbs();
-
 }
 
 function loadattrs(data) {
     $("#b_details_" + curobjid)
         .addClass("glyphicon-collapse-down")
         .removeClass("glyphicon-collapse-up");
+
     $("#" + curobjid).html("");
     if(curobjid != data) {
         curobjid = data;
@@ -841,6 +847,9 @@ function showdata(data) {
                 }
             }
         });
+    var tabletop = $("#b_details_" + curobjid).parent().parent().parent().position().top;
+    var objtop = $("#b_details_" + curobjid).parent().parent().position().top;
+    $(".objectsData").scrollTop(objtop-tabletop);
 }
 
 function clickGotoObject(event) {
