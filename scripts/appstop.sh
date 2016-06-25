@@ -3,38 +3,32 @@
 WWWDATA=/var/www/html
 
 backup() {
-    local CONFFILE=/home/ubuntu/.my.cnf
-    local HOST=localhost
-    local USER=demonio
-    local PASSWORD=s3cur3s0c
-    local DBNAME=NetPivot
-    local DBDIR=/var/lib/mysql/$DBNAME
-    local DBDUMP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.sql
+    export PGPASSFILE=/home/ubuntu/.pgpass
+    export PGHOST=localhost
+    export PGUSER=demonio
+    export PGPASSWORD=s3cur3s0c
+    export PGDATABASE=netpivot
+    local DBDIR=`psql -l | grep -q netpivot`
+    local DBDUMP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.sql.xz
     local BACKUP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.tbz2
 
-    invoke-rc.d --quiet mysql status
+    invoke-rc.d --quiet postgresql status
     if [ $? -gt 0 ]; then
-	invoke-rc.d --quiet mysql start
+	invoke-rc.d --quiet postgresql start
     fi
 
-    if [ ! -f ${CONFFILE} ]; then
-	echo "[mysqldump]" >> ${CONFFILE}
-	echo "host=${HOST}" >> ${CONFFILE}
-	echo "user=${USER}" >> ${CONFFILE}
-	echo "password=${PASSWORD}" >> ${CONFFILE}
-	echo "[mysql]" >> ${CONFFILE}
-	echo "host=${HOST}" >> ${CONFFILE}
-	echo "user=root" >> ${CONFFILE}
-	echo "password=s3cur3s0c" >> ${CONFFILE}
+    if [ ! -f ${PGPASSFILE} ]; then
+	echo "localhost:5432:netpivot:demonio:s3cur3s0c" >> ${PGPASSFILE}
+	chmod 0600 ${PGPASSFILE}
     fi
 
     if [ ! -d `dirname ${DBDUMP}` ]; then
         mkdir -pv `dirname ${DBDUMP}`
     fi
 
-    if [ -d ${DBDIR} ]; then
-	mysqldump --defaults-file=${CONFFILE} --compact -c --delayed-insert -e -f -n -t -v --single-transaction --tz-utc --skip-quote-names ${DBNAME} > ${DBDUMP}
-	bzip2 -zfv9 ${DBDUMP}
+    psql -l | grep -q netpivot
+    if [ $? -ne 0 ]; then
+	su postgres -c "pg_dump ${PGDATABASE} | xz -z9q > ${DBDUMP}"
     fi
 
     tar -cvjf ${BACKUP} -C ${WWWDATA} .
