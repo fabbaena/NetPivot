@@ -21,7 +21,6 @@ require 'Config.php';
 
 $file = "$path_files${uuid}_.conf";
 
-
 header( "Content-Type: application/octet-stream");
 header( "Content-Length: ".filesize($file));
 header( "Content-Disposition: attachment; filename=${filename}_ns.conf");

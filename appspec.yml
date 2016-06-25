@@ -5,8 +5,10 @@ os: linux
 files:
   - source: content
     destination: /var/www/html
-  - source: netpivot_kernel
-    destination: /opt/netpivot_kernel
+  - source: netpivot_kernel/f5conv
+    destination: /var/www/html/dashboard/
+  - source: scripts/user_clean.sh
+    destination: /home/ubuntu/
 
 permissions:
   - object: /var/www/html
@@ -21,13 +23,6 @@ permissions:
     mode: 755
     type:
       - directory
-  - object: /opt/netpivot_kernel
-    pattern: "f5conv*"
-    owner: www-data
-    group: www-data
-    mode: 755
-    type: 
-      - file
 
 hooks:
   ApplicationStop:
