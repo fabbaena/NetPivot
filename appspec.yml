@@ -5,8 +5,6 @@ os: linux
 files:
   - source: content
     destination: /var/www/html
-  - source: netpivot_kernel/f5conv
-    destination: /var/www/html/dashboard/
   - source: scripts/user_clean.sh
     destination: /home/ubuntu/
 
