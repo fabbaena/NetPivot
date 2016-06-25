@@ -5,7 +5,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require 'ConnectionBD.php';
 require 'CheckUser.php';
 require 'StartSession.php';
 require 'Crud.php';
@@ -13,7 +12,7 @@ require 'Crud.php';
 $model = new CheckUser();
 $model->name = htmlspecialchars($_POST['inputUsername']);
 //$model->password = htmlspecialchars(sha1($_POST['inputPassword']));
-$model-> password = htmlspecialchars($_POST['inputPassword']);
+$model->password = htmlspecialchars($_POST['inputPassword']);
 $model->login();
 $mensaje = $model->mensaje;
 $id = $model->id;
@@ -28,7 +27,11 @@ if ($mensaje == true) { //Establish all the parameters for the session
     $sesion->set('id',$id);
     $sesion->set('type', $type);
     $sesion->set('max_files', $max_files);
-     header("location: ../dashboard/index.php");
+    $model->getRoles();
+    $sesion->set('roles', $model->roles);
+    $sesion->set('starturl', $model->starturl);
+    $starturl = $model->starturl;
+    header("location: ../". $starturl);
 } else {
     header ('location:../index.php?error=1');
 }

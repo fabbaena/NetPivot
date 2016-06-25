@@ -6,9 +6,7 @@
  * and open the template in the editor.
  */
 require '../model/StartSession.php';
-require '../model/FileManager.php';
 require '../model/Crud.php';
-require '../model/ConnectionBD.php';
 
 $sesion = new StartSession();
 $usuario = $sesion->get('usuario'); //Get username
@@ -40,7 +38,10 @@ if($usuario == false ) {
    <div class="col-md-10 content">
         <div class="panel panel-default">
             <div class="panel-body">
-               <?php include('../engine/breadcrumbs.php');//Includethe breadcrumb ?>
+                <ol class="breadcrumb">
+                    <li><a href="index.php">Files</a></li>
+                </ol>
+                <hr>
             </div>
             
             <div class="panel-body">

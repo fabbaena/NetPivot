@@ -6,7 +6,6 @@
  * and open the template in the editor.
  */
 
-require '../model/ConnectionBD.php';
 require '../model/Crud.php';
 
 $timezone = htmlspecialchars($_POST['Time_Zone']);

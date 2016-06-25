@@ -7,7 +7,6 @@
  */
 require '../model/StartSession.php';
 require '../model/Crud.php';
-require '../model/ConnectionBD.php';
 
 $sesion = new StartSession();
 $usuario = $sesion->get('usuario'); //Got username
