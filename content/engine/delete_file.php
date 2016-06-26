@@ -8,7 +8,6 @@
 
 require '../model/FileManager.php';
 require '../model/Crud.php';
-require '../model/ConnectionBD.php';
 
 
 

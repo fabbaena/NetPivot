@@ -1,18 +1,18 @@
 #!/bin/bash
 
-CONFFILE=/home/ubuntu/.my.cnf
+export PGPASSFILE=/home/ubuntu/.pgpass
 
-HOST=localhost
-USER=demonio
-PASSWORD=s3cur3s0c
-DBNAME=NetPivot
+export PGHOST=localhost
+export PGUSER=demonio
+export PGPASSWORD=s3cur3s0c
+export PGDATABASE=netpivot
 
-DBDIR=/var/lib/mysql/$DBNAME
+DBDIR=`psql -l | grep -q netpivot`
 
 create() {
-    local DBCREATE=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/mariadb_create.sql
+    local DBCREATE=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/pgsql_create.sql
     #local DBCREATE=/home/ubuntu/codedeploy/scripts/db_create.sql
-    mysql --defaults-file=${CONFFILE} -f -v -s < ${DBCREATE}
+    su - postgres -c "psql -b -f ${DBCREATE}"
 
 #    if [ ! -d /opt/netpivot_kernel ]; then
 #	mkdir -p -m 0755 /opt/netpivot_kernel
@@ -21,31 +21,24 @@ create() {
 }
 
 alter() {
-    local DBALTER=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/mariadb_update.sql
+    local DBALTER=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/pgsql_update.sql
     #local DBALTER=/home/ubuntu/codedeploy/scripts/db_update.sql
-    mysql --defaults-file=${CONFFILE} -f -v -s < ${DBALTER} && exit 0
+    su - postgres -c "psql -b -f ${DBALTER}"
 }
 
-invoke-rc.d --quiet mysql status
+invoke-rc.d --quiet postgresql status
 if [ $? -gt 0 ]; then
-    invoke-rc.d --quiet mysql start
+    invoke-rc.d --quiet postgresql start
 fi
 
-if [ ! -f ${CONFFILE} ]; then
-    echo "[mysqldump]" >> ${CONFFILE}
-    echo "host=${HOST}" >> ${CONFFILE}
-    echo "user=${USER}" >> ${CONFFILE}
-    echo "password=${PASSWORD}" >> ${CONFFILE}
-    echo "[mysql]" >> ${CONFFILE}
-    echo "host=${HOST}" >> ${CONFFILE}
-    echo "user=root" >> ${CONFFILE}
-    echo "password=s3cur3s0c" >> ${CONFFILE}
+if [ ! -f ${PGPASSFILE} ]; then
+    echo "localhost:5432:netpivot:demonio:s3cur3s0c" >> ${PGPASSFILE}
+    chmod 0600 ${PGPASSFILE}
 fi
 
 if [ ! -d ${DBDIR} ]; then
     rm -f /var/www/html/index.html
 
-    mysql --no-defaults --no-auto-rehash -v -s -u root -e "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('s3cur3s0c');"
     create
 else
     alter

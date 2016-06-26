@@ -6,51 +6,53 @@
  * and open the template in the editor.
  */
 
+require '../model/StartSession.php';
 require '../model/Crud.php';
-require '../model/ConnectionBD.php';
 require '../model/CheckUser.php';
+require '../model/UserList.php';
 
+$sesion = new StartSession();
+$usuario = $sesion->get('usuario');
+$id= $sesion->get('id'); 
+$user_type = $sesion->get('type');
+$roles = $sesion->get('roles');
+
+
+if($usuario == false || !isset($roles[1]) || 
+    !isset($_POST['username']) || !isset($_POST['password']) ||
+        !isset($_POST['max_files']) || !isset($_POST['max_conversions'])) {
+    header('location: ../');
+    exit();
+}
 
 $username = htmlspecialchars($_POST['username']);
 $password = htmlspecialchars($_POST['password']);
-$type = htmlspecialchars($_POST['usertype']);
+$type = htmlspecialchars(isset($_POST['usertype'])?$_POST['usertype']:"");
+$max_files = htmlspecialchars($_POST['max_files']);
+$max_conversions = htmlspecialchars($_POST['max_conversions']);
+
+$user = new User(array(
+    "id" => 0, 
+    "name" => $username, 
+    "type" => "", 
+    "max_files" => $max_files, 
+    "max_conversions" => $max_conversions, 
+    "used_files" => 0,
+    "used_conversions" => 0
+    ));
+
+$user->password = $password;
+
+for($i=1; $i<4; $i++) {
+    if(isset($_POST["role_". $i])) {
+        array_push($user->roles, $i);
+    }
+}
+
+$user->save();
 
 
-$check = new CheckUser();
-$check->name = $username;
-$check->password = $password;
-$check->login();
-$msg = $check->mensaje;
-$number = 100;
-
-echo $username.'<br>';
-echo $password.'<br>';
-echo $type.'<br>';
-if ($msg == false) 
-    {
-        $hash = password_hash($password, PASSWORD_BCRYPT);
-        echo $hash;
-        $model = new Crud();
-        $model->insertInto = 'users';
-        $model->insertColumns = 'name,password,type,max_files,max_conversions';
-        $model->insertValues = "'$username','$hash','Administrator',$number,$number";
-        $model->Create();
-        $mensaje = $model->mensaje;
-        if ($mensaje == true) {
-            echo 'usuario creado';
-            //header ('location:../dashboard/admin_users.php?new_done');
-        } else {
-            echo 'usuario error';
-            //header ('location:../dashboard/admin_users.php?new_error');
-        }    
-    } elseif ($msg == true) {
-        echo 'usuario existe';
-        //header ('location:../dashboard/admin_users.php?user_exists');
-    }   
-
-
-
-
+?>
 
 
 

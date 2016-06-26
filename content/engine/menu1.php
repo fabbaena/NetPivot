@@ -1,36 +1,28 @@
 
-
-<nav class="navbar navbar-default navbar-static-top black">
+<nav class="navbar navbar-inverse navbar-static-top">
     <div class="container-fluid">
-		<!-- Brand and toggle get grouped for better mobile display -->
-	<div class="navbar-header ">
-            
-            <a id="titulo" class="navbar-brand" href="../dashboard/index.php">
-                <img src="../images/netpivot_web-logo.png" width="50%" height="50%">
+		<div class="navbar-header">
+            <a class="np-navbar-brand" href="../dashboard/index.php">
+                <img src="../images/netpivot_web-logo-small.png">
             </a>
-	</div>
-		<!-- Collect the nav links, forms, and other content for toggling -->
-	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">      
-
+		</div>
+		<div class="collapse navbar-collapse">      
             <ul class="nav navbar-nav navbar-right">
-	
-                          
-             <li><a href="../model/EndSession.php">Log Out</a></li>
-                         
-			
-			
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" ><?= $usuario ?><span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                <?php if(isset($roles) && isset($roles[1])) { ?>
+                    <li><a href="../admin">System Admin</a></li>
+                <?php } ?>
+                <?php if(isset($roles) && isset($roles[2])) { ?>
+                    <li><a href="../sales">Sales</a></li>
+                <?php } ?>
+                <?php if(isset($roles) && isset($roles[3])) { ?>
+                    <li><a href="../dashboard">Engineering</a></li>
+                <?php } ?>
+                </ul>
+                </li>
+            	<li><a href="../model/EndSession.php">Log Out</a></li>
             </ul>
-	</div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
-</nav>  	
-<div class="container-fluid main-container">
-  <div class="col-md-2 sidebar">
-  	<div class="row">
-	<!-- uncomment code for absolute positioning tweek see top comment in css -->
-            <div class="absolute-wrapper"> </div>
-	<!-- Menu
-            <div class="side-menu">
-		<nav class="navbar navbar-default" role="navigation">
-			<!-- Main Menu -->
-                   <!-- <div class="side-menu-container">
-			<ul class="nav navbar-nav"> -->
+		</div>
+    </div>
+</nav>

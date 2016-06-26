@@ -1,7 +1,6 @@
 <?php
-require '../../model/StartSession.php';
-require '../../model/Crud.php';
-require '../../model/ConnectionBD.php';
+require '../model/StartSession.php';
+require '../model/Crud.php';
 
 $sesion = new StartSession();
 $usuario = $sesion->get('usuario'); //Get username
@@ -12,7 +11,7 @@ if($usuario == false || !isset($_GET["objid"])) {
 $uuid = $sesion->get('uuid');
 $objid = $_GET["objid"];
 
-include '../../engine/Config.php';
+include 'Config.php';
 
 $objname = new Crud();
 $objname->select='line';
