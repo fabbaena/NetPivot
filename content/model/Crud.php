@@ -37,8 +37,8 @@ class Crud {
         $usuario = "demonio";
         $pass = "s3cur3s0c";
         $host = "localhost";
-        $db = "NetPivot";
-        $this->_conn = new PDO("mysql:host=$host;dbname=$db", $usuario, $pass);
+        $db = "netpivot";
+        $this->_conn = new PDO("pgsql:host=$host;dbname=$db", $usuario, $pass);
     }
     
     public function Create(){
