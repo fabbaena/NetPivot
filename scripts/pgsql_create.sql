@@ -34,20 +34,20 @@ CREATE TABLE IF NOT EXISTS roles (
     starturl VARCHAR(255) NOT NULL
 );
 ALTER TABLE IF EXISTS roles OWNER TO demonio;
-ALTER SEQUENCE IF EXISTS roles_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 32767 START WITH 1 CYCLE OWNER BY roles_id;
+ALTER SEQUENCE IF EXISTS roles_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 32767 START WITH 1 CYCLE OWNED BY roles.id;
 DROP INDEX IF EXISTS roles_name_idx CASCADE;
 CREATE INDEX IF NOT EXISTS roles_name_idx ON roles USING BTREE (name);
-COPY roles (id, name, starturl) FROM STDIN WITH FORMAT CSV;
-1,'System Admin','admin/'
-2,'Sales','sales/'
-3,'Engineer','dashboard/'
-\.
+BEGIN;
+INSERT INTO roles(id,name,starturl) VALUES (1,'System Admin','admin/');
+INSERT INTO roles(id,name,starturl) VALUES (2,'Sales','sales/');
+INSERT INTO roles(id,name,starturl) VALUES (3,'Engineer','dashboard/');
+COMMIT;
 
 -- TABLE user_role
 DROP TABLE IF EXISTS user_role CASCADE;
 CREATE TABLE IF NOT EXISTS user_role (
     user_id SMALLINT NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE NO ACTION,
-    role_id SMALLINT NOT NULL REFERENCES roles(id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    role_id SMALLINT NOT NULL REFERENCES roles(id) ON DELETE CASCADE ON UPDATE NO ACTION
 );
 ALTER TABLE IF EXISTS user_role OWNER TO demonio;
 DROP INDEX IF EXISTS user_role_user_id_idx CASCADE;
@@ -56,11 +56,11 @@ DROP INDEX IF EXISTS user_role_user_id_role_id_idx CASCADE;
 CREATE INDEX IF NOT EXISTS user_role_user_id_idx ON user_role USING BTREE (user_id);
 CREATE INDEX IF NOT EXISTS user_role_role_id_idx ON user_role USING BTREE (role_id);
 CREATE UNIQUE INDEX IF NOT EXISTS user_role_user_id_role_id_idx ON user_role USING BTREE (user_id,role_id);
-COPY user_role (user_id, role_id) FROM STDIN WITH FORMAT CSV;
-1,1
-1,2
-1,3
-\.
+BEGIN;
+INSERT INTO user_role(user_id,role_id) VALUES (1,1);
+INSERT INTO user_role(user_id,role_id) VALUES (1,2);
+INSERT INTO user_role(user_id,role_id) VALUES (1,3);
+COMMIT;
 
 -- TABLE files
 DROP TABLE IF EXISTS files CASCADE;
@@ -219,7 +219,7 @@ CREATE TABLE IF NOT EXISTS f5_persistence_json (
     name VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
     adminpart VARCHAR(255) NOT NULL,
-    attributes JSONB NOT NULL,
+    attributes JSONB NOT NULL
 );
 ALTER TABLE IF EXISTS f5_persistence_json OWNER TO demonio;
 ALTER SEQUENCE IF EXISTS f5_persistence_json_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CYCLE OWNED BY f5_persistence_json.id;
