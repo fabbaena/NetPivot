@@ -23,7 +23,8 @@ permissions:
     mode: 755
     type:
       - directory
-  - object: /var/www/files
+  - object: /var/www
+    pattern: "files"
     owner: www-data
     group: www-data
     mode: 755
