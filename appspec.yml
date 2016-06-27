@@ -12,7 +12,7 @@ files:
 
 permissions:
   - object: /var/www/html
-    except: dashboard/f5conv
+    except: "dashboard/f5conv"
     owner: www-data
     group: www-data
     mode: 644
@@ -22,7 +22,7 @@ permissions:
     pattern: "f5conv"
     owner: www-data
     group: www-data
-    mode: 644
+    mode: 755
     type:
       - file
   - object: /var/www/html
