@@ -95,14 +95,14 @@ if($usuario == false  || !isset($roles[2])) {
                             $list = new Crud();
                             $list->select = '*';
                             $list->from = 'files';
-                            $list->condition = "users_id=" . $id . ' order by upload_time DESC';
+                            $list->condition = "users_id=$id order by upload_time DESC";
                             $list->Read();
                             $files = $list->rows;
                                                             
                             $done = new Crud();
                             $done->select = 'files_uuid,converted_file,error_file,stats_file,time_conversion';
-                            $done->from = 'conversions as c inner join files as f';
-                            $done->condition = 'f.uuid=c.files_uuid AND f.users_id=' . $id ;
+                            $done->from = 'conversions c, files f';
+                            $done->condition = "f.uuid=c.files_uuid AND f.users_id=$id" ;
                             $done->Read();
                             $dones = $done->rows;                                   
                                                        
