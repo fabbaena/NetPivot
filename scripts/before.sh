@@ -21,7 +21,7 @@ alter() {
     export PGPASSWORD=s3cur3s0c
     export PGDATABASE=netpivot
 
-    su - postgres -c "psql -b -f ${DBALTER}"
+    psql -b -f ${DBALTER}
 }
 
 invoke-rc.d --quiet postgresql status

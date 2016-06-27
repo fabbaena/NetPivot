@@ -4,7 +4,7 @@ os: linux
 
 files:
   - source: content
-    destination: /var/www/html
+    destination: /var/www/html/
   - source: scripts/user_clean.sh
     destination: /home/ubuntu/
   - source: files

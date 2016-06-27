@@ -46,8 +46,8 @@ COMMIT;
 -- TABLE user_role
 DROP TABLE IF EXISTS user_role CASCADE;
 CREATE TABLE IF NOT EXISTS user_role (
-    user_id SMALLINT NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE NO ACTION,
-    role_id SMALLINT NOT NULL REFERENCES roles(id) ON DELETE CASCADE ON UPDATE NO ACTION
+    user_id SMALLINT NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    role_id SMALLINT NOT NULL REFERENCES roles(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 ALTER TABLE IF EXISTS user_role OWNER TO demonio;
 DROP INDEX IF EXISTS user_role_user_id_idx CASCADE;
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS files (
     filename VARCHAR(255) NULL,
     project_name VARCHAR(64) NULL,
     upload_time TIMESTAMP(0) WITH TIME ZONE NULL,
-    users_id SMALLINT NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE NO ACTION
+    users_id SMALLINT NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 ALTER TABLE IF EXISTS files OWNER TO demonio;
 
@@ -86,9 +86,9 @@ ALTER TABLE IF EXISTS settings OWNER TO demonio;
 DROP TABLE IF EXISTS conversions CASCADE;
 CREATE TABLE IF NOT EXISTS conversions (
     id_conversions BIGSERIAL NOT NULL UNIQUE PRIMARY KEY,
-    users_id SMALLINT NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE NO ACTION,
+    users_id SMALLINT NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     time_conversion TIMESTAMP(0) WITH TIME ZONE NOT NULL,
-    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE NO ACTION,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
     converted_file VARCHAR(255) NOT NULL,
     error_file VARCHAR(255) NULL,
     stats_file VARCHAR(255) NULL
@@ -99,7 +99,7 @@ ALTER SEQUENCE IF EXISTS conversions_id_conversions_seq INCREMENT BY 1 MINVALUE 
 -- TABLE details
 DROP TABLE IF EXISTS details CASCADE;
 CREATE TABLE IF NOT EXISTS details (
-    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE NO ACTION,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
     module VARCHAR(16) NULL,
     obj_grp VARCHAR(32) NULL,
     obj_component VARCHAR(32) NULL,
@@ -303,6 +303,17 @@ CREATE INDEX IF NOT EXISTS f5_virtual_json_files_uuid ON f5_virtual_json USING H
 CREATE INDEX IF NOT EXISTS f5_virtual_json_name_idx ON f5_virtual_json USING BTREE (name);
 CREATE UNIQUE INDEX IF NOT EXISTS f5_virtual_json_name_files_uuid_idx ON f5_virtual_json USING BTREE (files_uuid,name);
 
+-- VIEW user_role_view
+CREATE OR REPLACE VIEW user_role_view AS
+    SELECT users.name AS username,
+	users.id AS userid,
+	roles.name AS rolename,
+	roles.id AS roleid,
+	roles.starturl
+    FROM users, roles, user_role
+    WHERE ((users.id = user_role.user_id) AND (roles.id = user_role.role_id));
+ALTER VIEW IF EXISTS user_role_view OWNER TO demonio;
+
 -- VIEW obj_names_view
 CREATE OR REPLACE VIEW obj_names_view AS
     SELECT
@@ -345,19 +356,6 @@ CREATE OR REPLACE VIEW modules_view AS
     FROM
 	modules;
 ALTER VIEW IF EXISTS modules_view OWNER TO demonio;
-
-CREATE OR REPLACE VIEW user_role_view AS
- SELECT u.name AS username,
-    u.id AS userid,
-    r.name AS rolename,
-    r.id AS roleid,
-    r.starturl
-   FROM users u,
-    roles r,
-    user_role ur
-  WHERE ((u.id = ur.user_id) AND (r.id = ur.role_id));
-ALTER TABLE IF EXISTS user_role_view OWNER TO demonio;
-
 
 -- TRIGGER new_detail_record()
 CREATE OR REPLACE FUNCTION new_detail_record() RETURNS TRIGGER AS $new_detail_record$

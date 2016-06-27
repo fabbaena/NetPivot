@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WWWDATA=/var/www/html
+WWWDATA=/var/www
 
 backup() {
     export PGPASSFILE=/home/ubuntu/.pgpass
@@ -27,8 +27,8 @@ backup() {
     fi
 
     psql -l | grep -q netpivot
-    if [ $? -ne 0 ]; then
-	su postgres -c "pg_dump ${PGDATABASE} | xz -z9q > ${DBDUMP}"
+    if [ $? -eq 0 ]; then
+	pg_dump ${PGDATABASE} | xz -z9q > ${DBDUMP}
     fi
 
     tar -cvjf ${BACKUP} -C ${WWWDATA} .
@@ -38,14 +38,13 @@ clean() {
     local FILELIST=( html css map php eot svg ttf woff woff2 png js f5conv )
     local DIRLIST=( `find ${WWWDATA} -type d` )
 
-    if [ ! -f ${WWWDATA}/.keep ]; then
-	touch ${WWWDATA}/.keep
+    if [ ! -f ${WWWDATA}/files/.keep ]; then
+	touch ${WWWDATA}/files/.keep
     fi
 
     for file in ${FILELIST[*]}; do
 	find ${WWWDATA} -name "*.${file}" -type f -exec rm -vf {} \;
     done
-    find ${WWWDATA} -name "f5conv*" -type f -exec rm -vf {} \;
     rm -vf /home/ubuntu/user_clean.sh
 
     for dir in ${DIRLIST[*]}; do
