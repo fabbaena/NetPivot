@@ -10,7 +10,7 @@
 
 if [ ! -f /var/www/html/dashboard/f5conv ]; then
     cp -v /opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/netpivot_kernel/f5conv /var/www/html/dashboard/f5conv
-    chown -c www-data.www-data /var/www/html/dashboard/f5conv
-    chmod -c 0755 /var/www/html/dashboard/f5conv
 fi
 
+chown -c www-data.www-data /var/www/html/dashboard/f5conv
+chmod -c 0755 /var/www/html/dashboard/f5conv
