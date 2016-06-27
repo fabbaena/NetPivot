@@ -28,7 +28,7 @@ class CheckUser {
         $model = new Crud();
         $model->select = '*';
         $model->from = 'users';
-        $model->condition = 'name="'. $this->name.'"';
+        $model->condition = "name='". $this->name."'";
         $model->Read();
         $total = $model->rows;
         if ($total) {
@@ -52,7 +52,7 @@ class CheckUser {
         $model = new Crud();
         $model->select = '*';
         $model->from = 'user_role_view';
-        $model->condition = 'username="'. $this->name.'"';
+        $model->condition = "username='". $this->name."'";
         $model->Read();
         $roles = $model->rows;
         if($roles) {

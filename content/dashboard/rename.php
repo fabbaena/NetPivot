@@ -54,7 +54,7 @@ if($usuario == false ) {
                     $model = new Crud();
                     $model->select='*';
                     $model->from='files';
-                    $model->condition='uuid="'.$filename.'"';
+                    $model->condition="uuid='$filename'";
                     $model->Read();
                     $esto = $model->rows;
                     

@@ -150,17 +150,21 @@ class Crud {
     public function Load(){
         $filename = $this->filename;
         $uuid = $this->uuid;
-        $sql = "load data infile '$filename' ".
-                "into table details fields terminated by ',' ".
-                "(module, obj_grp, obj_component, obj_name, attribute, converted, omitted, line, files_uuid) ".
-                "set files_uuid=\"$uuid\";";
+
+        $consulta = $this->_conn->prepare('BEGIN');
+        $consulta->execute();
+        $sql = "INSERT INTO details (module, obj_grp, obj_component, obj_name, attribute, converted, omitted, line, files_uuid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $consulta = $this->_conn->prepare($sql);
-        if (!$consulta) {
-            $this->mensaje = $consulta->errorInfo();
-        } else {
-            $consulta->execute();
-            $this->mensaje = $consulta->errorInfo();
+        $csvfile = fopen($filename, "r") or die("Unable to open $filename!");
+        while($line = fgets($csvfile)) {
+            $arr = explode(",", $line);
+            array_push($arr, $uuid);
+            $consulta->execute($arr);
         }
+        fclose($csvfile);
+        $consulta = $this->_conn->prepare('COMMIT');
+        $consulta->execute();
+        $this->mensage = $consulta->errorInfo();
     }
 
     function uploadJSON($uuid, $objectgroup, $obj) {

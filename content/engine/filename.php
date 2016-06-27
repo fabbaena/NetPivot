@@ -15,7 +15,7 @@ if(!isset($filename) || $filename == "" ) {
     $info = new Crud();
     $info->select ='filename';
     $info->from='files';
-    $info->condition='uuid="'.$uuid.'"';
+    $info->condition="uuid='$uuid'";
     $info->Read();
     $filename = $info->rows[0]["filename"];
     $sesion->set('filename', $filename);

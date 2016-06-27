@@ -11,7 +11,7 @@ if($usuario == false || !isset($npmodules2) ||
     exit();
 }
 $object_name = $_GET['object_name'];
-$object_group = $_GET['object_group'];
+$object_group = str_replace("-", "_", $_GET['object_group']);
 
 $attributes = new Crud();
 $attributes->select='attributes';

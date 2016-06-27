@@ -16,7 +16,7 @@ if(!isset($npmodules2) || !$npmodules2 || true) {
 	$npm = new Crud();
 	$npm->select='*';
 	$npm->from='modules_view';
-	$npm->condition='files_uuid="'.$uuid.'"';
+	$npm->condition="files_uuid='$uuid'";
 	$npm->Read();
 
 	$npmodules2["_data"]["files_uuid"] = $uuid;
@@ -59,7 +59,7 @@ if(!isset($npmodules2) || !$npmodules2 || true) {
 	        $npo = new Crud();
 	        $npo->select='*';
 	        $npo->from='obj_grps_view';
-	        $npo->condition='module_id='.$ltmid.' AND name="rule"';
+	        $npo->condition="module_id='$ltmid' AND name='rule'";
 	        $npo->Read();
 			if($npo->rows[0]["attribute_count"] && $npo->rows[0]["attribute_count"] > 0) {
 				$p_converted = round($npo->rows[0]["attribute_converted"] / $npo->rows[0]["attribute_count"] * 100);

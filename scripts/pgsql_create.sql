@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS conversions (
     id_conversions BIGSERIAL NOT NULL UNIQUE PRIMARY KEY,
     users_id SMALLINT NOT NULL REFERENCES users(id) ON DELETE CASCADE ON UPDATE NO ACTION,
     time_conversion TIMESTAMP(0) WITH TIME ZONE NOT NULL,
-    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE NO ACTION,
     converted_file VARCHAR(255) NOT NULL,
     error_file VARCHAR(255) NULL,
     stats_file VARCHAR(255) NULL
@@ -99,7 +99,7 @@ ALTER SEQUENCE IF EXISTS conversions_id_conversions_seq INCREMENT BY 1 MINVALUE 
 -- TABLE details
 DROP TABLE IF EXISTS details CASCADE;
 CREATE TABLE IF NOT EXISTS details (
-    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE NO ACTION,
     module VARCHAR(16) NULL,
     obj_grp VARCHAR(32) NULL,
     obj_component VARCHAR(32) NULL,
@@ -178,7 +178,7 @@ CREATE INDEX IF NOT EXISTS attributes_name_obj_name_id_idx ON attributes USING B
 DROP TABLE IF EXISTS f5_monitor_json CASCADE;
 CREATE TABLE IF NOT EXISTS f5_monitor_json (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE NO ACTION,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
     name VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
     adminpart VARCHAR(255) NOT NULL,
@@ -197,7 +197,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS f5_monitor_json_name_files_uuid_idx ON f5_moni
 DROP TABLE IF EXISTS f5_node_json CASCADE;
 CREATE TABLE IF NOT EXISTS f5_node_json (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE NO ACTION,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
     name VARCHAR(255) NOT NULL,
     adminpart VARCHAR(255) NOT NULL,
     attributes JSONB NOT NULL
@@ -215,7 +215,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS f5_node_json_name_files_uuid_idx ON f5_node_js
 DROP TABLE IF EXISTS f5_persistence_json CASCADE;
 CREATE TABLE IF NOT EXISTS f5_persistence_json (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE NO ACTION,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
     name VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
     adminpart VARCHAR(255) NOT NULL,
@@ -234,7 +234,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS f5_persistence_json_name_files_uuid_idx ON f5_
 DROP TABLE IF EXISTS f5_pool_json CASCADE;
 CREATE TABLE IF NOT EXISTS f5_pool_json (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE NO ACTION,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
     name VARCHAR(255) NOT NULL,
     adminpart VARCHAR(255) NOT NULL,
     attributes JSONB NOT NULL
@@ -252,7 +252,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS f5_pool_json_name_files_uuid_idx ON f5_pool_js
 DROP TABLE IF EXISTS f5_profile_json CASCADE;
 CREATE TABLE IF NOT EXISTS f5_profile_json (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE NO ACTION,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
     name VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
     adminpart VARCHAR(255) NOT NULL,
@@ -267,29 +267,29 @@ CREATE INDEX IF NOT EXISTS f5_profile_json_files_uuid_idx ON f5_profile_json USI
 CREATE INDEX IF NOT EXISTS f5_profile_json_name_idx ON f5_profile_json USING BTREE (name);
 CREATE UNIQUE INDEX IF NOT EXISTS f5_profile_json_name_files_uuid_idx ON f5_profile_json USING BTREE (name,files_uuid);
 
--- TABLE f5_virtualaddress_json
-DROP TABLE IF EXISTS f5_virtualaddress_json CASCADE;
-CREATE TABLE IF NOT EXISTS f5_virtualaddress_json (
+-- TABLE f5_virtual_address_json
+DROP TABLE IF EXISTS f5_virtual_address_json CASCADE;
+CREATE TABLE IF NOT EXISTS f5_virtual_address_json (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE NO ACTION,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
     name VARCHAR(255) NOT NULL,
     adminpart VARCHAR(255) NOT NULL,
     attributes JSONB NOT NULL
 );
-ALTER TABLE IF EXISTS f5_virtualaddress_json OWNER TO demonio;
-ALTER SEQUENCE IF EXISTS f5_virtualaddress_json_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CYCLE OWNED BY f5_virtualaddress_json.id;
-DROP INDEX IF EXISTS f5_virtualaddress_json_files_uuid_idx CASCADE;
-DROP INDEX IF EXISTS f5_virtualaddress_json_name_idx CASCADE;
-DROP INDEX IF EXISTS f5_virtualaddress_json_name_files_uuid_idx CASCADE;
-CREATE INDEX IF NOT EXISTS f5_virtualaddress_json_files_uuid_idx ON f5_virtualaddress_json USING HASH (files_uuid);
-CREATE INDEX IF NOT EXISTS f5_virtualaddress_json_name_idx ON f5_virtualaddress_json USING BTREE (name);
-CREATE UNIQUE INDEX IF NOT EXISTS f5_virtualaddress_json_name_files_uuid_idx ON f5_virtualaddress_json USING BTREE (name,files_uuid);
+ALTER TABLE IF EXISTS f5_virtual_address_json OWNER TO demonio;
+ALTER SEQUENCE IF EXISTS f5_virtual_address_json_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CYCLE OWNED BY f5_virtualaddress_json.id;
+DROP INDEX IF EXISTS f5_virtual_address_json_files_uuid_idx CASCADE;
+DROP INDEX IF EXISTS f5_virtual_address_json_name_idx CASCADE;
+DROP INDEX IF EXISTS f5_virtual_address_json_name_files_uuid_idx CASCADE;
+CREATE INDEX IF NOT EXISTS f5_virtual_address_json_files_uuid_idx ON f5_virtual_address_json USING HASH (files_uuid);
+CREATE INDEX IF NOT EXISTS f5_virtual_address_json_name_idx ON f5_virtual_address_json USING BTREE (name);
+CREATE UNIQUE INDEX IF NOT EXISTS f5_virtual_address_json_name_files_uuid_idx ON f5_virtual_address_json USING BTREE (name,files_uuid);
 
 -- TABLE f5_virtual_json
 DROP TABLE IF EXISTS f5_virtual_json CASCADE;
 CREATE TABLE IF NOT EXISTS f5_virtual_json (
     id BIGSERIAL NOT NULL PRIMARY KEY,
-    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE NO ACTION,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
     name VARCHAR(255) NOT NULL,
     adminpart VARCHAR(255) NOT NULL,
     attributes JSONB NOT NULL
@@ -345,6 +345,19 @@ CREATE OR REPLACE VIEW modules_view AS
     FROM
 	modules;
 ALTER VIEW IF EXISTS modules_view OWNER TO demonio;
+
+CREATE OR REPLACE VIEW user_role_view AS
+ SELECT u.name AS username,
+    u.id AS userid,
+    r.name AS rolename,
+    r.id AS roleid,
+    r.starturl
+   FROM users u,
+    roles r,
+    user_role ur
+  WHERE ((u.id = ur.user_id) AND (r.id = ur.role_id));
+ALTER TABLE IF EXISTS user_role_view OWNER TO demonio;
+
 
 -- TRIGGER new_detail_record()
 CREATE OR REPLACE FUNCTION new_detail_record() RETURNS TRIGGER AS $new_detail_record$

@@ -11,14 +11,14 @@ $user_id = htmlspecialchars($_GET['id']);
 try {
     $model = new Crud();
     $model->deleteFrom = 'conversions';
-    $model->condition = 'user_id=' . $user_id;
+    $model->condition = "user_id=$user_id";
     $model->Delete();
     $mensaje = $model->mensaje;
     
     if ($mensaje == true) {
         $modelo1 = new Crud();
         $modelo1->deleteFrom = 'files';
-        $modelo1->condition = 'users_id=' . $user_id;
+        $modelo1->condition = "users_id=$user_id";
         $modelo1->Delete();
         $mensaje1 = $modelo1->mensaje;
     } else {
@@ -28,7 +28,7 @@ try {
     if ($mensaje1 == true) {
         $modelo2 = new Crud();
         $modelo2->deleteFrom = 'users';
-        $modelo2->condition = 'id=' . $user_id;
+        $modelo2->condition = "id=$user_id";
         $modelo2->Delete();
         $mensaje3 = $modelo2->mensaje;
     } else {
