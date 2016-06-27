@@ -1,14 +1,5 @@
 #!/bin/bash
 
-export PGPASSFILE=/home/ubuntu/.pgpass
-
-export PGHOST=localhost
-export PGUSER=demonio
-export PGPASSWORD=s3cur3s0c
-export PGDATABASE=netpivot
-
-DBDIR=`psql -l | grep -q netpivot`
-
 create() {
     local DBCREATE=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/pgsql_create.sql
     #local DBCREATE=/home/ubuntu/codedeploy/scripts/db_create.sql
@@ -23,6 +14,12 @@ create() {
 alter() {
     local DBALTER=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/pgsql_update.sql
     #local DBALTER=/home/ubuntu/codedeploy/scripts/db_update.sql
+    export PGPASSFILE=/home/ubuntu/.pgpass
+    export PGHOST=localhost
+    export PGUSER=demonio
+    export PGPASSWORD=s3cur3s0c
+    export PGDATABASE=netpivot
+
     su - postgres -c "psql -b -f ${DBALTER}"
 }
 
@@ -36,7 +33,8 @@ if [ ! -f ${PGPASSFILE} ]; then
     chmod 0600 ${PGPASSFILE}
 fi
 
-if [ ! -d ${DBDIR} ]; then
+psql -l | grep -q netpivot
+if [ $? -ne 0 ]; then
     rm -f /var/www/html/index.html
 
     create
