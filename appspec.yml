@@ -12,6 +12,14 @@ files:
 
 permissions:
   - object: /var/www/html
+    except: dashboard/f5conv
+    owner: www-data
+    group: www-data
+    mode: 644
+    type:
+      - file
+  - object: /var/www/html/dashboard/
+    pattern: "f5conv"
     owner: www-data
     group: www-data
     mode: 644
