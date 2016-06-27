@@ -2,7 +2,7 @@
 
 $uuid = !isset($uuid)?$sesion->get('uuid'):$uuid;
 $path_pivot = '/var/www/html/dashboard/';
-$path_files = '/var/www/html/dashboard/files/';
+$path_files = '/var/www/files/';
 
 $f5conv       = $path_pivot. 'f5conv';
 $f5_file      = $uuid;

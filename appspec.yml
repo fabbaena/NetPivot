@@ -7,6 +7,8 @@ files:
     destination: /var/www/html
   - source: scripts/user_clean.sh
     destination: /home/ubuntu/
+  - source: files
+    destination: /var/www/
 
 permissions:
   - object: /var/www/html
@@ -16,6 +18,12 @@ permissions:
     type:
       - file
   - object: /var/www/html
+    owner: www-data
+    group: www-data
+    mode: 755
+    type:
+      - directory
+  - object: /var/www/files
     owner: www-data
     group: www-data
     mode: 755
