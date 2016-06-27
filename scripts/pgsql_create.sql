@@ -267,23 +267,23 @@ CREATE INDEX IF NOT EXISTS f5_profile_json_files_uuid_idx ON f5_profile_json USI
 CREATE INDEX IF NOT EXISTS f5_profile_json_name_idx ON f5_profile_json USING BTREE (name);
 CREATE UNIQUE INDEX IF NOT EXISTS f5_profile_json_name_files_uuid_idx ON f5_profile_json USING BTREE (name,files_uuid);
 
--- TABLE f5_virtualaddress_json
-DROP TABLE IF EXISTS f5_virtualaddress_json CASCADE;
-CREATE TABLE IF NOT EXISTS f5_virtualaddress_json (
+-- TABLE f5_virtual_address_json
+DROP TABLE IF EXISTS f5_virtual_address_json CASCADE;
+CREATE TABLE IF NOT EXISTS f5_virtual_address_json (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
     name VARCHAR(255) NOT NULL,
     adminpart VARCHAR(255) NOT NULL,
     attributes JSONB NOT NULL
 );
-ALTER TABLE IF EXISTS f5_virtualaddress_json OWNER TO demonio;
-ALTER SEQUENCE IF EXISTS f5_virtualaddress_json_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CYCLE OWNED BY f5_virtualaddress_json.id;
-DROP INDEX IF EXISTS f5_virtualaddress_json_files_uuid_idx CASCADE;
-DROP INDEX IF EXISTS f5_virtualaddress_json_name_idx CASCADE;
-DROP INDEX IF EXISTS f5_virtualaddress_json_name_files_uuid_idx CASCADE;
-CREATE INDEX IF NOT EXISTS f5_virtualaddress_json_files_uuid_idx ON f5_virtualaddress_json USING HASH (files_uuid);
-CREATE INDEX IF NOT EXISTS f5_virtualaddress_json_name_idx ON f5_virtualaddress_json USING BTREE (name);
-CREATE UNIQUE INDEX IF NOT EXISTS f5_virtualaddress_json_name_files_uuid_idx ON f5_virtualaddress_json USING BTREE (name,files_uuid);
+ALTER TABLE IF EXISTS f5_virtual_address_json OWNER TO demonio;
+ALTER SEQUENCE IF EXISTS f5_virtual_address_json_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CYCLE OWNED BY f5_virtualaddress_json.id;
+DROP INDEX IF EXISTS f5_virtual_address_json_files_uuid_idx CASCADE;
+DROP INDEX IF EXISTS f5_virtual_address_json_name_idx CASCADE;
+DROP INDEX IF EXISTS f5_virtual_address_json_name_files_uuid_idx CASCADE;
+CREATE INDEX IF NOT EXISTS f5_virtual_address_json_files_uuid_idx ON f5_virtual_address_json USING HASH (files_uuid);
+CREATE INDEX IF NOT EXISTS f5_virtual_address_json_name_idx ON f5_virtual_address_json USING BTREE (name);
+CREATE UNIQUE INDEX IF NOT EXISTS f5_virtual_address_json_name_files_uuid_idx ON f5_virtual_address_json USING BTREE (name,files_uuid);
 
 -- TABLE f5_virtual_json
 DROP TABLE IF EXISTS f5_virtual_json CASCADE;

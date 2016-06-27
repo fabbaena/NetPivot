@@ -7,8 +7,6 @@ export PGUSER=demonio
 export PGPASSWORD=s3cur3s0c
 export PGDATABASE=netpivot
 
-DBDIR=`psql -l | grep -q netpivot`
-
 create() {
     local DBCREATE=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/pgsql_create.sql
     #local DBCREATE=/home/ubuntu/codedeploy/scripts/db_create.sql
@@ -36,9 +34,9 @@ if [ ! -f ${PGPASSFILE} ]; then
     chmod 0600 ${PGPASSFILE}
 fi
 
-if [ ! -d ${DBDIR} ]; then
+psql -l | grep -q netpivot
+if [ $? -ne 0 ]; then
     rm -f /var/www/html/index.html
-
     create
 else
     alter
