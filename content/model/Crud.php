@@ -155,7 +155,7 @@ class Crud {
         $consulta->execute();
         $sql = "INSERT INTO details (module, obj_grp, obj_component, obj_name, attribute, converted, omitted, line, files_uuid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $consulta = $this->_conn->prepare($sql);
-        $csvfile = fopen($filename, "r") or die("Unable to open file!");
+        $csvfile = fopen($filename, "r") or die("Unable to open $filename!");
         while($line = fgets($csvfile)) {
             $arr = explode(",", $line);
             array_push($arr, $uuid);

@@ -98,7 +98,7 @@ try {
 
         }
 
-        header ('location:content.php');
+        header ('location:../dashboard/content.php');
     }
     else {
         header ('location:command.php?error');
