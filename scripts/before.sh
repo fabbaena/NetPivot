@@ -1,11 +1,5 @@
 #!/bin/bash
 
-export PGPASSFILE=/home/ubuntu/.pgpass
-
-export PGHOST=localhost
-export PGUSER=demonio
-export PGPASSWORD=s3cur3s0c
-export PGDATABASE=netpivot
 
 create() {
     local DBCREATE=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/pgsql_create.sql
@@ -21,6 +15,12 @@ create() {
 alter() {
     local DBALTER=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/pgsql_update.sql
     #local DBALTER=/home/ubuntu/codedeploy/scripts/db_update.sql
+    export PGPASSFILE=/home/ubuntu/.pgpass
+    export PGHOST=localhost
+    export PGUSER=demonio
+    export PGPASSWORD=s3cur3s0c
+    export PGDATABASE=netpivot
+
     su - postgres -c "psql -b -f ${DBALTER}"
 }
 
