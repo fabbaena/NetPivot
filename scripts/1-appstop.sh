@@ -17,10 +17,8 @@ backup() {
 	invoke-rc.d --quiet postgresql start
     fi
 
-    if [ ! -f ${PGPASSFILE} ]; then
-	echo "localhost:5432:netpivot:demonio:s3cur3s0c" >> ${PGPASSFILE}
-	chmod 0600 ${PGPASSFILE}
-    fi
+    echo "localhost:5432:netpivot:demonio:s3cur3s0c" > ${PGPASSFILE}
+    chmod 0600 ${PGPASSFILE}
 
     if [ ! -d `dirname ${DBDUMP}` ]; then
         mkdir -pv `dirname ${DBDUMP}`
@@ -40,8 +38,6 @@ clean() {
 
     if [ ! -f ${WWWDATA}/files/.keep ]; then
 	touch ${WWWDATA}/files/.keep
-    else
-	echo "" > ${WWWDATA}/files/.keep
     fi
 
     for file in ${FILELIST[*]}; do
@@ -54,6 +50,7 @@ clean() {
 	    rmdir -v $dir
 	fi
     done
+    rm -f ${WWWDATA}/files/.keep
 }
 
 backup
