@@ -14,6 +14,7 @@ $sesion    = new StartSession();
 $usuario   = $sesion->get('usuario');
 $id        = $sesion->get('id');
 $user_type = $sesion->get('type'); 
+$uuid      = $sesion->get('uuid');
 
 if($usuario == false ) { 
     header('location: /'); 
