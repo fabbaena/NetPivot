@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS users (
     max_conversions SMALLINT NULL
 );
 ALTER TABLE IF EXISTS users OWNER TO demonio;
-ALTER SEQUENCE IF EXISTS users_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 32767 START WITH 1 CYCLE OWNED BY users.id;
+ALTER SEQUENCE IF EXISTS users_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 32767 START WITH 10 CYCLE OWNED BY users.id;
 INSERT INTO users(id,name,password,type,max_files,max_conversions) VALUES (1,'admin','$2y$10$G.TH1hSw9wQcQOTqZjIJNudYm1jfQIjxFthJBnbJhmSTJQrpiU2la','Administrator',100,100);
 
 -- TABLE roles
