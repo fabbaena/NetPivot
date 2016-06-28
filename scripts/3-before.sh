@@ -34,9 +34,11 @@ chmod 0600 ${PGPASSFILE}
 
 psql -l -U demonio netpivot | grep -q netpivot
 if [ $? -ne 0 ]; then
+    echo "Creating Database..."
     rm -f /var/www/html/index.html
     create
 else
+    echo "Altering Database..."
     alter
 fi
 

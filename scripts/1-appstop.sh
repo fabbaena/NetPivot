@@ -36,8 +36,8 @@ clean() {
     local FILELIST=( html css map php eot svg ttf woff woff2 png js f5conv detecttype )
     local DIRLIST=( `find ${WWWDATA} -type d` )
 
-    if [ ! -f ${WWWDATA}/files/.keep ]; then
-	touch ${WWWDATA}/files/.keep
+    if [ ! -f ${WWWDATA}/../files/.keep ]; then
+	touch ${WWWDATA}/../files/.keep
     fi
 
     for file in ${FILELIST[*]}; do
