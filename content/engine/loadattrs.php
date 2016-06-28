@@ -13,6 +13,8 @@ $objid = $_GET["objid"];
 
 include 'Config.php';
 
+$c = new Config($uuid);
+
 $objname = new Crud();
 $objname->select='line';
 $objname->from='obj_names';
@@ -28,7 +30,7 @@ $objname->condition="id=$objidnxt";
 $objname->Read();
 $lineend = $objname->rows[0]["line"] - 2;
 
-$handle = file($p_f5_file);
+$handle = file($c->f5_file());
 
 for($i=$linestart; $i <= $lineend; $i++) {
 	$out[$i + 1]["source"] = $handle[$i];

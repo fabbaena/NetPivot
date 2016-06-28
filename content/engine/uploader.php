@@ -15,24 +15,42 @@ if($usuario == false ) {
 
 require 'Config.php';
 
+$c = new Config();
+
 $file_name = $_FILES['InputFile']['name'];
 
-$model = new FileManager($path_files);
-$model->file = $file_name;
-$model->CheckFile(); 
-$so = $model->message;
+$file = new FileManager($c->path_files());
+$file->file = $file_name;
+$file->CheckFile(); 
+$so = $file->message;
 
 if ($so==false) {
         $uuid = new UUID(); //get UUID
         $value_uuid = $uuid->v4();
         $sesion->set('uuid', $value_uuid);
-        $target_path = $path_files . $value_uuid; 
-        if(move_uploaded_file($_FILES['InputFile']['tmp_name'], $target_path)) {
+        $c->set_uuid($value_uuid);
+        if(move_uploaded_file($_FILES['InputFile']['tmp_name'], $c->f5_file())) {
             try {
                 $time = new TimeManager(); //get Date
                 $time->Today_Date();
                 $date = $time->full_date;
                 
+                $asciibin = exec($c->file_type());
+                if(strpos($asciibin, "ASCII text") === false) {
+                    unlink($c->f5_file());
+                    echo $asciibin;
+                    $sesion->delete("uuid");
+                    header("location: ../dashboard/?e=1");
+                    exit(0);
+                }
+                $bt = exec($c->detect());
+                if(strpos($bt, "BIGPIPE") !== false) {
+                    $sesion->delete("uuid");
+                    unlink($c->f5_file());
+                    header("location: ../dashboard/?e=2");
+                    exit(0);
+                }
+
                 $add = new Crud();
                 $add->insertInto = 'files';
                 $add->data = array(
