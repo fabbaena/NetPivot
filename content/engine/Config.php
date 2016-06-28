@@ -1,23 +1,107 @@
 <?php
 
-$uuid = !isset($uuid)?$sesion->get('uuid'):$uuid;
-$path_pivot = '/var/www/html/dashboard/';
-$path_files = '/var/www/files/';
+class Config {
+	private $_path_pivot;
+	private $_path_files;
+	private $_f5conv;
+	private $_uuid;
+	private $_filecmd;
 
-$f5conv       = $path_pivot. 'f5conv';
-$f5_file      = $uuid;
-$ns_file      = $uuid. '_.conf';
-$error_name   = $uuid. '_error.txt';
-$csv_name     = $uuid. '_stats.csv';
-$json_name    = $uuid. '.json';
+	function __construct(
+			$uuid       = null, 
+			$f5conv     = "f5conv", 
+			$detecttype = "detecttype",
+			$path_pivot = "/var/www/html/dashboard/",
+			$path_files = "/var/www/files/",
+			$filecmd    = "/usr/bin/file") {
 
-$p_f5_file    = $path_files. $f5_file;
-$p_ns_file    = $path_files. $ns_file;
-$p_error_name = $path_files. $error_name;
-$p_csv_name   = $path_files. $csv_name;
-$p_json_name  = $path_files. $json_name;
+		$this->_uuid = $uuid;
+		$this->_path_pivot = $path_pivot;
+		$this->_path_files = $path_files;
+		$this->_f5conv = $f5conv;
+		$this->_detecttype = $detecttype;
+		$this->_filecmd = $filecmd;
 
-$command   = "$f5conv -f $p_f5_file -e $p_error_name -C $p_csv_name -O $p_ns_file -J $p_json_name";
+
+	}
+
+	function set_uuid($uuid) {
+		$this->_uuid = $uuid;
+	}
+
+	function path_files() {
+		return $this->_path_files;
+	}
+
+	function f5conv() {
+		return $this->_path_pivot. $this->_f5conv;
+	}
+
+	function detecttype() {
+		return $this->_path_pivot. $this->_detecttype;
+	}
+
+	function f5_file() {
+		if(isset($this->_uuid))
+			return $this->_path_files. $this->_uuid;
+		else 
+			return false;
+	}
+
+	function ns_file() {
+		if(isset($this->_uuid))
+			return $this->_path_files. $this->_uuid. "_.conf";
+		else 
+			return false;
+	}
+
+	function error_file() {
+		if(isset($this->_uuid))
+			return $this->_path_files. $this->_uuid. "_error.txt";
+		else 
+			return false;
+	}
+
+	function stats_file() {
+		if(isset($this->_uuid))
+			return $this->_path_files. $this->_uuid. "_stats.csv";
+		else 
+			return false;
+	}
+
+	function json_file() {
+		if(isset($this->_uuid))
+			return $this->_path_files. $this->_uuid. ".json";
+		else 
+			return false;
+	}
+
+	function command() {
+		if(isset($this->_uuid))
+			return $this->f5conv(). 
+				" -f ". $this->f5_file().
+				" -e ". $this->error_file().
+				" -C ". $this->stats_file().
+				" -O ". $this->ns_file().
+				" -J ". $this->json_file();
+		else 
+			return false;
+	}
+
+	function file_type() {
+		if(isset($this->_uuid))
+			return $this->_filecmd. " -b ". $this->f5_file();
+		else 
+			return false;
+	}
+
+	function detect() {
+		if(isset($this->_uuid))
+			return $this->_path_pivot. $this->_detecttype. " ". $this->f5_file();
+		else 
+			return false;
+	}
+}
 
 ?>
 

@@ -14,6 +14,7 @@ $sesion    = new StartSession();
 $usuario   = $sesion->get('usuario');
 $id        = $sesion->get('id');
 $user_type = $sesion->get('type'); 
+$uuid      = $sesion->get('uuid');
 
 if($usuario == false ) { 
     header('location: /'); 
@@ -22,8 +23,11 @@ if($usuario == false ) {
 
 include 'Config.php';
 
+$c = new Config($uuid);
+
 try {
-    $pwd = exec($command, $pwd_out,$pwd_error); //this is the command executed on the host  
+
+    $pwd = exec($c->command(), $pwd_out,$pwd_error); //this is the command executed on the host  
     $time = new TimeManager();
     $time->Today_Date();
     $today = $time->full_date;                        
@@ -33,9 +37,9 @@ try {
         "users_id"        => $id,
         "time_conversion" => $today,
         "files_uuid"      => $uuid,
-        "converted_file"  => $ns_file,
-        "error_file"      => $error_name,
-        "stats_file"      => $csv_name
+        "converted_file"  => $c->ns_file(),
+        "error_file"      => $c->error_file(),
+        "stats_file"      => $c->stats_file()
         );
     $model->Create2();
 
@@ -44,13 +48,13 @@ try {
 
         /****** Loads CSV *****/
         $load = new Crud();
-        $load->filename = $p_csv_name;
+        $load->filename = $c->stats_file();
         $load->uuid = $uuid;
         $load->Load();
         $sesion->set('uuid', $uuid);
 
         /***** Loads JSON *****/
-        $string = file_get_contents($p_json_name);
+        $string = file_get_contents($c->json_file());
         $json_a = json_decode($string, true);
         $conn = new Crud();
         foreach($json_a as $objectgroup => $obj) {

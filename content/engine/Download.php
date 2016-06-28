@@ -19,7 +19,9 @@ if($usuario == false || !isset($uuid)) {
 }
 require 'Config.php';
 
-$file = "$path_files${uuid}_.conf";
+$c = new Config($uuid);
+
+$file = $c->ns_file();
 
 header( "Content-Type: application/octet-stream");
 header( "Content-Length: ".filesize($file));

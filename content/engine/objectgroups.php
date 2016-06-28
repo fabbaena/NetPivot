@@ -28,7 +28,9 @@ if(!isset($npmodules[$module]["object_groups"]) || true) {
         $npobjgrp[$ogname]["attribute_count"] += 0;
         $npobjgrp[$ogname]["attribute_converted"] += 0;
         $npobjgrp[$ogname]["attribute_omitted"] += 0;
-        $npobjgrp[$ogname]["object_count"] += 0;
+        if(isset($npobjgrp[$ogname]["object_count"]) ) {
+            $npobjgrp[$ogname]["object_count"] += 0;
+        }
 
         if(isset($npobjgrp[$ogname]["attribute_count"]) && $npobjgrp[$ogname]["attribute_count"] > 0) {
             $npobjgrp[$ogname]["p_converted"] = round($npobjgrp[$ogname]["attribute_converted"] / 

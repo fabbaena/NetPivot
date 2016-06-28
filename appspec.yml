@@ -23,8 +23,7 @@ permissions:
     mode: 755
     type:
       - directory
-  - object: /var/www
-    pattern: "files"
+  - object: /var/www/files
     owner: www-data
     group: www-data
     mode: 755
@@ -33,15 +32,15 @@ permissions:
 
 hooks:
   ApplicationStop:
-    - location: scripts/appstop.sh
+    - location: scripts/1-appstop.sh
       timeout: 512
   BeforeInstall:
-    - location: scripts/before.sh
+    - location: scripts/3-before.sh
       timeout: 512
   AfterInstall:
-    - location: scripts/after.sh
+    - location: scripts/5-after.sh
       timeout: 32
   ApplicationStart:
-    - location: scripts/appstart.sh
+    - location: scripts/6-appstart.sh
       timeout: 32
 

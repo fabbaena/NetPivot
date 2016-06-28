@@ -23,6 +23,8 @@ $uuid  = htmlspecialchars($_GET['file']);
 
 include '../engine/Config.php';
 
+$c = new Config($uuid);
+
 function uploadJSON($conn, $uuid, $objectgroup, $obj) {
     foreach($obj as $name => $v) {
         $conn->insertInto = "f5_${objectgroup}_json";
@@ -82,14 +84,12 @@ try {
     $msg = $model->mensaje;
     if ($msg == true) {
         $load = new Crud();
-        $load->filename = $p_csv_name;
+        $load->filename = $c->stats_file();
         $load->uuid = $uuid;
         $load->Load();
         $sesion->set('uuid', $uuid);
 
-        $string = file_get_contents($p_json_name
-
-            );
+        $string = file_get_contents($c->f5_file());
         $json_a = json_decode($string, true);
 
         $conn = new Crud();

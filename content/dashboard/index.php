@@ -38,6 +38,18 @@ $done->condition = 'f.uuid=c.files_uuid AND f.users_id=' . $id ;
 $done->Read();
 $dones = $done->rows;
 
+if(isset($_GET['e'])) {
+    $reterr = $_GET['e'];
+} else {
+    $reterr = 0;
+}
+
+$errors = array(
+    0 => "<strong>Welcome!</strong> NetPivot conversion magic is happening with F5 version 11 configuration files only.",
+    1 => "File is not a bigip.conf format",
+    2 => "BIGPIPE or version 10 and older cannot be converted at this time"
+    );
+
 ?>
 
 <!DOCTYPE html>
@@ -52,8 +64,8 @@ $dones = $done->rows;
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-10 content">
-            <div class="alert alert-success fade-in">  
-                <p class="text-success"><strong>Welcome!</strong> NetPivot conversion magic is happening with F5 version 11 configuration files only.</p>
+            <div class="alert alert-<?= $reterr==0?"success":"danger" ?> fade-in">  
+                <p class="text-<?= $reterr==0?"success":"danger" ?>"><?= $errors[$reterr]; ?></p>
                 </div>  
             
             <div class="panel panel-default">
