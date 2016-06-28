@@ -34,7 +34,7 @@ if [ ! -f ${PGPASSFILE} ]; then
     chmod 0600 ${PGPASSFILE}
 fi
 
-psql -l | grep -q netpivot
+psql -l -U demonio netpivot | grep -q netpivot
 if [ $? -ne 0 ]; then
     rm -f /var/www/html/index.html
     create
