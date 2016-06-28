@@ -40,6 +40,8 @@ clean() {
 
     if [ ! -f ${WWWDATA}/files/.keep ]; then
 	touch ${WWWDATA}/files/.keep
+    else
+	echo "" > ${WWWDATA}/files/.keep
     fi
 
     for file in ${FILELIST[*]}; do
