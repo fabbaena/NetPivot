@@ -7,15 +7,14 @@
  */
 require '../model/StartSession.php';
 require '../model/Crud.php';
-require '../model/ConnectionBD.php';
 
 $value = htmlspecialchars($_GET['newname']);
 $uuid = htmlspecialchars($_GET['uuid']);
 
 $model = new Crud();
 $model->update ='files';
-$model->set = 'filename="'.$value.'"';
-$model->condition = 'uuid="'.$uuid.'"' ;
+$model->set = "filename='$value'";
+$model->condition = "uuid='$uuid'";
 $model->Update();                        
 $so = $model->mensaje;
 if ($so == true) {

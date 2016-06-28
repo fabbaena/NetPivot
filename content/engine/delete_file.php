@@ -8,7 +8,6 @@
 
 require '../model/FileManager.php';
 require '../model/Crud.php';
-require '../model/ConnectionBD.php';
 
 
 
@@ -23,7 +22,7 @@ if (isset($_GET['file']) && isset($_GET['uuid'])) {
         try {
             $bd = new Crud();
             $bd->deleteFrom = 'files';
-            $bd->condition = "uuid='" . $uuid . "'";
+            $bd->condition = "uuid='$uuid'";
             $bd->Delete();
             $mensaje = $bd->mensaje;
             if ($mensaje == true) {

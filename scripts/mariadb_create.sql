@@ -142,6 +142,163 @@ CREATE TABLE IF NOT EXISTS attributes (
 	    ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
+-- TABLE NetPivot.f5_monitor_json
+DROP TABLE IF EXISTS f5_monitor_json CASCADE;
+CREATE TABLE IF NOT EXISTS f5_monitor_json (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  files_uuid char(36) NOT NULL,
+  name varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  type varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  adminpart varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  attributes blob NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uni_files_uuid_name_monitor (name,files_uuid),
+  KEY idx_monitor_name (name),
+  KEY files_uuid (files_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE f5_monitor_json
+  ADD CONSTRAINT fk_f5_monitor_json_file_uuid FOREIGN KEY (files_uuid) REFERENCES files (uuid) ON DELETE CASCADE;
+
+-- TABLE NetPrivot.f5_node_json
+DROP TABLE IF EXISTS f5_node_json CASCADE;
+CREATE TABLE IF NOT EXISTS f5_node_json (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  files_uuid char(36) NOT NULL,
+  name varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  adminpart varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  attributes blob NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uni_files_uuid_name_node (name,files_uuid),
+  KEY idx_node_name (name),
+  KEY files_uuid (files_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE f5_node_json
+  ADD CONSTRAINT fk_f5_node_json_file_uuid FOREIGN KEY (files_uuid) REFERENCES `files` (uuid) ON DELETE CASCADE;
+
+-- TABLE NetPrivot.f5_persistence_json
+DROP TABLE IF EXISTS f5_persistence_json;
+CREATE TABLE IF NOT EXISTS f5_persistence_json (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  files_uuid char(36) NOT NULL,
+  name varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  type varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  adminpart varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  attributes blob NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uni_files_uuid_name_persistence (name,files_uuid) USING BTREE,
+  KEY name (name),
+  KEY files_uuid (files_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE f5_persistence_json
+  ADD CONSTRAINT fk_f5_persistence_json_file_uuid FOREIGN KEY (files_uuid) REFERENCES `files` (uuid) ON DELETE CASCADE;
+
+-- TABLE NetPrivot.f5_pool_json
+DROP TABLE IF EXISTS f5_pool_json;
+CREATE TABLE IF NOT EXISTS f5_pool_json (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  files_uuid char(36) NOT NULL,
+  name varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  adminpart varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  attributes blob NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uni_files_uuid_name_pool (name,files_uuid),
+  KEY idx_pool_name (name),
+  KEY file_uuid (files_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE f5_pool_json
+  ADD CONSTRAINT fk_f5_pool_json_file_uuid FOREIGN KEY (files_uuid) REFERENCES `files` (uuid) ON DELETE CASCADE ON;
+
+-- TABLE NetPrivot.f5_profile_json
+DROP TABLE IF EXISTS f5_profile_json;
+CREATE TABLE IF NOT EXISTS f5_profile_json (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  files_uuid char(36) NOT NULL,
+  name varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  type varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  adminpart varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  attributes blob NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uni_files_uuid_name_profile (name,files_uuid),
+  KEY idx_profile_name (name),
+  KEY file_uuid (files_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE f5_profile_json
+  ADD CONSTRAINT fk_f5_profile_json_file_uuid FOREIGN KEY (files_uuid) REFERENCES `files` (uuid) ON DELETE CASCADE;
+
+-- TABLE NetPrivot.f5_virtualaddress_json
+DROP TABLE IF EXISTS f5_virtualaddress_json;
+CREATE TABLE IF NOT EXISTS f5_virtualaddress_json (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  files_uuid char(36) NOT NULL,
+  name varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  adminpart varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  attributes blob NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uni_files_uuid_name_va (name,files_uuid),
+  KEY idx_virtualaddress_name (name),
+  KEY fk_f5_virtualaddress_json_file_uuid (files_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE f5_virtualaddress_json
+  ADD CONSTRAINT fk_f5_virtualaddress_json_file_uuid FOREIGN KEY (files_uuid) REFERENCES `files` (uuid) ON DELETE CASCADE;
+
+-- TABLE NetPrivot.f5_virtual_json
+DROP TABLE IF EXISTS f5_virtual_json;
+CREATE TABLE IF NOT EXISTS f5_virtual_json (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  files_uuid char(36) NOT NULL,
+  name varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  adminpart varchar(255) CHARACTER SET latin1 COLLATE latin1_bin NOT NULL,
+  attributes blob NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uni_files_uuid_name_virtual (files_uuid,name) USING BTREE,
+  KEY idx_virtual_name (name),
+  KEY file_uuid (files_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE f5_virtual_json
+  ADD CONSTRAINT fk_f5_virtual_json_file_uuid FOREIGN KEY (files_uuid) REFERENCES `files` (uuid) ON DELETE CASCADE;
+
+-- TABLE NetPrivot.roles
+DROP TABLE IF EXISTS roles;
+CREATE TABLE IF NOT EXISTS roles (
+  id int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  name varchar(255) NOT NULL,
+  starturl varchar(255) NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_role_name (name)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+INSERT INTO roles (id, `name`, starturl) VALUES
+(1, 'System Admin', 'admin/'),
+(2, 'Sales', 'sales/'),
+(3, 'Engineer', 'dashboard/');
+
+-- TABLE NetPrivot.user_role
+DROP TABLE IF EXISTS user_role;
+CREATE TABLE IF NOT EXISTS user_role (
+  user_id int(10) UNSIGNED NOT NULL,
+  role_id int(10) UNSIGNED NOT NULL,
+  UNIQUE KEY idx_userid_role_id (user_id,role_id),
+  KEY idx_user_id (user_id),
+  KEY idx_role_id (user_id),
+  KEY fk_roleid_user_role (role_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO user_role (user_id, role_id) VALUES
+(1, 1),
+(1, 2),
+(1, 3);
+
+ALTER TABLE user_role
+  ADD CONSTRAINT fk_roleid_user_role FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE,
+  ADD CONSTRAINT fk_userid_user_role FOREIGN KEY (user_id) REFERENCES `users` (id) ON DELETE CASCADE;
+
 -- VIEW NetPivot.obj_names_view
 DROP VIEW IF EXISTS obj_names_view CASCADE;
 CREATE VIEW obj_names_view AS
@@ -195,19 +352,23 @@ BEGIN
 	INSERT INTO modules(name,files_uuid) VALUES (NEW.module,NEW.files_uuid);
 	SET @module_id = (SELECT id FROM modules WHERE name = NEW.module AND files_uuid = NEW.files_uuid);
     END IF;
+
     SET @obj_grp_id = (SELECT id FROM obj_grps WHERE name = NEW.obj_grp AND module_id = @module_id);
     IF (@obj_grp_id IS NULL) THEN
 	INSERT INTO obj_grps(name,obj_component,module_id) VALUES (NEW.obj_grp,NEW.obj_component,@module_id);
 	SET @obj_grp_id = (SELECT id FROM obj_grps WHERE name = NEW.obj_grp AND module_id = @module_id);
     END IF;
+
     IF ((NEW.attribute IS NOT NULL OR NEW.attribute <> "") AND (NEW.obj_name IS NULL OR NEW.obj_name = "")) THEN
 	SET NEW.obj_name = '---';
     END IF;
-    SET @obj_name_id = (SELECT id FROM obj_names WHERE name=NEW.obj_name AND obj_grp_id = @obj_grp_id);
+
+    SET @obj_name_id = (SELECT id FROM obj_names WHERE name = NEW.obj_name AND obj_grp_id = @obj_grp_id);
     IF (@obj_name_id IS NULL) THEN
 	INSERT INTO obj_names(name,line,obj_grp_id) VALUES (NEW.obj_name,NEW.line,@obj_grp_id);
 	SET @obj_name_id = (SELECT id FROM obj_names WHERE name = NEW.obj_name AND obj_grp_id = @obj_grp_id);
     END IF;
+
     IF (NEW.attribute IS NOT NULL AND NEW.attribute <> "") THEN
 	INSERT INTO attributes(name,converted,omitted,line,obj_name_id) VALUES (NEW.attribute,NEW.converted,NEW.omitted,NEW.line,@obj_name_id);
     END IF;

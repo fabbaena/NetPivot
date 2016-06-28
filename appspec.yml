@@ -4,9 +4,11 @@ os: linux
 
 files:
   - source: content
-    destination: /var/www/html
-  - source: netpivot_kernel
-    destination: /opt/netpivot_kernel
+    destination: /var/www/html/
+  - source: scripts/user_clean.sh
+    destination: /home/ubuntu/
+  - source: files
+    destination: /var/www/files/
 
 permissions:
   - object: /var/www/html
@@ -21,13 +23,13 @@ permissions:
     mode: 755
     type:
       - directory
-  - object: /opt/netpivot_kernel
-    pattern: "f5conv*"
+  - object: /var/www
+    pattern: "files"
     owner: www-data
     group: www-data
     mode: 755
-    type: 
-      - file
+    type:
+      - directory
 
 hooks:
   ApplicationStop:
