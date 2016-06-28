@@ -14,4 +14,5 @@ fi
 
 chown -c www-data.www-data /var/www/html/dashboard/f5conv
 chmod -c 0755 /var/www/html/dashboard/f5conv
+chmod -c 0755 /var/www/html/dashboard/detecttype
 
