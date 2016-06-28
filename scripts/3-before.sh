@@ -16,7 +16,7 @@ alter() {
     local DBALTER=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/pgsql_update.sql
     #local DBALTER=/home/ubuntu/codedeploy/scripts/db_update.sql
 
-    psql -U demonio-b -f ${DBALTER} netpivot
+    psql -U demonio -b -f ${DBALTER} netpivot
 }
 
 invoke-rc.d --quiet postgresql status
@@ -29,7 +29,7 @@ echo "localhost:5432:netpivot:demonio:s3cur3s0c" > ${PGPASSFILE}
 echo "localhost:5432:template1:demonio:s3cur3s0c" >> ${PGPASSFILE}
 chmod 0600 ${PGPASSFILE}
 
-psql -l template1 | grep -q netpivot
+psql -l -U demonio template1 | grep -q netpivot
 if [ $? -ne 0 ]; then
     echo "Creating Database..."
     rm -f /var/www/html/index.html

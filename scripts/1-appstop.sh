@@ -20,7 +20,7 @@ backup() {
         mkdir -pv `dirname ${DBDUMP}`
     fi
 
-    psql -l template1 | grep -q netpivot
+    psql -l -U demonio template1 | grep -q netpivot
     if [ $? -eq 0 ]; then
 	   pg_dump ${PGDATABASE} | xz -z9q > ${DBDUMP}
     fi
