@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WWWDATA=/var/www
+WWWDATA=/var/www/html
 
 backup() {
     export PGPASSFILE=/home/ubuntu/.pgpass
@@ -45,7 +45,7 @@ clean() {
     fi
 
     for file in ${FILELIST[*]}; do
-	find ${WWWDATA} -name "*.${file}" -type f -exec rm -vf {} \;
+	find ${WWWDATA} -name "*${file}" -type f -exec rm -vf {} \;
     done
     rm -vf /home/ubuntu/user_clean.sh
 
