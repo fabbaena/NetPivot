@@ -7,6 +7,7 @@
  */
 
 require '../model/StartSession.php';
+require 'Config.php';
 
 
 $sesion = new StartSession();
@@ -17,7 +18,6 @@ if($usuario == false || !isset($uuid)) {
     header('location: /'); 
     exit();
 }
-require 'Config.php';
 
 $c = new Config($uuid);
 

@@ -798,20 +798,22 @@ function showdata(data) {
                         break;
                     case "destination":
                         var d = attributes[attribute].value;
+                        var dname = d.substring(0,1)=='/'?d.split("/")[2].split(":")[0]:d.split(":")[0];
                         var link = {
                             "mod": "ltm", 
                             "og": "virtual-address", 
-                            "on": d.split("/")[2].split(":")[0]}
-                            ;
+                            "on": dname
+                        };
                         $("#lineno" + lineno).addClass("linked_line");
                         $("#conv" + lineno).append(gotoIcon(link));
                         break;
                     case "pool":
                         p = attributes[attribute].value;
+                        var pname = p.substring(0,1)=='/'?p.split("/")[2]:p;
                         var link = {
                                 "mod": "ltm", 
                                 "og": "pool", 
-                                "on": p.split("/")[2]
+                                "on": pname
                             };
                         $("#lineno" + lineno).addClass("linked_line");
                         $("#conv" + lineno).append(gotoIcon(link));
@@ -832,10 +834,11 @@ function showdata(data) {
                     case "rules":
                         for(r in attributes.rules.value) {
                             rule = attributes.rules.value[r];
+                            var rname = r.substring(0,1)=='/'?r.split("/")[2]:r;
                             var link = {
                                     "mod": "rule", 
-                                    "og": r.split("/")[2], 
-                                    "on": r.split("/")[2]
+                                    "og": rname, 
+                                    "on": rname
                                 };
                             $("#lineno" + rule.line).addClass("linked_line");
                             $("#conv" + rule.line)

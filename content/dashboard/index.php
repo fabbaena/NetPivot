@@ -47,7 +47,8 @@ if(isset($_GET['e'])) {
 $errors = array(
     0 => "<strong>Welcome!</strong> NetPivot conversion magic is happening with F5 version 11 configuration files only.",
     1 => "File is not a bigip.conf format",
-    2 => "BIGPIPE or version 10 and older cannot be converted at this time"
+    2 => "BIGPIPE or version 10 and older cannot be converted at this time",
+    3 => "UNKNOWN file type. Cannot identify the version of F5 config file."
     );
 
 ?>
