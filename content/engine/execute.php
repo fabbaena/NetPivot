@@ -9,6 +9,7 @@
 require '../model/StartSession.php';
 require '../model/TimeManager.php';
 require '../model/Crud.php';
+require 'Config.php';
 
 $sesion    = new StartSession();
 $usuario   = $sesion->get('usuario');
@@ -21,7 +22,6 @@ if($usuario == false ) {
     exit();
 }
 
-include 'Config.php';
 
 $c = new Config($uuid);
 

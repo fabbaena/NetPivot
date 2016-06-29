@@ -1,6 +1,7 @@
 <?php
 require '../model/StartSession.php';
 require '../model/Crud.php';
+require 'Config.php';
 
 $sesion = new StartSession();
 $usuario = $sesion->get('usuario'); //Get username
@@ -11,7 +12,6 @@ if($usuario == false || !isset($_GET["objid"])) {
 $uuid = $sesion->get('uuid');
 $objid = $_GET["objid"];
 
-include 'Config.php';
 
 $c = new Config($uuid);
 
