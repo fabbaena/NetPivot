@@ -8,6 +8,7 @@
 require '../model/StartSession.php';
 require '../model/TimeManager.php';
 require '../model/Crud.php';
+require '../engine/Config.php';
 
 $sesion    = new StartSession();
 $usuario   = $sesion->get('usuario');
@@ -21,7 +22,6 @@ if($usuario == false ) {
 
 $uuid  = htmlspecialchars($_GET['file']);
 
-include '../engine/Config.php';
 
 $c = new Config($uuid);
 

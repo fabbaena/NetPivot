@@ -4,6 +4,7 @@ require '../model/Crud.php';
 require '../model/UUID.php';
 require '../model/TimeManager.php';
 require '../model/StartSession.php';
+require 'Config.php';
 
 $sesion = new StartSession();
 $usuario = $sesion->get('usuario');
@@ -13,7 +14,6 @@ if($usuario == false ) {
     exit();
 }
 
-require 'Config.php';
 
 $c = new Config();
 
@@ -38,7 +38,6 @@ if ($so==false) {
                 $asciibin = exec($c->file_type());
                 if(strpos($asciibin, "ASCII text") === false) {
                     unlink($c->f5_file());
-                    echo $asciibin;
                     $sesion->delete("uuid");
                     header("location: ../dashboard/?e=1");
                     exit(0);
@@ -50,6 +49,13 @@ if ($so==false) {
                     header("location: ../dashboard/?e=2");
                     exit(0);
                 }
+                if(strpos($bt, "UNKNOWN") !== false) {
+                    $sesion->delete("uuid");
+                    unlink($c->f5_file());
+                    header("location: ../dashboard/?e=3");
+                    exit(0);
+                }
+
 
                 $add = new Crud();
                 $add->insertInto = 'files';
