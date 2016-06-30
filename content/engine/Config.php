@@ -6,11 +6,13 @@ class Config {
 	private $_f5conv;
 	private $_uuid;
 	private $_filecmd;
+	private $_services;
 
 	function __construct(
 			$uuid       = null, 
 			$f5conv     = "f5conv", 
 			$detecttype = "detecttype",
+			$services   = "services.F5",
 			$path_pivot = "/var/www/html/dashboard/",
 			$path_files = "/var/www/files/",
 			$filecmd    = "/usr/bin/file") {
@@ -21,6 +23,7 @@ class Config {
 		$this->_f5conv = $f5conv;
 		$this->_detecttype = $detecttype;
 		$this->_filecmd = $filecmd;
+		$this->_services = $services;
 
 
 	}
@@ -76,6 +79,10 @@ class Config {
 			return false;
 	}
 
+	function services_file() {
+		return $this->_path_pivot. $this->_services;
+	}
+
 	function command() {
 		if(isset($this->_uuid))
 			return $this->f5conv(). 
@@ -83,7 +90,9 @@ class Config {
 				" -e ". $this->error_file().
 				" -C ". $this->stats_file().
 				" -O ". $this->ns_file().
-				" -J ". $this->json_file();
+				" -J ". $this->json_file().
+				" -s ". $this->services_file().
+				" -g";
 		else 
 			return false;
 	}
