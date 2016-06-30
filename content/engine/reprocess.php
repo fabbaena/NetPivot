@@ -26,7 +26,9 @@ $uuid  = htmlspecialchars($_GET['file']);
 $c = new Config($uuid);
 
 function uploadJSON($conn, $uuid, $objectgroup, $obj) {
-    foreach($obj as $name => $v) {
+    foreach($obj as $object) {
+        $name =  key($object);
+        $v = $object[$name];
         $conn->insertInto = "f5_${objectgroup}_json";
 
         $conn->data = array(
@@ -44,7 +46,7 @@ function uploadJSON($conn, $uuid, $objectgroup, $obj) {
 
 
 try {
-    $pwd = exec($command, $pwd_out,$pwd_error); //this is the command executed on the host  
+    $pwd = exec($c->command(), $pwd_out,$pwd_error); //this is the command executed on the host  
     $time = new TimeManager();
     $time->Today_Date();
     $today = $time->full_date;
@@ -55,7 +57,12 @@ try {
     $file_rec->condition = "uuid='$uuid'";
     $file_rec->Read();
     $file_data = $file_rec->rows[0];
-
+    /*
+    unlink($c->stats_file());
+    unlink($c->error_file());
+    unlink($c->json_file());
+    unlink($c->ns_file());
+    */
     $converted_rec = new Crud();
     $converted_rec->select = "*";
     $converted_rec->from = "conversions";
@@ -89,7 +96,7 @@ try {
         $load->Load();
         $sesion->set('uuid', $uuid);
 
-        $string = file_get_contents($c->f5_file());
+        $string = file_get_contents($c->json_file());
         $json_a = json_decode($string, true);
 
         $conn = new Crud();
