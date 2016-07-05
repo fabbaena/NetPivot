@@ -249,7 +249,7 @@ function showModuleTable() {
         .addClass("objectstats_table")
         .append($("<tr>").addClass("active")
             .append($("<th>")
-                .css("width", "45%")
+                .css("width", "55%")
                 .html(curmodule!='rule'?"F5 Object Groups":"iRule Name")
                 .append("&nbsp;")
                 .append($("<div>")
@@ -257,7 +257,7 @@ function showModuleTable() {
                     .addClass("sortStatName")
                     .addClass("glyphicon glyphicon-sort")
                     .click(clickSortStats)))
-            .append($("<th>").css("width", "12%")
+            .append($("<th>").css("width", "15%")
                 .html(curmodule!='rule'?"# Objects":"")
                 .append("&nbsp;")
                 .append($("<div>")
@@ -273,17 +273,7 @@ function showModuleTable() {
                     .addClass("sortStatConverted")
                     .addClass("glyphicon glyphicon-sort")
                     .click(clickSortStats)))
-            .append($("<th>").css("width", "12%")
-                .html("# Omitted")
-                .addClass("sort")
-                .addClass("sortOmitted")
-                .append("&nbsp;")
-                .append($("<div>")
-                    .addClass("sortStat")
-                    .addClass("sortStatOmitted")
-                    .addClass("glyphicon glyphicon-sort")
-                    .click(clickSortStats)))
-            .append($("<th>").css("width", "12%").html("Actions"))
+            .append($("<th>").css("width", "15%").html("Actions"))
         );
 
     $("#content").append($("<div>")
@@ -313,7 +303,6 @@ function showModuleData() {
                 .html($("<strong>").html(npmodules2[curmodule]["object_groups"][ogname]["p_converted"]))
                 .append("%")
                 )
-            .append($("<td>").html(npmodules2[curmodule]["object_groups"][ogname]["attribute_omitted"]))
             .append($("<td>").html(
                 $("<a>").attr("id", "vo_"+ogname).html("View Object").click(
                     function(event) {
@@ -754,16 +743,17 @@ function showdata(data) {
             .append($("<td>")
                 .html(lineno))
             .append($("<td>")
-                .attr("id", "conv" + lineno)
-                .html(ignoreIcon()))
+                .attr("id", "conv" + lineno))
             .append($("<td>")
                 .attr("id", "link" + lineno))
             .append($("<td>")
                 .html(data[lineno]["source"].replace(/ /g, '&nbsp;')))
             .attr("id", "lineno" + lineno));
     }
+
     $("#div_details_" + curobjid)
         .html(attributelist);
+
     $("#b_details_" + curobjid)
         .removeClass("glyphicon-collapse-down")
         .addClass("glyphicon-collapse-up");
@@ -772,79 +762,111 @@ function showdata(data) {
             "object_group": curobjectgroup, 
             "object_name": $("#l_details_" + curobjid).text()
         }, 
-        function(data) {
-            for(i in data) {
-                attributes = data[i];
-                for(attribute in attributes) {
-                    lineno = attributes[attribute].line;
-                    if(attributes[attribute].converted == 1) {
-                        $("#lineno" + lineno).addClass("converted_line");
-                        $("#conv" + lineno).html(okIcon());
-                    } else {
-                        $("#lineno" + lineno).addClass("notconverted_line");
-                        $("#conv" + lineno).html(noIcon());
-                    }
-                    switch(attribute) {
-                        case "profiles":
-                            for(i in attributes[attribute].value) {
-                                for(p in attributes[attribute].value[i]) {
-                                    profile = attributes[attribute].value[i][p];
-                                    var pname = p.substring(0,1)=='/'?p.split("/")[2]:p;
-                                    setLink(profile.line, "ltm", "profile", pname);
-                                }
-                            }
-                            break;
-                        case "destination":
-                            if(curobjectgroup != "virtual") break;
-                            var d = attributes[attribute].value;
-                            var dname = d.substring(0,1)=='/'?d.split("/")[2].split(":")[0]:d.split(":")[0];
-                            setLink(attributes[attribute].line, "ltm", "virtual-address", dname);
-                            break;
-                        case "pool":
-                            var p = attributes[attribute].value;
+        function(attributes) {
+            for(attribute in attributes) {
+                lineno = attributes[attribute].line;
+                if(attributes[attribute].converted == 1) {
+                    $("#lineno" + lineno).addClass("converted_line");
+                    $("#conv" + lineno).html(okIcon());
+                } else {
+                    $("#lineno" + lineno).addClass("notconverted_line");
+                    $("#conv" + lineno).html(noIcon());
+                }
+                switch(attributes[attribute].name) {
+                    case "persist":
+                        for(i in attributes[attribute].value) {
+                            persistence = attributes[attribute].value[i];
+                            p = persistence.name;
                             var pname = p.substring(0,1)=='/'?p.split("/")[2]:p;
-                            setLink(attributes[attribute].line, "ltm", "pool", pname);
-                            break;
-                        case "members":
+                            setLink(persistence.line, "ltm", "persistence", pname);
+                        }
+                        break;
+                    case "profiles":
+                        for(i in attributes[attribute].value) {
+                            profile = attributes[attribute].value[i];
+                            p = profile.name;
+                            var pname = p.substring(0,1)=='/'?p.split("/")[2]:p;
+                            setLink(profile.line, "ltm", "profile", pname);
+                        }
+                        break;
+                    case "destination":
+                        if(curobjectgroup != "virtual") break;
+                        var d = attributes[attribute].value;
+                        var dname = d.substring(0,1)=='/'?d.split("/")[2].split(":")[0]:d.split(":")[0];
+                        setLink(attributes[attribute].line, "ltm", "virtual-address", dname);
+                        break;
+                    case "pool":
+                        var p = attributes[attribute].value;
+                        var pname = p.substring(0,1)=='/'?p.split("/")[2]:p;
+                        setLink(attributes[attribute].line, "ltm", "pool", pname);
+                        break;
+                    case "members":
+                        if(Object.prototype.toString.call(attributes[attribute].value) === "[object Array]") {
                             for(i in attributes[attribute].value) {
-                                for(m in attributes.members.value[i]) {
-                                    var mname = m.substring(0,1)=='/'?m.split("/")[2].split(":")[0]:m.split(":")[0];
-                                    setLink(attributes.members.value[i][m].line, "ltm", "node", mname);
-                                    for(j in attributes.members.value[i][m].attributes){
-                                        for(k in attributes.members.value[i][m].attributes[j]) {
-                                            l = attributes.members.value[i][m].attributes[j][k]
-                                            if(l.converted == 1) {
-                                                $("#lineno" + l.line).addClass("converted_line");
-                                                $("#conv" + l.line).html(okIcon());
-                                            } else {
-                                                $("#lineno" + l.line).addClass("notconverted_line");
-                                                $("#conv" + l.line).html(noIcon());
-                                            }
-                                        }
+                                member = attributes[attribute].value[i];
+                                m = member.name;
+                                var mname = m.substring(0,1)=='/'?m.split("/")[2].split(":")[0]:m.split(":")[0];
+                                if(curobjectgroup == "pool")
+                                    setLink(member.line, "ltm", "node", mname);
+                                for(j in member.attributes){
+                                    mattr = member.attributes[j];
+                                    if(mattr.converted == 1) {
+                                        $("#lineno" + mattr.line).addClass("converted_line");
+                                        $("#conv" + mattr.line).html(okIcon());
+                                    } else {
+                                        $("#lineno" + mattr.line).addClass("notconverted_line");
+                                        $("#conv" + mattr.line).html(noIcon());
                                     }
                                 }
                             }
-                            break;
-                        case "rules":
-                            for(i in attributes[attribute].value) {
-                                for(r in attributes.rules.value[i]) {
-                                    var rname = r.substring(0,1)=='/'?r.split("/")[2]:r;
-                                    setLink(attributes.rules.value[i][r].line, "rule", rname, rname);
+                        } else {
+                            member = attributes[attribute].value;
+                            m = member.name;
+                            var mname = m.substring(0,1)=='/'?m.split("/")[2].split(":")[0]:m.split(":")[0];
+                            if(curobjectgroup == "pool") 
+                                setLink(member.line, "ltm", "node", mname);
+                            for(j in member.attributes){
+                                mattr = member.attributes[j];
+                                if(mattr.converted == 1) {
+                                    $("#lineno" + mattr.line).addClass("converted_line");
+                                    $("#conv" + mattr.line).html(okIcon());
+                                } else {
+                                    $("#lineno" + mattr.line).addClass("notconverted_line");
+                                    $("#conv" + mattr.line).html(noIcon());
                                 }
                             }
-                            break;
-                        case "source-address-translation":
-                            for(i in attributes['source-address-translation']['value']) {
-                                for(r in attributes['source-address-translation']['value'][i]) {
-                                    sat = attributes['source-address-translation']['value'][i][r];
-                                    $("#lineno" + sat.line).addClass("converted_line");
-                                    $("#conv" + sat.line).html(okIcon());
-                                }
+                            if(member.converted == 1) {
+                                $("#lineno" + member.line).addClass("converted_line");
+                                $("#conv" + member.line).html(okIcon());
+                            } else {
+                                $("#lineno" + member.line).addClass("notconverted_line");
+                                $("#conv" + member.line).html(noIcon());
                             }
-                            break;
-                        default:
-                            break;
-                    }
+                        }
+                        break;
+                    case "rules":
+                        for(i in attributes[attribute].value) {
+                            rule = attributes[attribute].value[i];
+                            r = rule.name;
+                            var rname = r.substring(0,1)=='/'?r.split("/")[2]:r;
+                            setLink(rule.line, "rule", rname, rname);
+                        }
+                        break;
+                    case "source-address-translation":
+                        for(i in attributes[attribute].value) {
+                            sat = attributes[attribute].value[i];
+                            $("#lineno" + sat.line).addClass("converted_line");
+                            $("#conv" + sat.line).html(okIcon());
+                        }
+                        break;
+                    case "snatpool":
+                        snatpool = attributes[attribute];
+                        s = snatpool.value;
+                        spname = s.substring(0,1)=='/'?s.split("/")[2]:s.split(":")[0];
+                        setLink(snatpool.line, "ltm", "snatpool", spname);
+                        break;
+                    default:
+                        break;
                 }
             }
         });
@@ -859,7 +881,7 @@ function setLink(line, mod, og, on) {
             "og": og, 
             "on": on
         };
-    $("#lineno" + line).addClass("linked_line");
+    //$("#lineno" + line).addClass("linked_line");
     $("#link" + line).html(gotoIcon(link));
 }
 
