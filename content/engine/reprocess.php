@@ -24,16 +24,15 @@ $uuid  = htmlspecialchars($_GET['file']);
 
 
 $c = new Config($uuid);
+$c->convert_orphan(true);
 
 function uploadJSON($conn, $uuid, $objectgroup, $obj) {
-    foreach($obj as $object) {
-        $name =  key($object);
-        $v = $object[$name];
+    foreach($obj as $v) {
+        if(!isset($v["name"])) continue;
         $conn->insertInto = "f5_${objectgroup}_json";
-
         $conn->data = array(
             "files_uuid" => $uuid,
-            "name"       => $name,
+            "name"       => $v["name"],
             "adminpart"  => $v["adminpart"],
             "attributes" => json_encode($v["attributes"]));
 

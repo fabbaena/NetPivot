@@ -169,6 +169,7 @@ class Crud {
 
     function uploadJSON($uuid, $objectgroup, $obj) {
         foreach($obj as $object) {
+            if(!isset($object["name"])) continue;
             $name =  key($object);
             $v = $object[$name];
             $this->insertInto = "f5_${objectgroup}_json";
