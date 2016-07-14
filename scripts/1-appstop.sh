@@ -22,7 +22,7 @@ backup() {
 
     psql -l -U demonio template1 | grep -q netpivot
     if [ $? -eq 0 ]; then
-	   pg_dump -U demonio ${PGDATABASE} | xz -z9q > ${DBDUMP}
+	   pg_dump -U demonio netpivot | xz -z9q > ${DBDUMP}
     fi
 
     tar -cvjf ${BACKUP} -C ${WWWDATA} .
