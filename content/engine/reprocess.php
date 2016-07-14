@@ -24,6 +24,7 @@ $uuid  = htmlspecialchars($_GET['file']);
 
 
 $c = new Config($uuid);
+$c->convert_orphan(true);
 
 function uploadJSON($conn, $uuid, $objectgroup, $obj) {
     foreach($obj as $v) {

@@ -7,6 +7,7 @@ class Config {
 	private $_uuid;
 	private $_filecmd;
 	private $_services;
+	private $_orphan;
 
 	function __construct(
 			$uuid       = null, 
@@ -24,6 +25,7 @@ class Config {
 		$this->_detecttype = $detecttype;
 		$this->_filecmd = $filecmd;
 		$this->_services = $services;
+		$this->_orphan = 0;
 
 
 	}
@@ -83,6 +85,14 @@ class Config {
 		return $this->_path_pivot. $this->_services;
 	}
 
+	function convert_orphan($o = null) {
+		if(isset($o)) {
+			$this->_orphan = $o;
+		} else {
+			return $this->_orphan?" -p":"";
+		}
+	}
+
 	function command() {
 		if(isset($this->_uuid))
 			return $this->f5conv(). 
@@ -92,6 +102,7 @@ class Config {
 				" -O ". $this->ns_file().
 				" -J ". $this->json_file().
 				" -s ". $this->services_file().
+				$this->convert_orphan().
 				" -g";
 		else 
 			return false;
