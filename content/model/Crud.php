@@ -157,7 +157,8 @@ class Crud {
         $consulta = $this->_conn->prepare($sql);
         $csvfile = fopen($filename, "r") or die("Unable to open $filename!");
         while($line = fgets($csvfile)) {
-            $arr = explode(",", $line);
+            $data = explode(",", $line);
+            $arr = array_splice($data, 0, 8);
             array_push($arr, $uuid);
             $consulta->execute($arr);
         }
