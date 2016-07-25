@@ -159,6 +159,8 @@ class Crud {
         while($line = fgets($csvfile)) {
             $data = explode(",", $line);
             $arr = array_splice($data, 0, 8);
+            $arr[5] = is_numeric($arr[5])?$arr[5]:0;
+            $arr[6] = is_numeric($arr[6])?$arr[6]:0;
             array_push($arr, $uuid);
             $consulta->execute($arr);
         }
