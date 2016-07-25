@@ -163,11 +163,13 @@ class Crud {
             $arr[6] = is_numeric($arr[6])?$arr[6]:0;
             array_push($arr, $uuid);
             $consulta->execute($arr);
+            echo $consulta->errorInfo();
         }
         fclose($csvfile);
         $consulta = $this->_conn->prepare('COMMIT');
         $consulta->execute();
         $this->mensage = $consulta->errorInfo();
+        exit(1);
     }
 
     function uploadJSON($uuid, $objectgroup, $obj) {
