@@ -159,17 +159,16 @@ class Crud {
         while($line = fgets($csvfile)) {
             $data = explode(",", $line);
             $arr = array_splice($data, 0, 8);
-            $arr[5] = is_numeric($arr[5])?$arr[5]:0;
-            $arr[6] = is_numeric($arr[6])?$arr[6]:0;
+            $arr[5] = intval($arr[5]);
+            $arr[6] = intval($arr[6]);
+            $arr[7] = intval($arr[7]);
             array_push($arr, $uuid);
             $consulta->execute($arr);
-            echo $consulta->errorInfo();
         }
         fclose($csvfile);
         $consulta = $this->_conn->prepare('COMMIT');
         $consulta->execute();
         $this->mensage = $consulta->errorInfo();
-        exit(1);
     }
 
     function uploadJSON($uuid, $objectgroup, $obj) {
