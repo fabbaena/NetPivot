@@ -218,9 +218,35 @@ CREATE TABLE IF NOT EXISTS f5_virtual_json (
     attributes JSONB NOT NULL
 );
 ALTER SEQUENCE IF EXISTS f5_virtual_json_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CYCLE OWNED BY f5_virtual_json.id;
-CREATE INDEX IF NOT EXISTS f5_virtual_json_files_uuid ON f5_virtual_json USING HASH (files_uuid);
+CREATE INDEX IF NOT EXISTS f5_virtual_json_files_uuid_idx ON f5_virtual_json USING HASH (files_uuid);
 CREATE INDEX IF NOT EXISTS f5_virtual_json_name_idx ON f5_virtual_json USING BTREE (name);
 CREATE UNIQUE INDEX IF NOT EXISTS f5_virtual_json_name_files_uuid_idx ON f5_virtual_json USING BTREE (files_uuid,name);
+
+-- TABLE f5_snat_translation_json
+CREATE TABLE IF NOT EXISTS f5_snat_translation_json (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    adminpart VARCHAR(255) NOT NULL,
+    attributes JSONB NOT NULL
+);
+ALTER SEQUENCE IF EXISTS f5_snat_translation_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CYCLE OWNED BY f5_snat_translation_json.id;
+CREATE INDEX IF NOT EXISTS f5_snat_translation_json_files_uuid_idx ON f5_snat_translation_json USING HASH (files_uuid);
+CREATE INDEX IF NOT EXISTS f5_snat_translation_json_name_idx ON f5_snat_translation_json USING BTREE (name);
+CREATE UNIQUE INDEX IF NOT EXISTS f5_snat_translation_json_name_files_uuid_idx ON f5_snat_translation_json USING BTREE (files_uuid,name);
+
+-- TABLE f5_snatpool_json
+CREATE TABLE IF NOT EXISTS f5_snatpool_json (
+    id BIGSERIAL NOT NULL PRIMARY KEY,
+    files_uuid UUID NOT NULL REFERENCES files(uuid) ON DELETE CASCADE ON UPDATE CASCADE,
+    name VARCHAR(255) NOT NULL,
+    adminpart VARCHAR(255) NOT NULL,
+    attributes JSONB NOT NULL
+);
+ALTER SEQUENCE IF EXISTS f5_snatpool_id_seq INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CYCLE OWNED BY f5_snatpool_json.id;
+CREATE INDEX IF NOT EXISTS f5_snatpool_json_files_uuid_idx ON f5_snatpool_json USING HASH (files_uuid);
+CREATE INDEX IF NOT EXISTS f5_snatpool_json_name_idx ON f5_snatpool_json USING BTREE (name);
+CREATE UNIQUE INDEX IF NOT EXISTS f5_snatpool_json_name_files_uuid_idx ON f5_snatpool_json USING BTREE (files_uuid,name);
 
 -- VIEW user_role_view
 CREATE OR REPLACE VIEW user_role_view AS
