@@ -1,6 +1,6 @@
 -- This UPDATES the Layout of an already deployed DB with Data.
 -- USE WITH CARE, please backup DB before running this.
-CREATE TABLE f5_attributes_json (
+CREATE TABLE IF NOT EXISTS f5_attributes_json (
     id integer NOT NULL,
     files_uuid uuid NOT NULL,
     objecttype character varying NOT NULL,
@@ -39,7 +39,7 @@ ALTER TABLE ONLY f5_attributes_json
 
 
 
-CREATE TABLE f5_stats_features (
+CREATE TABLE IF NOT EXISTS f5_stats_features (
     id integer NOT NULL,
     files_uuid uuid NOT NULL,
     name character varying NOT NULL,
@@ -67,7 +67,7 @@ ALTER TABLE ONLY f5_stats_features
     ADD CONSTRAINT f5_stats_features_files_uuid_fkey FOREIGN KEY (files_uuid) REFERENCES files(uuid) ON DELETE CASCADE;
 
 
-CREATE TABLE f5_stats_modules (
+CREATE TABLE IF NOT EXISTS f5_stats_modules (
     id integer NOT NULL,
     files_uuid uuid NOT NULL,
     feature_id integer NOT NULL,

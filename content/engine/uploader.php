@@ -42,20 +42,6 @@ if ($so==false) {
                     header("location: ../dashboard/?e=1");
                     exit(0);
                 }
-                $bt = exec($c->detect());
-                if(strpos($bt, "BIGPIPE") !== false) {
-                    $sesion->delete("uuid");
-                    unlink($c->f5_file());
-                    header("location: ../dashboard/?e=2");
-                    exit(0);
-                }
-                if(strpos($bt, "UNKNOWN") !== false) {
-                    $sesion->delete("uuid");
-                    unlink($c->f5_file());
-                    header("location: ../dashboard/?e=3");
-                    exit(0);
-                }
-
 
                 $add = new Crud();
                 $add->insertInto = 'files';

@@ -12,9 +12,6 @@ if [ ! -f /var/www/html/dashboard/f5conv ]; then
     cp -vf /opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/content/dashboard/f5conv /var/www/html/dashboard/f5conv
 fi
 
-chown -c www-data.www-data /var/www/html/dashboard/f5conv
-chmod -c 0755 /var/www/html/dashboard/f5conv
-chmod -c 0755 /var/www/html/dashboard/detecttype
 wget https://s3-us-west-2.amazonaws.com/netpivotkernel/netpivotkernel.tgz -P /var/tmp
 tar -xzvf /var/tmp/netpivotkernel.tgz -C /var/tmp
 sudo sh /var/tmp/installer.sh

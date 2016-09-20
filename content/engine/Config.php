@@ -12,9 +12,8 @@ class Config {
 	function __construct(
 			$uuid       = null, 
 			$f5conv     = "f5conv", 
-			$detecttype = "detecttype",
 			$services   = "services.F5",
-			$path_pivot = "/var/www/html/dashboard/",
+			$path_pivot = "/opt/netpivot/",
 			$path_files = "/var/www/files/",
 			$filecmd    = "/usr/bin/file") {
 
@@ -22,7 +21,6 @@ class Config {
 		$this->_path_pivot = $path_pivot;
 		$this->_path_files = $path_files;
 		$this->_f5conv = $f5conv;
-		$this->_detecttype = $detecttype;
 		$this->_filecmd = $filecmd;
 		$this->_services = $services;
 		$this->_orphan = 0;
@@ -40,10 +38,6 @@ class Config {
 
 	function f5conv() {
 		return $this->_path_pivot. $this->_f5conv;
-	}
-
-	function detecttype() {
-		return $this->_path_pivot. $this->_detecttype;
 	}
 
 	function f5_file() {
@@ -115,12 +109,6 @@ class Config {
 			return false;
 	}
 
-	function detect() {
-		if(isset($this->_uuid))
-			return $this->_path_pivot. $this->_detecttype. " ". $this->f5_file();
-		else 
-			return false;
-	}
 }
 
 ?>
