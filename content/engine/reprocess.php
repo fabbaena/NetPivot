@@ -26,26 +26,7 @@ $uuid  = htmlspecialchars($_GET['file']);
 $c = new Config($uuid);
 $c->convert_orphan(true);
 
-function uploadJSON($conn, $uuid, $objectgroup, $obj) {
-    foreach($obj as $v) {
-        if(!isset($v["name"])) continue;
-        $conn->insertInto = "f5_${objectgroup}_json";
-        $conn->data = array(
-            "files_uuid" => $uuid,
-            "name"       => $v["name"],
-            "adminpart"  => $v["adminpart"],
-            "attributes" => json_encode($v["attributes"]));
-
-        if(isset($v["type"])) {
-            $conn->data["type"] = $v["type"];
-        }
-        $conn->Create2();
-    }
-}
-
-
 try {
-    $pwd = exec($c->command(), $pwd_out,$pwd_error); //this is the command executed on the host  
     $time = new TimeManager();
     $time->Today_Date();
     $today = $time->full_date;
@@ -56,12 +37,19 @@ try {
     $file_rec->condition = "uuid='$uuid'";
     $file_rec->Read();
     $file_data = $file_rec->rows[0];
-    /*
-    unlink($c->stats_file());
-    unlink($c->error_file());
-    unlink($c->json_file());
-    unlink($c->ns_file());
-    */
+
+    if(file_exists($c->stats_file()))
+        unlink($c->stats_file());
+    if(file_exists($c->error_file()))
+        unlink($c->error_file());
+    if(file_exists($c->json_file()))
+        unlink($c->json_file());
+    if(file_exists($c->ns_file()))
+        unlink($c->ns_file());
+
+    putenv("LD_LIBRARY_PATH=". $c->libpath());
+    $pwd = exec($c->command(), $pwd_out,$pwd_error); 
+
     $converted_rec = new Crud();
     $converted_rec->select = "*";
     $converted_rec->from = "conversions";
@@ -89,20 +77,25 @@ try {
 
     $msg = $model->mensaje;
     if ($msg == true) {
+        /*
         $load = new Crud();
         $load->filename = $c->stats_file();
         $load->uuid = $uuid;
         $load->Load();
+        */
         $sesion->set('uuid', $uuid);
 
         $string = file_get_contents($c->json_file());
         $json_a = json_decode($string, true);
 
         $conn = new Crud();
+        $conn->uploadJSON2($uuid, $json_a);
+        /*
         foreach($json_a as $objectgroup => $obj) {
             uploadJSON($conn, $uuid, $objectgroup, $obj);
 
         }
+        */
 
         header ('location:../dashboard/content.php');
     }

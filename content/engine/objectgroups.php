@@ -10,20 +10,34 @@ if($usuario == false || !isset($npmodules2) || !isset ($_GET['module'])) {
     exit();
 }
 $module = $_GET['module'];
+$uuid = $sesion->get('uuid');
 
-if(!isset($npmodules[$module]["object_groups"]) || true) {
+if(!isset($npmodules2[$module]["object_groups"]) || true) {
     $npo = new Crud();
-    $npo->select='*';
+
+    //$npo->select='*';
+    $npo->select='id, name, object_count, attribute_count, attribute_converted, attribute_ommited';
     if($module != 'rule') {
+        $npo->select='id, name, objects as object_count, attributes as attribute_count, converted as attribute_converted, 0 as attribute_omitted';
+        $npo->from='f5_stats_modules';
+        $npo->condition='feature_id='.$npmodules2[$module]["id"];        
+        /*
         $npo->from='obj_grps_view';
         $npo->condition='module_id='.$npmodules2[$module]["id"];
+        */
     } else {
+        $npo->select='id, name, 1 as object_count, total_attr as attribute_count, conv_attr as attribute_converted, 0 as attribute_omitted';
+        $npo->from='f5_attributes_json';
+        $npo->condition="feature='ltm' and module='rule' and files_uuid='$uuid'";
+        /*
         $npo->from='obj_names_view';
         $npo->condition='obj_grp_id='.$npmodules2[$module]["id"];
+        */
     }
     $npo->Read2();
     $npobjgrp = $npo->fetchall;
     $out = [];
+
     foreach($npobjgrp as $ogname => $v) {
         $npobjgrp[$ogname]["attribute_count"] += 0;
         $npobjgrp[$ogname]["attribute_converted"] += 0;

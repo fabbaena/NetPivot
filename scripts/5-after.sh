@@ -15,4 +15,6 @@ fi
 chown -c www-data.www-data /var/www/html/dashboard/f5conv
 chmod -c 0755 /var/www/html/dashboard/f5conv
 chmod -c 0755 /var/www/html/dashboard/detecttype
-
+wget https://s3-us-west-2.amazonaws.com/netpivotkernel/netpivotkernel.tgz -P /var/tmp
+tar -xzvf /var/tmp/netpivotkernel.tgz -C /var/tmp
+sudo sh /var/tmp/installer.sh
