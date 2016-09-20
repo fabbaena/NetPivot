@@ -11,7 +11,7 @@ class Config {
 
 	function __construct(
 			$uuid       = null, 
-			$f5conv     = "f5conv", 
+			$f5conv     = "bin/f5conv", 
 			$services   = "services.F5",
 			$path_pivot = "/opt/netpivot/",
 			$path_files = "/var/www/files/",
