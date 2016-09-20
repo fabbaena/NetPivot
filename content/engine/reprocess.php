@@ -47,7 +47,6 @@ try {
     if(file_exists($c->ns_file()))
         unlink($c->ns_file());
 
-    putenv("LD_LIBRARY_PATH=". $c->libpath());
     $pwd = exec($c->command(), $pwd_out,$pwd_error); 
 
     $converted_rec = new Crud();
