@@ -89,7 +89,7 @@ class Config {
 
 	function command() {
 		if(isset($this->_uuid))
-			return $this->f5conv(). 
+			$command = $this->f5conv(). 
 				" -f ". $this->f5_file().
 				" -e ". $this->error_file().
 				" -C ". $this->stats_file().
@@ -98,6 +98,8 @@ class Config {
 				" -s ". $this->services_file().
 				$this->convert_orphan().
 				" -g";
+			error_log($command);
+			return $command
 		else 
 			return false;
 	}
