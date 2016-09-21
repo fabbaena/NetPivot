@@ -11,13 +11,12 @@ if($usuario == false || !isset($npmodules2) ||
     header('location: /'); 
     exit();
 }
-$object_name = $_GET['object_name'];
-$object_group = str_replace("-", "_", $_GET['object_group']);
+$objid = $_GET['objid'];
 
 $attributes = new Crud();
 $attributes->select='attributes';
-$attributes->from="f5_${object_group}_json" ;
-$attributes->condition="name='$object_name' and files_uuid='$uuid'";
+$attributes->from="f5_attributes_json" ;
+$attributes->condition="id=$objid";
 
 $attributes->Read2();
 $a = $attributes->fetchall;
