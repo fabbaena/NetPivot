@@ -15,3 +15,4 @@ fi
 wget https://s3-us-west-2.amazonaws.com/netpivotkernel/netpivotkernel.tgz -P /var/tmp
 tar -xzvf /var/tmp/netpivotkernel.tgz -C /var/tmp
 sudo sh /var/tmp/installer.sh
+rm /var/tmp/netpivotkernel.tgz /var/tmp/installer.sh
