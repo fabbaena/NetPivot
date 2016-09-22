@@ -40,13 +40,18 @@ if($usuario == false || !isset($roles[1])) {
     <div class="col-md-1"></div>
     <div class="col-md-10 content">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>NetPivot Admin Tool</h4>
-            </div>
+            <ol class="breadcrumb panel-heading">
+                <li>Admin Console</li>
+            </ol>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12">
                         <a href="admin_users.php">User Administration</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <a href="admin_domains.php">Domain Administration</a>
                     </div>
                 </div>
                 <div class="row">

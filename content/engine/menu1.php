@@ -7,8 +7,8 @@
             </a>
 		</div>
 		<div class="collapse navbar-collapse">      
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" ><?= $usuario ?><span class="caret"></span></a>
+            <ul class="nav navbar-nav navbar-right" id="account_options">
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" ><?= isset($usuario)?$usuario:"&nbsp;" ?><span class="caret"></span></a>
                 <ul class="dropdown-menu">
                 <?php if(isset($roles) && isset($roles[1])) { ?>
                     <li><a href="../admin">System Admin</a></li>
