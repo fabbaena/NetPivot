@@ -281,7 +281,7 @@ END$$;
 DO $$
 BEGIN
     IF NOT EXISTS ( 
-    	select 1 from information_schema.columns where table_name='users' and column_name='email';)
+    	select 1 from information_schema.columns where table_name='users' and column_name='email')
     THEN 
         ALTER TABLE users 
 	        ADD COLUMN email character varying;
@@ -292,7 +292,7 @@ END$$;
 DO $$
 BEGIN
     IF NOT EXISTS ( 
-    	select 1 from information_schema.columns where table_name='users' and column_name='validation_string';)
+    	select 1 from information_schema.columns where table_name='users' and column_name='validation_string')
     THEN 
         ALTER TABLE users 
 	        ADD COLUMN validation_string character varying;
@@ -303,7 +303,7 @@ END$$;
 DO $$
 BEGIN
     IF NOT EXISTS ( 
-    	select 1 from information_schema.columns where table_name='users' and column_name='position';)
+    	select 1 from information_schema.columns where table_name='users' and column_name='position')
     THEN 
         ALTER TABLE users 
 	        ADD COLUMN "position" character varying;
@@ -314,7 +314,7 @@ END$$;
 DO $$
 BEGIN
     IF NOT EXISTS ( 
-    	select 1 from information_schema.columns where table_name='users' and column_name='company';)
+    	select 1 from information_schema.columns where table_name='users' and column_name='company')
     THEN 
         ALTER TABLE users 
 	        ADD COLUMN company character varying;
@@ -325,7 +325,7 @@ END$$;
 DO $$
 BEGIN
     IF NOT EXISTS ( 
-    	select 1 from information_schema.columns where table_name='users' and column_name='firstname';)
+    	select 1 from information_schema.columns where table_name='users' and column_name='firstname')
     THEN 
         ALTER TABLE users 
 	        ADD COLUMN firstname character varying;
@@ -336,7 +336,7 @@ END$$;
 DO $$
 BEGIN
     IF NOT EXISTS ( 
-    	select 1 from information_schema.columns where table_name='users' and column_name='lastname';)
+    	select 1 from information_schema.columns where table_name='users' and column_name='lastname')
     THEN 
         ALTER TABLE users 
 	        ADD COLUMN lastname character varying;
