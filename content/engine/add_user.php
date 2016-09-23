@@ -51,6 +51,7 @@ for($i=1; $i<4; $i++) {
 
 $user->save();
 
+header('location: ../admin/admin_users.php')
 
 ?>
 

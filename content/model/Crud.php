@@ -81,7 +81,6 @@ class Crud {
             $consulta->execute($insertValuesArray);
             $this->id = isset($returning)?$consulta->fetch()["id"]:null;
             $this->mensaje = TRUE;
-//            $this->id = $this->_conn->lastInsertId();
         }  
     }
     

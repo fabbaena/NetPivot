@@ -232,4 +232,114 @@ BEGIN
     END IF;
 END$$;
 
+\echo '>> Create table domains'
+CREATE TABLE domains (
+    id integer NOT NULL,
+    name character varying
+);
+
+\echo '>>> Change owner of domains to demonio'
+ALTER TABLE domains OWNER TO demonio;
+
+\echo '>>> Create user_domains_id_seq sequence'
+DO $$ 
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_class c 
+        JOIN pg_namespace n ON n.oid = c.relnamespace 
+        WHERE c.relname='user_domains_id_seq' AND n.nspname = 'public') 
+    THEN 
+        CREATE SEQUENCE user_domains_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+            END IF;
+END$$;
+
+\echo '>>> Change owner of user_domains_id_seq to demonio'
+ALTER TABLE user_domains_id_seq OWNER TO demonio;
+
+\echo '>>> Assign sequence user_domains_id_seq to column id of table domains'
+ALTER SEQUENCE user_domains_id_seq OWNED BY domains.id;
+ALTER TABLE ONLY domains ALTER COLUMN id SET DEFAULT nextval('user_domains_id_seq'::regclass);
+
+
+\echo '>>> Create domains_name_key unique constraint of table domain'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'domains_name_key' )
+    THEN 
+        ALTER TABLE ONLY domains
+            ADD CONSTRAINT domains_name_key UNIQUE (name);
+    END IF;
+END$$;
+
+\echo '>> Add email column to table users'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+    	select 1 from information_schema.columns where table_name='users' and column_name='email')
+    THEN 
+        ALTER TABLE users 
+	        ADD COLUMN email character varying;
+    END IF;
+END$$;
+
+\echo '>> Add validation_string column to table users'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+    	select 1 from information_schema.columns where table_name='users' and column_name='validation_string')
+    THEN 
+        ALTER TABLE users 
+	        ADD COLUMN validation_string character varying;
+    END IF;
+END$$;
+
+\echo '>> Add position column to table users'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+    	select 1 from information_schema.columns where table_name='users' and column_name='position')
+    THEN 
+        ALTER TABLE users 
+	        ADD COLUMN "position" character varying;
+    END IF;
+END$$;
+
+\echo '>> Add company column to table users'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+    	select 1 from information_schema.columns where table_name='users' and column_name='company')
+    THEN 
+        ALTER TABLE users 
+	        ADD COLUMN company character varying;
+    END IF;
+END$$;
+
+\echo '>> Add firstname column to table users'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+    	select 1 from information_schema.columns where table_name='users' and column_name='firstname')
+    THEN 
+        ALTER TABLE users 
+	        ADD COLUMN firstname character varying;
+    END IF;
+END$$;
+
+\echo '>> Add lastname column to table users'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+    	select 1 from information_schema.columns where table_name='users' and column_name='lastname')
+    THEN 
+        ALTER TABLE users 
+	        ADD COLUMN lastname character varying;
+    END IF;
+END$$;
 
