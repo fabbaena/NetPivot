@@ -1,46 +1,31 @@
 <?php
 
 require '../model/Crud.php';
+require 'functions.php';
 include('Mail.php');
 
-if(!isset($_GET['email'])) {
-    header("location: /");
-    exit;
-}
 
-function RandomString()
-{
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charlen = strlen($characters) - 1;
-    $randstring = '';
-    for ($i = 0; $i < 50; $i++) {
-        $randstring .= $characters[rand(0, $charlen)];
-    }
-    return $randstring;
-}
+$email = get_email($_GET);
+np_check(isset($email), "Data entered is invalid.");
 
-$email = htmlspecialchars($_GET['email']);
+$token = get_token($_GET);
+$password = get_password($_GET);
 
-if(isset($_GET['token']) && isset($_GET['newpass'])) {
-    $newpass = urldecode($_GET['newpass']);
-    $token = urldecode($_GET['token']);
+if(isset($token) && isset($password)) {
     $model = new Crud();
     $model->select = "id";
     $model->from = "users";
     $model->condition = "email='$email' and validation_string='$token'";
     $model->Read();
-    if(isset($model->rows[0])) {
-        $uid = $model->rows[0]['id'];
+    np_check(isset($model->rows[0]), "Invalid password reset request.");
+    $uid = $model->rows[0]['id'];
 
-        $model->update = "users";
-        $model->set = "password='". password_hash($newpass, PASSWORD_BCRYPT). "'";
-        $model->set .= ", validation_string = ''";
-        $model->condition = "id=$uid";
-        $model->Update();
-        $result["message"] = "Password has been reset.";
-    } else {
-        $result["message"] = "Invalid password reset request.";
-    }
+    $model->update = "users";
+    $model->set = "password='". password_hash($password, PASSWORD_BCRYPT). "'";
+    $model->set .= ", validation_string = ''";
+    $model->condition = "id=$uid";
+    $model->Update();
+    $result["message"] = "Password has been reset.";
 
 } else {
     $model = new Crud();
@@ -49,36 +34,40 @@ if(isset($_GET['token']) && isset($_GET['newpass'])) {
     $model->condition = "email='$email'";
     $model->Read();
 
-    if(isset($model->rows)) {
-        $r = RandomString();
-        $model = new Crud();
-        $model->update = "users";
-        $model->set = "validation_string='". $r. "'";
-        $model->condition = "email='$email'";
-        $model->Update();
+    np_check(isset($model->rows[0]), "If you already have an account an email ".
+        "has been sent to your inbox with a link to reset your password.");
 
-        $from = 'NetPivot DO_NOT_REPLY <noreply@netpivot.io>';
-        $to = "<$email>";
-        $subject = 'NetPivot Password Reset';
-        $body = "Hi,\n\nPlease use the following link to reset your password.\nhttp://". $_SERVER['HTTP_HOST']. "/reset_pass.php?email=". urlencode($email). "&token=". urlencode($r);
+    $r = RandomString();
+    $model = new Crud();
+    $model->update = "users";
+    $model->set = "validation_string='". $r. "'";
+    $model->condition = "email='$email'";
+    $model->Update();
 
-        $headers = array(
-            'From' => $from,
-            'To' => $to,
-            'Subject' => $subject
-        );
-        $smtp = Mail::factory('smtp', array(
-                'host' => 'ssl://smtp.gmail.com',
-                'port' => '465',
-                'auth' => true,
-                'username' => 'noreply@netpivot.io',
-                'password' => 'U&0MQ7/4(f}_M'
-            ));
+    $from = 'NetPivot DO_NOT_REPLY <noreply@netpivot.io>';
+    $to = "<$email>";
+    $subject = 'NetPivot Password Reset';
+    $body = "Hi,\n\nPlease use the following link to reset your password.\n".
+            "http://". $_SERVER['HTTP_HOST']. "/reset_pass.php?email=". 
+            urlencode($email). "&token=". urlencode($r);
 
-        $mail = $smtp->send($to, $headers, $body);
+    $headers = array(
+        'From' => $from,
+        'To' => $to,
+        'Subject' => $subject
+    );
+    $smtp = Mail::factory('smtp', array(
+            'host' => 'ssl://smtp.gmail.com',
+            'port' => '465',
+            'auth' => true,
+            'username' => 'noreply@netpivot.io',
+            'password' => 'U&0MQ7/4(f}_M'
+        ));
 
-    }
-    $result["message"] = "Email an email has been sent to your inbox with a link to reset your password.";
+    $mail = $smtp->send($to, $headers, $body);
+
+    $result["message"] = "If you already have an account an email has been ".
+        "sent to your inbox with a link to reset your password.";
 }
 
 echo json_encode($result);
