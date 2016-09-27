@@ -56,7 +56,7 @@ class Crud {
         }  
     }
 
-    public function Create2() {
+    public function Create2($returning = null) {
         $insertColumnsArray = array();
         $insertValuesArray = array();
         $insertValuesQArray = array();
@@ -73,13 +73,14 @@ class Crud {
         $insertColumns = implode(",", $insertColumnsArray);
         $insertValues  = implode(",", $insertValuesQArray);
         $sql = "INSERT INTO $insertInto ($insertColumns) VALUES ($insertValues)";
+        if(isset($returning)) $sql .= " RETURNING $returning";
         $consulta = $this->_conn->prepare($sql);
         if (!$consulta){
             $this->mensaje = errorInfo();
         } else {
             $consulta->execute($insertValuesArray);
+            $this->id = isset($returning)?$consulta->fetch()["id"]:null;
             $this->mensaje = TRUE;
-            $this->id = $this->_conn->lastInsertId();
         }  
     }
     
@@ -188,6 +189,81 @@ class Crud {
                 $this->data["type"] = $v["type"];
             }
             $this->Create2();
+        }
+    }
+
+    function uploadJSON2($uuid, $data) {
+        $stats = array();
+        foreach($data as $key => $m) {
+            if(!is_array($m)) continue;
+            foreach($m as $key => $obj) {
+                if(!is_array($obj)) continue;
+                $c = 0;
+                $t = 0;
+                $feature = $obj["feature"];
+                $module = $obj["module"];
+                foreach ($obj["attributes"] as $attr => $a) {
+                    $c += isset($a["converted"])?$a["converted"]:0;
+                    $t += 1;
+                }
+                if(!isset($stats[$feature])) {
+                    $stats[$feature] = array();
+                    $stats[$feature]["modules"] = array();
+                    $stats[$feature]["objects"] = 1;
+                    $stats[$feature]["converted"] = $c;
+                    $stats[$feature]["total"] = $t;
+                } else {
+                    $stats[$feature]["objects"] += 1;
+                    $stats[$feature]["converted"] += $c;
+                    $stats[$feature]["total"] += $t;
+                }
+
+                if(!isset($stats[$feature]["modules"][$module])) {
+                    $stats[$feature]["modules"][$module] = array();
+                    $stats[$feature]["modules"][$module]["objects"] = 1;
+                    $stats[$feature]["modules"][$module]["converted"] = $c;
+                    $stats[$feature]["modules"][$module]["total"] = $t;
+                } else {
+                    $stats[$feature]["modules"][$module]["objects"] += 1;
+                    $stats[$feature]["modules"][$module]["converted"] += $c;
+                    $stats[$feature]["modules"][$module]["total"] += $t;
+                }
+
+                $this->insertInto = "f5_attributes_json";
+                $this->data = $obj;
+                $attributes = $this->data["attributes"];
+                unset($this->data["attributes"]);
+                $this->data["files_uuid"] = $uuid;
+                $this->data["conv_attr"] = $c;
+                $this->data["total_attr"] = $t;
+                $this->data["attributes"] = json_encode($attributes);
+                $this->Create2();
+            }
+        }
+        foreach($stats as $feature_name => $feature) {
+            $this->insertInto = "f5_stats_features";
+            $this->data = array(
+                "files_uuid" => $uuid,
+                "name"       => $feature_name,
+                "modules"    => count($feature["modules"]),
+                "objects"    => $feature["objects"],
+                "attributes" => $feature["total"],
+                "converted"  => $feature["converted"]
+                );
+            $this->Create2("id");
+            $f_id = $this->id;
+            foreach($feature["modules"] as $module_name => $module) {
+                $this->insertInto = "f5_stats_modules";
+                $this->data = array(
+                    "files_uuid" => $uuid,
+                    "feature_id" => $f_id,
+                    "name"       => $module_name,
+                    "objects"    => $module["objects"],
+                    "attributes" => $module["total"],
+                    "converted"  => $module["converted"]
+                    );
+                $this->Create2();
+            }
         }
     }
     

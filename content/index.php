@@ -26,36 +26,44 @@ if($usuario == true && $roles == true) {
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-     <!--   <meta name="viewport" content="width=device-width, initial-scale=1"> Bootstrap for mobile devices -->
+        <?php include ('engine/css.php');?>
         <title>NetPivot</title>
-        <meta name="description" content="">
-        <meta name="author" content="netpivot">
-        <!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
-        <link rel="shortcut icon" href="/favicon.ico">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-            <!-- CSS de Bootstrap -->
-        <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <script language="javascript">
+        $().ready( function() {
+            $(".resetpass").click(function() {document.location="reset_pass.php";});
+            $(".register").click(function() { document.location="register.php";});
+            })
+        </script>
     </head>
     <body>
         <link href="css/signing.css" rel="stylesheet">
         <div class="container-fluid">  
             <form class="form-signin" method="POST" action="model/LoginUser.php">
-                <h2 class="form-signin-heading"> Please Login</h2>
-                    <label for="inputUsername">Username</label>
-                    <input type="text" class="form-control" id="inputUsername" name="inputUsername" placeholder="Username"> 
-                    <label for="inputPassword">Password</label>
-                    <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password">
-                
-                <button type="submit" class="btn btn-primary">Login</button>
-                <?php 
-                    if (isset($_GET['error'])) { 
-                        echo '<p class="text-danger">Wrong username or password, please check.</p>';
-                    }
-                ?>
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-4">
+                        <h2 class="form-signin-heading">Please Login</h2>
+                            <label for="inputUsername">Username</label>
+                            <input type="text" class="form-control" id="inputUsername" name="inputUsername" placeholder="Username"> 
+                            <label for="inputPassword">Password</label>
+                            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
+                        <p class="text-danger"><?= isset($_GET['error'])? "Wrong username or password, please check.": "" ?></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-md-offset-4">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </div>
             </form>
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <a class="resetpass" href="#">Reset password</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <a class="register" href="#">Register</a>
+                </div>
         </div> 
     </body>
 </html>

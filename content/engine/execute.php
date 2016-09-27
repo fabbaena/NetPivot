@@ -47,20 +47,25 @@ try {
     if ($msg == true) {
 
         /****** Loads CSV *****/
+        /*
         $load = new Crud();
         $load->filename = $c->stats_file();
         $load->uuid = $uuid;
         $load->Load();
+        */
         $sesion->set('uuid', $uuid);
 
         /***** Loads JSON *****/
         $string = file_get_contents($c->json_file());
         $json_a = json_decode($string, true);
         $conn = new Crud();
+        /*
         foreach($json_a as $objectgroup => $obj) {
             $conn->uploadJSON($uuid, $objectgroup, $obj);
 
         }
+        */
+        $conn->uploadJSON2($uuid, $json_a);
 
         header ('location:../dashboard/content.php');
     } else {

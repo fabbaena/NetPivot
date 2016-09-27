@@ -12,43 +12,30 @@ if($usuario == false || !isset($_GET["objid"])) {
 $uuid = $sesion->get('uuid');
 $objid = $_GET["objid"];
 
-
 $c = new Config($uuid);
 
 $objname = new Crud();
-$objname->select='line';
-$objname->from='obj_names';
+$objname->select='line, lineend, attributes';
+$objname->from='f5_attributes_json';
 $objname->condition="id=$objid";
 $objname->Read();
-$linestart = $objname->rows[0]["line"] - 1;
-
-$objidnxt = $objid + 1;
-$objname = new Crud();
-$objname->select='line';
-$objname->from='obj_names';
-$objname->condition="id=$objidnxt";
-$objname->Read();
-$lineend = $objname->rows[0]["line"] - 2;
+$linestart = $objname->rows[0]["line"];
+$lineend = $objname->rows[0]["lineend"];
+$attrs = json_decode($objname->rows[0]["attributes"]);
 
 $handle = file($c->f5_file());
 
-for($i=$linestart; $i <= $lineend; $i++) {
+for($i=$linestart-1; $i < $lineend; $i++) {
 	$out[$i + 1]["source"] = $handle[$i];
 	$out[$i + 1]["converted"] = -1;
 }
 
-$attrs = new Crud();
-$attrs->select='name, converted, line';
-$attrs->from='attributes';
-$attrs->condition="obj_name_id=$objid";
-$attrs->Read();
-foreach ($attrs->rows as $a) {
-	$l = $a["line"];
-	$out[$l]["name"] = $a["name"];
-	$out[$l]["converted"] = $a["converted"];
+
+foreach ($attrs as $a) {
+	$l = $a->line;
+	$out[$l]["name"] = $a->name;
+	$out[$l]["converted"] = $a->converted;
 }
-$out[$linestart + 1]["converted"] = "-2";
-$out[$lineend + 1]["converted"] = "-2";
 
 
 

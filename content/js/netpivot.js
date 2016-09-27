@@ -759,6 +759,7 @@ function showdata(data) {
         .addClass("glyphicon-collapse-up");
     $.getJSON("../engine/get_attributes_json.php", 
         {
+            "objid": curobjid,
             "object_group": curobjectgroup, 
             "object_name": $("#l_details_" + curobjid).text()
         }, 

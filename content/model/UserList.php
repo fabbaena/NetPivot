@@ -44,22 +44,30 @@ class User {
 	public $used_conversions;
 	public $roles;
 	public $password;
+	public $email;
+	public $validation_string;
+	public $company;
+	public $position;
+	public $firstname;
+	public $lastname;
 
 	function __construct($record = NULL) {
 		$this->roles = [];
 		if($record != NULL) {
-			$this->setData($record);
+			foreach($this as $key => $value) {
+				if($key != "roles" && isset($record[$key])) {
+					$this->$key = $record[$key];
+				}
+			}
 		}
 	}
 
 	function setData($record) {
-		$this->id = $record["id"];
-		$this->name = $record["name"];
-		$this->type = $record["type"];
-		$this->max_files = $record["max_files"];
-		$this->max_conversions = $record["max_conversions"];
-		$this->used_files = $record["used_files"];
-		$this->used_conversions = $record["used_conversions"];
+		foreach($this as $key => $value) {
+			if($key != "roles" && isset($record[$key])) {
+				$this->$key = $record[$key];
+			}
+		}
 	}
 
 	function addRole($role) {
@@ -83,27 +91,30 @@ class User {
 		}
 		return $out;
 	}
-	function save() {
-		$username = $this->name;
-		$type = $this->type;
-		$max_files = $this->max_files;
-		$max_conversions = $this->max_conversions;
-		$hash = password_hash($this->password, PASSWORD_BCRYPT);
+	function save($ajax = false) {
 		$model = new Crud();
         $model->insertInto = 'users';
-        $model->insertColumns = 'name,password,type,max_files,max_conversions';
-        $model->insertValues = "'$username','$hash','Administrator',$max_files,$max_conversions";
-        $model->Create();
+        foreach($this as $key => $value) {
+        	if($key != 'roles' && isset($value)) {
+        		$model->data[$key] = $value;
+        	}
+        }
+        $model->data['password'] = isset($this->password) ? 
+        	password_hash($this->password, PASSWORD_BCRYPT) :
+			"PasswordNotSet";
+        $model->Create2("id");
         $mensaje = $model->mensaje;
         $user_id = $model->id;
 
-        foreach($this->roles as $role_id) {
+        foreach($this->roles as $role_id => $role) {
 	        $newrole = new Crud();
 	        $newrole->insertInto = 'user_role';
-	        $newrole->insertColumns = 'user_id, role_id';
-	        $newrole->insertValues = "$user_id,$role_id";
-	        $newrole->Create();
+	        $newrole->data = array(
+	        	"user_id" => $user_id,
+	        	"role_id" => $role_id);
+	        $newrole->Create2();
         }
+        if($ajax) return;
         if ($mensaje == true) {
             header ('location:../admin/admin_users.php?new_done');
         } else {
