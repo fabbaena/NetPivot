@@ -8,11 +8,12 @@
 require 'CheckUser.php';
 require 'StartSession.php';
 require 'Crud.php';
+require '../engine/functions.php';
 
 $model = new CheckUser();
 $model->name = htmlspecialchars($_POST['inputUsername']);
 //$model->password = htmlspecialchars(sha1($_POST['inputPassword']));
-$model->password = htmlspecialchars($_POST['inputPassword']);
+$model->password = get_password($_POST);
 $model->login();
 $mensaje = $model->mensaje;
 $id = $model->id;

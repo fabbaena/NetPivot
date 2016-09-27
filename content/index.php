@@ -45,7 +45,7 @@ if($usuario == true && $roles == true) {
                             <label for="inputUsername">Username</label>
                             <input type="text" class="form-control" id="inputUsername" name="inputUsername" placeholder="Username"> 
                             <label for="inputPassword">Password</label>
-                            <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password">
+                            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
                         <p class="text-danger"><?= isset($_GET['error'])? "Wrong username or password, please check.": "" ?></p>
                     </div>
                 </div>

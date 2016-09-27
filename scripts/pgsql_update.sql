@@ -233,7 +233,7 @@ BEGIN
 END$$;
 
 \echo '>> Create table domains'
-CREATE TABLE domains (
+CREATE TABLE IF NOT EXISTS domains (
     id integer NOT NULL,
     name character varying
 );

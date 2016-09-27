@@ -2,101 +2,88 @@
 
 require '../model/Crud.php';
 require '../model/UserList.php';
+require 'functions.php';
 include('Mail.php');
 
-if(!isset($_GET['email'])) {
-    header("location: /");
-    exit;
-}
+np_check(isset($_GET['email']), "Incomplete information");
+np_check(isset($_GET['company']), "Incomplete information");
+np_check(isset($_GET['position']), "Incomplete information");
+np_check(isset($_GET['firstname']), "Incomplete information");
+np_check(isset($_GET['lastname']), "Incomplete information");
 
-function RandomString()
-{
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charlen = strlen($characters) - 1;
-    $randstring = '';
-    for ($i = 0; $i < 50; $i++) {
-        $randstring .= $characters[rand(0, $charlen)];
-    }
-    return $randstring;
-}
+$email = urldecode($_GET['email']);
+$company = urldecode($_GET['company']);
+$position = urldecode($_GET['position']);
+$firstname = urldecode($_GET['firstname']);
+$lastname = urldecode($_GET['lastname']);
 
-if(isset($_GET['email']) && isset($_GET['company']) && 
-        isset($_GET['position']) && isset($_GET['firstname']) && 
-        isset($_GET['lastname'])) {
-    $email = urldecode($_GET['email']);
-    $company = urldecode($_GET['company']);
-    $position = urldecode($_GET['position']);
-    $firstname = urldecode($_GET['firstname']);
-    $lastname = urldecode($_GET['lastname']);
+$validemailpat = '/^[._A-z0-9]{1,}@[._A-z0-9]{1,}\.[A-z]{1,}$/';
+$validstringpat = '/^[.A-z0-9 \']{1,30}$/';
 
-    $domain = substr($email, strpos($email, "@") + 1);
+np_check(preg_match($validemailpat, $email), "Data entered is invalid.");
+np_check(preg_match($validstringpat, $company), "Data entered is invalid.");
+np_check(preg_match($validstringpat, $firstname), "Data entered is invalid.");
+np_check(preg_match($validstringpat, $lastname), "Data entered is invalid.");
 
-    $model = new Crud();
+$domain = substr($email, strpos($email, "@") + 1);
 
-    $model->select = "id";
-    $model->from = "users";
-    $model->condition = "name='$email'";
-    $model->Read();
-    if(isset($model->rows[0])) {
-        $result["message"] = "You have already an account.";
-    } else {
-        $model->select = "id";
-        $model->from = "domains";
-        $model->condition = "name='$domain'";
-        $model->Read();
+$model = new Crud();
 
-        if(!isset($model->rows[0])) {
-            $result["message"] = "Your company is not registered to be able to use NetPivot. Please contact us at info@samanagroup.co";
-        } else {
-            $r = RandomString();
+$model->select = "id";
+$model->from = "users";
+$model->condition = "name='$email'";
+$model->Read();
+np_check(!isset($model->rows[0]), "You have already an account.");
 
-            $role = new Role(array(
-                "roleid" => 3,
-                "rolename" => "",
-                "starturl" => ""));
-            $user = new User(array(
-                "name" => $email,
-                "type" => "user",
-                "max_files" => 100,
-                "max_conversions" => 100,
-                "email" => $email,
-                "validation_string" => $r,
-                "company" => $company,
-                "position" => $position,
-                "firstname" => $firstname,
-                "lastname" => $lastname));
-            $user->addRole($role);
-            $user->save(true);
+$model->select = "id";
+$model->from = "domains";
+$model->condition = "name='$domain'";
+$model->Read();
+np_check(isset($model->rows[0]), "Your company is not registered to be able to use NetPivot. Please contact us at info@samanagroup.co");
 
-            $from = "NetPivot DO_NOT_REPLY <noreply@netpivot.io>";
-            $to = "<$email>";
-            $subject = 'NetPivot Account Created';
-            $body = "Hi,\n\nPlease use the following link to set your password.\nhttp://". $_SERVER['HTTP_HOST']. "/reset_pass.php?email=". urlencode($email). "&token=". urlencode($r);
+$r = RandomString();
 
-            $headers = array(
-                'From' => $from,
-                'To' => $to,
-                'Subject' => $subject
-            );
-            $smtp = Mail::factory('smtp', array(
-                    'host' => 'ssl://smtp.gmail.com',
-                    'port' => '465',
-                    'auth' => true,
-                    'username' => 'noreply@netpivot.io',
-                    'password' => 'U&0MQ7/4(f}_M'
-                ));
+$role = new Role(array(
+    "roleid" => 3,
+    "rolename" => "",
+    "starturl" => ""));
+$user = new User(array(
+    "name" => $email,
+    "type" => "user",
+    "max_files" => 100,
+    "max_conversions" => 100,
+    "email" => $email,
+    "validation_string" => $r,
+    "company" => $company,
+    "position" => $position,
+    "firstname" => $firstname,
+    "lastname" => $lastname));
+$user->addRole($role);
+$user->save(true);
 
-            $mail = $smtp->send($to, $headers, $body);
+$from = "NetPivot DO_NOT_REPLY <noreply@netpivot.io>";
+$to = "<$email>";
+$subject = 'NetPivot Account Created';
+$body = "Hi,\n\nPlease use the following link to set your password.\n".
+        "http://". $_SERVER['HTTP_HOST']. "/reset_pass.php?email=". 
+        urlencode($email). "&token=". urlencode($r);
 
-            $result["message"] = "Account has been created. Please check your email to activate your account.";
-        }
-    }
+$headers = array(
+    'From' => $from,
+    'To' => $to,
+    'Subject' => $subject
+);
+$smtp = Mail::factory('smtp', array(
+        'host' => 'ssl://smtp.gmail.com',
+        'port' => '465',
+        'auth' => true,
+        'username' => 'noreply@netpivot.io',
+        'password' => 'U&0MQ7/4(f}_M'
+    ));
 
+$mail = $smtp->send($to, $headers, $body);
 
-} else {
-    $result["message"] = "Information incomplete.";
-}
-
+$result["message"] = "Account has been created. Please check your email to activate your account.";
 echo json_encode($result);
 ?>
 
