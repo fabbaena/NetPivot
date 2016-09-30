@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS f5_attributes_json (
 ALTER TABLE f5_attributes_json OWNER TO demonio;
 
 \echo '>>> Create f5_json_id_seq sequence'
+\echo '>>> Change owner of f5_json_id_seq to demonio'
+\echo '>>> Assign sequence f5_json_id_seq to column id of table f5_attributes_json'
 DO $$ 
 BEGIN
     IF NOT EXISTS ( 
@@ -35,15 +37,12 @@ BEGIN
             NO MINVALUE 
             NO MAXVALUE 
             CACHE 1; 
+        ALTER TABLE f5_json_id_seq OWNER TO demonio;
+        ALTER SEQUENCE f5_json_id_seq OWNED BY f5_attributes_json.id;
+        ALTER TABLE ONLY f5_attributes_json ALTER COLUMN id SET DEFAULT nextval('f5_json_id_seq'::regclass);
     END IF;
 END$$;
 
-\echo '>>> Change owner of f5_json_id_seq to demonio'
-ALTER TABLE f5_json_id_seq OWNER TO demonio;
-
-\echo '>>> Assign sequence f5_json_id_seq to column id of table f5_attributes_json'
-ALTER SEQUENCE f5_json_id_seq OWNED BY f5_attributes_json.id;
-ALTER TABLE ONLY f5_attributes_json ALTER COLUMN id SET DEFAULT nextval('f5_json_id_seq'::regclass);
 
 \echo '>>> Create f5_json_pkey primary key for table f5_attributes_json'
 DO $$
@@ -90,6 +89,8 @@ CREATE TABLE IF NOT EXISTS f5_stats_features (
 ALTER TABLE f5_stats_features OWNER TO demonio;
 
 \echo '>>> Create f5_stats_features_id_seq sequence'
+\echo '>>> Change owner of f5_stats_features_id_seq to demonio'
+\echo '>>> Assign sequence f5_stats_features_id_seq to column id of table f5_stats_features'
 DO $$ 
 BEGIN
     IF NOT EXISTS ( 
@@ -104,14 +105,12 @@ BEGIN
             NO MAXVALUE
             CACHE 1;
             END IF;
+        ALTER TABLE f5_stats_features_id_seq OWNER TO demonio;
+        ALTER SEQUENCE f5_stats_features_id_seq OWNED BY f5_stats_features.id;
+        ALTER TABLE ONLY f5_stats_features ALTER COLUMN id SET DEFAULT nextval('f5_stats_features_id_seq'::regclass);
 END$$;
 
-\echo '>>> Change owner of f5_stats_features_id_seq to demonio'
-ALTER TABLE f5_stats_features_id_seq OWNER TO demonio;
 
-\echo '>>> Assign sequence f5_stats_features_id_seq to column id of table f5_stats_features'
-ALTER SEQUENCE f5_stats_features_id_seq OWNED BY f5_stats_features.id;
-ALTER TABLE ONLY f5_stats_features ALTER COLUMN id SET DEFAULT nextval('f5_stats_features_id_seq'::regclass);
 
 \echo '>>> Create f5_stats_features_files_uuid_feature unique constraint of table f5_stats_features'
 DO $$
@@ -163,6 +162,8 @@ CREATE TABLE IF NOT EXISTS f5_stats_modules (
 ALTER TABLE f5_stats_modules OWNER TO demonio;
 
 \echo '>>> Create f5_stats_modules_id_seq sequence'
+\echo '>>> Change owner of f5_stats_modules_id_seq to demonio'
+\echo '>>> Assign sequence f5_stats_modules_id_seq to column id of table f5_stats_modules'
 DO $$ 
 BEGIN
     IF NOT EXISTS ( 
@@ -177,14 +178,11 @@ BEGIN
             NO MAXVALUE
             CACHE 1;
             END IF;
+        ALTER TABLE f5_stats_modules_id_seq OWNER TO demonio;
+        ALTER SEQUENCE f5_stats_modules_id_seq OWNED BY f5_stats_modules.id;
+        ALTER TABLE ONLY f5_stats_modules ALTER COLUMN id SET DEFAULT nextval('f5_stats_modules_id_seq'::regclass);
 END$$;
 
-\echo '>>> Change owner of f5_stats_modules_id_seq to demonio'
-ALTER TABLE f5_stats_modules_id_seq OWNER TO demonio;
-
-\echo '>>> Assign sequence f5_stats_modules_id_seq to column id of table f5_stats_modules'
-ALTER SEQUENCE f5_stats_modules_id_seq OWNED BY f5_stats_modules.id;
-ALTER TABLE ONLY f5_stats_modules ALTER COLUMN id SET DEFAULT nextval('f5_stats_modules_id_seq'::regclass);
 
 \echo '>>> Create f5_stats_modules_pkey primary key for table f5_stats_modules'
 DO $$
@@ -242,6 +240,8 @@ CREATE TABLE IF NOT EXISTS domains (
 ALTER TABLE domains OWNER TO demonio;
 
 \echo '>>> Create user_domains_id_seq sequence'
+\echo '>>> Change owner of user_domains_id_seq to demonio'
+\echo '>>> Assign sequence user_domains_id_seq to column id of table domains'
 DO $$ 
 BEGIN
     IF NOT EXISTS ( 
@@ -256,14 +256,10 @@ BEGIN
             NO MAXVALUE
             CACHE 1;
             END IF;
+        ALTER TABLE user_domains_id_seq OWNER TO demonio;
+        ALTER SEQUENCE user_domains_id_seq OWNED BY domains.id;
+        ALTER TABLE ONLY domains ALTER COLUMN id SET DEFAULT nextval('user_domains_id_seq'::regclass);
 END$$;
-
-\echo '>>> Change owner of user_domains_id_seq to demonio'
-ALTER TABLE user_domains_id_seq OWNER TO demonio;
-
-\echo '>>> Assign sequence user_domains_id_seq to column id of table domains'
-ALTER SEQUENCE user_domains_id_seq OWNED BY domains.id;
-ALTER TABLE ONLY domains ALTER COLUMN id SET DEFAULT nextval('user_domains_id_seq'::regclass);
 
 
 \echo '>>> Create domains_name_key unique constraint of table domain'
