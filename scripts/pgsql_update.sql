@@ -434,6 +434,10 @@ DROP TABLE IF EXISTS attributes;
 DROP TABLE IF EXISTS obj_names;
 DROP TABLE IF EXISTS obj_grps;
 DROP TABLE IF EXISTS modules;
+DROP SEQUENCE IF EXISTS f5_snat_translation_json_id_seq;
+DROP SEQUENCE IF EXISTS f5_snatpool_json_id_seq;
+ALTER SEQUENCE f5_json_id_seq RENAME TO f5_attributes_json_id_seq;
+ALTER SEQUENCE user_domains_id_seq RENAME TO domains_id_seq;
 
 \echo '>>> Create users_email_ukey unique constraint of table users'
 DO $$
