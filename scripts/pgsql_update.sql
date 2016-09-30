@@ -21,25 +21,25 @@ CREATE TABLE IF NOT EXISTS f5_attributes_json (
 \echo '>>> Change owner of f5_attributes_json to demonio'
 ALTER TABLE f5_attributes_json OWNER TO demonio;
 
-\echo '>>> Create f5_json_id_seq sequence'
-\echo '>>> Change owner of f5_json_id_seq to demonio'
-\echo '>>> Assign sequence f5_json_id_seq to column id of table f5_attributes_json'
+\echo '>>> Create f5_attributes_json_id_seq sequence'
+\echo '>>> Change owner of f5_attributes_json_id_seq to demonio'
+\echo '>>> Assign sequence f5_attributes_json_id_seq to column id of table f5_attributes_json'
 DO $$ 
 BEGIN
     IF NOT EXISTS ( 
         SELECT 1 FROM pg_class c 
         JOIN pg_namespace n ON n.oid = c.relnamespace 
-        WHERE c.relname='f5_json_id_seq' AND n.nspname = 'public') 
+        WHERE c.relname='f5_attributes_json_id_seq' AND n.nspname = 'public') 
     THEN 
-        CREATE SEQUENCE f5_json_id_seq 
+        CREATE SEQUENCE f5_attributes_json_id_seq 
             START WITH 1 
             INCREMENT BY 1 
             NO MINVALUE 
             NO MAXVALUE 
             CACHE 1; 
-        ALTER TABLE f5_json_id_seq OWNER TO demonio;
-        ALTER SEQUENCE f5_json_id_seq OWNED BY f5_attributes_json.id;
-        ALTER TABLE ONLY f5_attributes_json ALTER COLUMN id SET DEFAULT nextval('f5_json_id_seq'::regclass);
+        ALTER TABLE f5_attributes_json_id_seq OWNER TO demonio;
+        ALTER SEQUENCE f5_attributes_json_id_seq OWNED BY f5_attributes_json.id;
+        ALTER TABLE ONLY f5_attributes_json ALTER COLUMN id SET DEFAULT nextval('f5_attributes_json_id_seq'::regclass);
     END IF;
 END$$;
 
@@ -239,17 +239,17 @@ CREATE TABLE IF NOT EXISTS domains (
 \echo '>>> Change owner of domains to demonio'
 ALTER TABLE domains OWNER TO demonio;
 
-\echo '>>> Create user_domains_id_seq sequence'
-\echo '>>> Change owner of user_domains_id_seq to demonio'
-\echo '>>> Assign sequence user_domains_id_seq to column id of table domains'
+\echo '>>> Create domains_id_seq sequence'
+\echo '>>> Change owner of domains_id_seq to demonio'
+\echo '>>> Assign sequence domains_id_seq to column id of table domains'
 DO $$ 
 BEGIN
     IF NOT EXISTS ( 
         SELECT 1 FROM pg_class c 
         JOIN pg_namespace n ON n.oid = c.relnamespace 
-        WHERE c.relname='user_domains_id_seq' AND n.nspname = 'public') 
+        WHERE c.relname='domains_id_seq' AND n.nspname = 'public') 
     THEN 
-        CREATE SEQUENCE user_domains_id_seq
+        CREATE SEQUENCE domains_id_seq
             START WITH 1
             INCREMENT BY 1
             NO MINVALUE
@@ -257,8 +257,8 @@ BEGIN
             CACHE 1;
             END IF;
         ALTER TABLE user_domains_id_seq OWNER TO demonio;
-        ALTER SEQUENCE user_domains_id_seq OWNED BY domains.id;
-        ALTER TABLE ONLY domains ALTER COLUMN id SET DEFAULT nextval('user_domains_id_seq'::regclass);
+        ALTER SEQUENCE domains_id_seq OWNED BY domains.id;
+        ALTER TABLE ONLY domains ALTER COLUMN id SET DEFAULT nextval('domains_id_seq'::regclass);
 END$$;
 
 
@@ -445,6 +445,17 @@ BEGIN
     END IF;
 END$$;
 
+\echo '>>> DROP IF EXISTS view modules_view'
+DO $$
+BEGIN
+    IF EXISTS (select 1 from information_schema.views where table_name='modules_view') 
+    THEN
+        RAISE NOTICE 'DROP VIEW modules_view';
+        DROP VIEW modules_view;
+    END IF;
+END$$;
+
+
 
 --- Remove old tables, sequences and views
 \echo '>>> DROP IF EXISTS view obj_grps_view'
@@ -464,16 +475,6 @@ BEGIN
     THEN
         RAISE NOTICE 'DROP VIEW obj_names_view';
         DROP VIEW obj_names_view;
-    END IF;
-END$$;
-
-\echo '>>> DROP IF EXISTS view modules_view'
-DO $$
-BEGIN
-    IF EXISTS (select 1 from information_schema.views where table_name='modules_view') 
-    THEN
-        RAISE NOTICE 'DROP VIEW modules_view';
-        DROP VIEW modules_view;
     END IF;
 END$$;
 
