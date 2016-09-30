@@ -351,7 +351,7 @@ BEGIN
         select 1 from information_schema.columns where table_name='conversions' and column_name='time_conversion')
     THEN 
         ALTER TABLE users 
-            RENAME COLUMN time_conversion TO time_conversion ;
+            RENAME COLUMN time_conversion TO conversion_time ;
     END IF;
 END$$;
 
@@ -387,6 +387,37 @@ BEGIN
             ADD CONSTRAINT f5_attribute_module_id_fkey FOREIGN KEY (module_id) REFERENCES f5_stats_modules(id) ON DELETE CASCADE;
     END IF;
 END$$;
+
+\echo '>>> DROP IF EXISTS view obj_names_view'
+DO $$
+BEGIN
+    IF EXISTS (select 1 from information_schema.views where table_name='obj_names_view') 
+    THEN
+        RAISE NOTICE 'DROP VIEW obj_names_view';
+        DROP VIEW obj_names_view;
+    END IF;
+END$$;
+
+\echo '>>> DROP IF EXISTS view modules_view'
+DO $$
+BEGIN
+    IF EXISTS (select 1 from information_schema.views where table_name='modules_view') 
+    THEN
+        RAISE NOTICE 'DROP VIEW modules_view';
+        DROP VIEW modules_view;
+    END IF;
+END$$;
+
+\echo '>>> DROP IF EXISTS view obj_grps_view'
+DO $$
+BEGIN
+    IF EXISTS (select 1 from information_schema.views where table_name='obj_grps_view') 
+    THEN
+        RAISE NOTICE 'DROP VIEW obj_grps_view';
+        DROP VIEW obj_grps_viewqq;
+    END IF;
+END$$;
+
 
 DROP TABLE IF EXISTS details;
 DROP TABLE IF EXISTS f5_monitor_json;
