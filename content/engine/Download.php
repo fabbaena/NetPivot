@@ -6,18 +6,19 @@
  * and open the template in the editor.
  */
 
-require '../model/StartSession.php';
-require 'Config.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/Config.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
 
+$session = new StartSession();
+$user = $session->get('user');
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario'); //Get username
-$uuid = $sesion->get('uuid');
-$filename  = $sesion->get('filename');
-if($usuario == false || !isset($uuid)) { 
+if(!($user && $user->has_role("Engineer"))) {
     header('location: /'); 
     exit();
 }
+$uuid = $session->get('uuid');
+$filename  = $session->get('filename');
 
 $c = new Config($uuid);
 

@@ -6,19 +6,16 @@
  * and open the template in the editor.
  */
 
-require '../model/StartSession.php';
-require '../model/Crud.php';
-require '../model/DomainList.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/DomainList.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario');
-$id= $sesion->get('id'); 
-$user_type = $sesion->get('type');
-$roles = $sesion->get('roles');
+$session = new StartSession();
+$user = $session->get('user');
 
 $modified = $_POST;
 
-if($usuario == false || !isset($roles[1]) || !isset($modified["id"])) {
+if(!($user && $user->has_role("System Admin")) || !isset($modified["id"])) {
     header('location: ../');
     exit();
 }

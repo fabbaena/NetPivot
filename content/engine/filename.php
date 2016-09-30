@@ -1,25 +1,20 @@
 <?php
-require '../model/StartSession.php';
-require '../model/Crud.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/FileManager.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario'); 
-$uuid = $sesion->get('uuid');
-if($usuario == false || !isset($uuid)) { 
+$session = new StartSession();
+$user = $session->get('user');
+$uuid = $session->get('uuid');
+if(!($user && ($user->has_role("Engineer") || $user->has_role("Sales")))) {
     header('location: /'); 
     exit();
 }
-$filename = $sesion->get('filename');
 
-if(!isset($filename) || $filename == "" ) {
-    $info = new Crud();
-    $info->select ='filename';
-    $info->from='files';
-    $info->condition="uuid='$uuid'";
-    $info->Read();
-    $filename = $info->rows[0]["filename"];
-    $sesion->set('filename', $filename);
-}
+$file = new FileManager(array('uuid' => $uuid));
+$file->load('uuid');
 
-echo json_encode($filename);
+$session->set('filename', $file->filename);
+
+echo json_encode($file->filename);
 ?>

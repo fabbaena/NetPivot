@@ -20,6 +20,17 @@ function np_check($b, $message) {
     }
 }
 
+function get_username(&$data) {
+    $validemailpat = '/^[._A-z0-9]{1,}@[._A-z0-9]{1,}\.[A-z]{1,}$/';
+    $validusername = '/^[._A-z0-9]{1,20}/';
+    if(!isset($data['username'])) return null;
+    $username = urldecode($data['username']);
+    if(!preg_match($validemailpat, $username) && 
+    	!preg_match($validusername, $username)) return null;
+
+    return $username;
+}
+
 function get_email(&$data) {
     $validemailpat = '/^[._A-z0-9]{1,}@[._A-z0-9]{1,}\.[A-z]{1,}$/';
 
@@ -46,5 +57,32 @@ function get_password(&$data) {
     if(!preg_match($validpassword, $password)) return null;
 
     return $password;
+}
+
+function get_validstring(&$data, $name) {
+    $validstring = '/^[.A-z0-9 \']{1,30}$/';
+    if(!isset($data[$name])) return null;
+    $string = urldecode($data[$name]);
+    if(!preg_match($validstring, $string)) return null;
+
+    return $string;
+}
+
+function get_domain(&$data) {
+    $validstring = '/^[.A-z0-9]{1,50}$/';
+    if(!isset($data['domainname'])) return null;
+    $string = urldecode($data['domainname']);
+    if(!preg_match($validstring, $string)) return null;
+
+    return $string;
+}
+
+function get_int(&$data, $name) {
+	$validstring = '/^[0-9]{1,6}/';
+	if(!isset($data[$name])) return null;
+	$int = urldecode($data[$name]);
+	if(!preg_match($validstring, $int)) return null;
+
+	return $int + 0;
 }
 ?>

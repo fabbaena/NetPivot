@@ -7,36 +7,20 @@
  * and open the template in the editor.
  */
 
-require '../model/StartSession.php';
-require '../model/Crud.php';
-require '../model/TimeManager.php';
- 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario');
-$id= $sesion->get('id'); 
-$user_type = $sesion->get('type'); 
-$max_files = $sesion->get('max_files');
-$sesion->set('filename', '');
-$roles = $sesion->get('roles');
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/FileManager.php';
 
-if($usuario == false ) { 
+$session = new StartSession();
+$user = $session->get('user');
+
+if(!($user && $user->has_role("Engineer") )) { 
     header('location: /'); 
     exit();
 }
+$id = $user->id;
 
-$list = new Crud();
-$list->select = '*';
-$list->from = 'files';
-$list->condition = "users_id=$id order by upload_time DESC";
-$list->Read();
-$files = $list->rows;
-
-$done = new Crud();
-$done->select = 'files_uuid,converted_file,error_file,stats_file,time_conversion';
-$done->from = 'conversions c, files f';
-$done->condition = 'f.uuid=c.files_uuid AND f.users_id=' . $id ;
-$done->Read();
-$dones = $done->rows;
+$filelist = new FileList(array('users_id' =>$id));
 
 if(isset($_GET['e'])) {
     $reterr = $_GET['e'];
@@ -74,7 +58,7 @@ $errors = array(
                     <h4>F5 Configuration Converter</h4>
                 </div>
                 <div class="panel-body">
-                    <form enctype="multipart/form-data" action='../engine/uploader.php?id='<?php $id;?> method="POST">
+                    <form enctype="multipart/form-data" action='../engine/uploader.php' method="POST">
                         <div class="form-group">
                             <div class="col-sm-9 ">                                
                                 <input type="file" class="filestyle" name="InputFile" id="InputFile" data-size="lg" required><br>
@@ -116,32 +100,22 @@ $errors = array(
                             </tr>
                         <tbody>
                         <?php 
-                                if (!empty($files) AND !empty($dones) ) { ?>
+                                if ($filelist->count > 0) { ?>
                                     <div class="col-md-12">
                                         <input type="submit" class="btn btn-primary btn-lg margin-set pull-right" value="View Conversion" title="View Conversion" formaction="content.php">                                                                                  
                                     </div><br><br><br>
                                     <?php
-                                    foreach ($files as $datafiles) { 
-                                            $is = false;                                      
-                                        foreach ($dones as $ok){                                           
-                                                if ($datafiles['uuid']== $ok['files_uuid']) {
-                                                    $download = $ok['files_uuid'];
-                                                    $is = true;                                                 
-                                                }                                                
-                                        }      
-                                        if ($is == true) { ?>
+                                    foreach ($filelist->files as &$f) { ?>
                                         <tr>
-                                            <td style="width: 5%"><input type="radio" name="uuid" value="<?= $download ?>" required /></td>
-                                            <td style="width: 55%"><?= $datafiles['filename'] ?></td>
+                                            <td style="width: 5%"><input type="radio" name="uuid" value="<?= $f->uuid ?>" required /></td>
+                                            <td style="width: 55%"><?= $f->filename ?></td>
                                             <td style="width: 20%">
-                                                <a href="rename.php?file=<?= $datafiles['uuid'] ?>">Rename</a>&nbsp;
-                                                <a href="../engine/reprocess.php?file=<?= $datafiles['uuid'] ?>">Reprocess</a>
+                                                <a href="rename.php?file=<?= $f->uuid ?>">Rename</a>&nbsp;
+                                                <a href="../engine/reprocess.php?file=<?= $f->uuid ?>">Reprocess</a>
                                             </td>
-                                            <td style="width: 20%"><?= $datafiles['upload_time'] ?></td>
+                                            <td style="width: 20%"><?= $f->upload_time ?></td>
                                         </tr>
-                                            <?php
-                                        } 
-                                    } 
+                                    <?php }
                                 } else { ?>
                                     <div class="col-md-12">
                                         <input type="submit" class="btn btn-primary btn-lg margin-set pull-right" value="View Conversion" title="View Conversion" disabled="disabled">          

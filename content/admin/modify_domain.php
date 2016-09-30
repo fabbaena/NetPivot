@@ -5,21 +5,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require '../model/StartSession.php';
-require '../model/Crud.php';
-require '../model/DomainList.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/DomainList.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario');
-$id= $sesion->get('id'); 
-$user_type = $sesion->get('type');
-$roles = $sesion->get('roles');
-
-
-if($usuario == false || !isset($roles[1])) {
-    header('location: ../');
+$session = new StartSession();
+$user = $session->get('user');
+if(!($user && $user->has_role("System Admin"))) {
+    header('location: /'); 
     exit();
 }
+
 $domain_id = htmlspecialchars($_GET['id']);
 
 $d = new Domain(array('id' => $domain_id));

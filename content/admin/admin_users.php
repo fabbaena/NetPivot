@@ -6,20 +6,14 @@
  * and open the template in the editor.
  */
 
-require '../model/StartSession.php';
-require '../model/FileManager.php';
-require '../model/Crud.php';
-require '../model/TimeManager.php';
-require '../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
  
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario');
-$id= $sesion->get('id'); 
-$user_type = $sesion->get('type');
-$roles = $sesion->get('roles');
+$session = new StartSession();
+$user = $session->get('user');
 
 
-if($usuario == false || !isset($roles[1])) {
+if(!($user && $user->has_role("System Admin"))) {
     header('location: ../');
     exit();
 }
@@ -35,7 +29,8 @@ $userlist = new UserList();
         <title>NetPivot - User Administration</title>
         <script language="javascript">
         $().ready( function() {
-            $(".btn-cancel").click(function() {document.location="./";});
+            $("#adminconsole").click(function() {document.location="./";});
+            $("#btn-newuser").click(function() {document.location="new_user.php";});
             })
         </script>
     </head>
@@ -44,14 +39,10 @@ $userlist = new UserList();
     <div class="col-md-1"></div>
     <div class="col-md-10 content">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-sm-4"><h4>User Management</h4></div>
-                    <div class="col-sm-8 text-right">
-                        <div class="btn btn-default btn-cancel">Admin Console</div>
-                    </div>
-                </div>
-            </div>
+            <ol class="breadcrumb panel-heading">
+                <li><a id="adminconsole" href="#">Admin Console</a></li>
+                <li class="active">User Management</li>
+            </ol>
             <div class="panel-body">
                 <?php 
                     if(isset($_GET['new_done'])) {
@@ -70,7 +61,7 @@ $userlist = new UserList();
                         echo '<p class="text-primary">Error deleting user, please try again.</p>';
                      }
                 ?>
-                <div class="btn btn-default btn-newuser">New User</div>
+                <div class="btn btn-default" id="btn-newuser">New User</div>
                 <h4>Users Created</h4>
                 <table class="table table-bordred table-striped">
                     <tr>
@@ -123,8 +114,5 @@ $userlist = new UserList();
             <hr class="divider">
         </p>
     </footer>
-    <script language="javascript">
-        $(".btn-newuser").click(function() {document.location="new_user.php";});
-    </script>
     </body>
 </html>

@@ -313,7 +313,7 @@ function showModuleData() {
 
     }
     if(curobjectgroup != "") {
-        getObjectData();
+        //getObjectData(); // need to find out why this is needed
     }
 }
 
@@ -615,12 +615,12 @@ function showObjectData() {
 
     $(".object_item").remove();
     var curog = npmodules2[curmodule]["object_groups"][curobjectgroup];
-    for(var keyval in curog["_print_order"]) {
-        oname = curog["_print_order"][keyval]["key"];
-        var curog_id = curog["objects"][oname]["id"];
-        var curog_ac = curog["objects"][oname]["attribute_count"];
-        var curog_pc = curog["objects"][oname]["p_converted"];
-        var perc_color = curog_pc==100?"text_color_green":"text_color_red";
+
+    if(curmodule == 'rule') {
+        curog_id = curog["id"];
+        oname = curog["name"];
+        curog_ac = curog["attribute_count"];
+        curog_pc = curog["p_converted"];
         $(".objectObjectsTable")
             .append($("<tr>")
                 .addClass("object_item")
@@ -650,15 +650,63 @@ function showObjectData() {
                     .attr("colspan", 4)
                     .attr("id", "div_details_" + curog_id))
                 );
-    }
-    if(typeof curobjname != "undefined" && curobjname != "") {
-        if(typeof npmodules2[curmodule]["object_groups"][curobjectgroup]["objects"][curobjname] != "undefined") {
-            var refid = npmodules2[curmodule]["object_groups"][curobjectgroup]["objects"][curobjname].id;
-            loadObjectAttributes(refid, curobjname);
-        } else {
-            alert("Object not found in file");
+
+        if(typeof curobjname != "undefined" && curobjname != "") {
+            if(typeof npmodules2[curmodule]["object_groups"][curobjectgroup] != "undefined") {
+                var refid = npmodules2[curmodule]["object_groups"][curobjectgroup].id;
+                loadObjectAttributes(refid, curobjname);
+            } else {
+                alert("Object not found in file");
+            }
+        }
+    } else {
+        for(var keyval in curog["_print_order"]) {
+            oname = curog["_print_order"][keyval]["key"];
+            var curog_id = curog["objects"][oname]["id"];
+            var curog_ac = curog["objects"][oname]["attribute_count"];
+            var curog_pc = curog["objects"][oname]["p_converted"];
+            var perc_color = curog_pc==100?"text_color_green":"text_color_red";
+            $(".objectObjectsTable")
+                .append($("<tr>")
+                    .addClass("object_item")
+                    .append($("<td>")
+                        .append($("<span>")
+                            .addClass("glyphicon")
+                            .addClass("glyphicon-collapse-down")
+                            .attr("id", "b_details_" + curog_id)
+                            .attr("objid", curog_id)
+                            .attr("objname", oname)
+                            .click(clickObjectAttributes))
+                        .append($("<span>")
+                            .attr("id", "l_details_" + curog_id)
+                            .append(oname)))
+                    .append($("<td>")
+                        .append(curog_ac))
+                    .append($("<td>")
+                        .addClass(perc_color)
+                        .append($("<strong>")
+                            .append(curog_pc)
+                            .append("%")))
+                    )
+                .append($("<tr>")
+                    .addClass("object_item")
+                    .append($("<td>")
+                        .css("border-top", "none")
+                        .attr("colspan", 4)
+                        .attr("id", "div_details_" + curog_id))
+                    );
+        }
+        if(typeof curobjname != "undefined" && curobjname != "") {
+            if(typeof npmodules2[curmodule]["object_groups"][curobjectgroup]["objects"][curobjname] != "undefined") {
+                var refid = npmodules2[curmodule]["object_groups"][curobjectgroup]["objects"][curobjname].id;
+                loadObjectAttributes(refid, curobjname);
+            } else {
+                alert("Object not found in file");
+            }
         }
     }
+
+
 }
 
 function clickObjectAttributes(event) {
@@ -927,6 +975,7 @@ function loadRoles(modifyData) {
                     .append($("<input>")
                         .change(modifyData)
                         .attr("id", "role_" + data.roles[role].id)
+                        .attr("name", "role_" + data.roles[role].id)
                         .attr("type", "checkbox"))
                     .append(data.roles[role].name)
                     .appendTo(".btn-group");
@@ -936,13 +985,21 @@ function loadRoles(modifyData) {
 function loadUser(id) {
     $.getJSON("../engine/load_user.php", {"id" : id}, 
         function(data) {
-            $("#panel-title").append(data.name);
-            $("#max_files").attr("value", data.max_files);
-            $("#max_conversions").attr("value", data.max_conversions);
+            userdata = data;
+            for(var attr in data) {
+                if(attr != "password" && attr != "roles" && 
+                        attr != "used_files" && attr != "used_conversions") {
+                    $("#" + attr).val(data[attr]);
+                    $("#" + attr).change(modifyData)
+                }
+            }
+            $("#password").val("NotChanged");
+            $("#pwdconfirm").val("NotChanged");
             for(var role in data.roles) {
                 $("#role_" + data.roles[role].id)
                     .attr("checked", "checked")
                     .parent().addClass("active");
             }
+            $(".form-submit").validator('validate');
         })
 }

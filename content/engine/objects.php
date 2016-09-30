@@ -1,64 +1,78 @@
 <?php
-require '../model/StartSession.php';
-require '../model/Crud.php';
+require_once '../model/StartSession.php';
+require_once '../model/UserList.php';
+require_once '../engine/Config.php';
+require_once '../model/F5Features.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario'); //Get username
-$npmodules2 = $sesion->get('npmodules2');
-if($usuario == false || !isset($npmodules2) || !isset ($_GET['module']) || !isset($_GET['object_group'])) { 
+$session = new StartSession();
+$user = $session->get('user');
+$uuid = $session->get('uuid');
+if(!($user && ($user->has_role("Engineer") || $user->has_role("Sales")))) {
     header('location: /'); 
     exit();
 }
-$uuid = $sesion->get('uuid');
+
+if(!isset ($_GET['module']) ) {
+    json_encode("No data");
+    exit();
+}
+
+$c = new Config($uuid);
+
+$npmodules2 = $session->get('npmodules2');
+$uuid = $session->get('uuid');
 $module = $_GET['module'];
 $object_group = $_GET['object_group'];
 
-if(!isset($npmodules2[$module]["object_groups"][$object_group]["objects"]) || true) {
-    $npo = new Crud();
-    /*
-    $npo->select='*';
-    */
-    $npo->select='id, name, total_attr as attribute_count, conv_attr as attribute_converted, 0 as attribute_omitted, line, lineend';
-    $npo->from='f5_attributes_json';
-    if($module != 'rule') {
-        $npo->condition="feature='$module' and module='$object_group' and files_uuid='$uuid'";
-        /*
-        $npo->from='obj_names_view';
-        $npo->condition='obj_grp_id='.$npmodules2[$module]["object_groups"][$object_group]["id"];
-        */
-    } else {
-        $npo->condition="feature='ltm' and module='rule' and files_uuid='$uuid'";
-        /*
-        $npo->from='obj_names_view';
-        $npo->condition='obj_grp_id='.$npmodules2[$module]["id"];
-        */
-    }
-    $npo->Read2();
-    $npobjects = $npo->fetchall;
-    $out = [];
-    foreach($npobjects as $oname => $v) {
-        $npobjects[$oname]["attribute_count"] += 0;
-        $npobjects[$oname]["attribute_converted"] += 0;
-        $npobjects[$oname]["attribute_omitted"] += 0;
-        $npobjects[$oname]["line"] += 0;
-        $npobjects[$oname]["lineend"] += 0;
+if(!isset($npmodules2[$module]["object_groups"][$object_group]["objects"]) || $c->ignore_cache()) {
+    if($module == 'rule') {
+        $data = array('files_uuid' => $uuid, 'name' => $module);
+        $m = new F5Module($data);
+        $m->load(array_keys($data));
+        $m->loadChild(array('name' => $object_group));
+        $rule = &$m->_objects[$object_group];
 
-        if(isset($npobjects[$oname]["attribute_count"]) && $npobjects[$oname]["attribute_count"] > 0) {
-            $npobjects[$oname]["p_converted"] = round($npobjects[$oname]["attribute_converted"] / 
-                $npobjects[$oname]["attribute_count"] * 100);
-        } else {
-            $npobjects[$oname]["p_converted"] = 0;
+        $handle = file($c->f5_file());
+        for($i=$rule->line-1; $i < $rule->lineend; $i++) {
+            $out[$i + 1]["source"] = $handle[$i];
+            $out[$i + 1]["converted"] = -1;
         }
-        $out[$npobjects[$oname]["name"]] = $npobjects[$oname];
-
+        echo json_encode($out);
+        exit();
     }
-    $npmodules2[$module]["object_groups"][$object_group]["objects"] = $out;
-    $sesion->set('npmodules2', $npmodules2);
+    $data = array('files_uuid' => $uuid, 'name' => $module);
+    $f = new F5Feature($data);
+    if(!$f->load(array_keys($data))) {
+        echo json_encode("No Data");
+        exit();
+    }
+    $f->loadChild(array('name' => $object_group));
+    $m = &$f->_modules[$object_group];
+    $m->loadChildren();
+
+    $npm = &$npmodules2[$module]["object_groups"][$object_group]["objects"];
+
+    foreach($m->_objects as &$o) {
+
+        $p_converted = ($o->total_attr && $o->total_attr > 0) ?
+                        round($o->conv_attr / $o->total_attr * 100) : 0;
+
+        $npm[$o->name]["id"]                  = $o->id;
+        $npm[$o->name]["name"]                = $o->name;
+        $npm[$o->name]["attribute_count"]     = $o->total_attr;
+        $npm[$o->name]["attribute_converted"] = $o->conv_attr;
+        $npm[$o->name]["attribute_omitted"]   = 0;
+        $npm[$o->name]["line"]                = $o->line;
+        $npm[$o->name]["lineend"]             = $o->lineend;
+        $npm[$o->name]["p_converted"]         = $p_converted;
+    }
+
+    $session->set('npmodules2', $npmodules2);
 
 } else {
-    $out = $npmodules2[$module]["object_groups"][$object_group]["objects"];
+    $npm = &$npmodules2[$module]["object_groups"][$object_group]["objects"];
 }
 
 
-echo json_encode($out);
+echo json_encode($npm);
 ?>

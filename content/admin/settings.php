@@ -5,8 +5,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require '../model/StartSession.php';
-require '../model/Crud.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/Crud.php';
 
 $sesion = new StartSession();
 $usuario = $sesion->get('usuario'); //Got username
@@ -36,7 +36,6 @@ if($usuario == false ) {
     
 	
    
-    <?php include ('../engine/menu2.php');//Include the second part of the nav bar?>	
         <div class="col-md-1"></div>
     <div class="col-md-10 content">
         <div class="panel panel-default">

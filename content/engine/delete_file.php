@@ -5,38 +5,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/FileManager.php';
 
-require '../model/FileManager.php';
-require '../model/Crud.php';
-
-
-
-if (isset($_GET['file']) && isset($_GET['uuid'])) {
-    $file = htmlspecialchars($_GET['file']);
-    $uuid = htmlspecialchars($_GET['uuid']);
-    $model = new FileManager;
-    $model-> file = $file;
-    $model->DeleteFile();
-    $so = $model->message;
-    if ($so == true) {
-        try {
-            $bd = new Crud();
-            $bd->deleteFrom = 'files';
-            $bd->condition = "uuid='$uuid'";
-            $bd->Delete();
-            $mensaje = $bd->mensaje;
-            if ($mensaje == true) {
-                header ('location: ../dashboard/index.php?deleted_file=true');
-            } else {
-                header ('location: ../dashboard/index.php?deleted_file=false');
-            }        
-        } catch (Exception $ex) {
-            header ('location: ../dashboard/index.php?deleted_file=false');
-        }
-    } else {
-        header ('location: ../dashboard/index.php?'. $so .'');
-    }
-} else {
-    header ('location: ../dashboard/index.php?deleted_file=false');
+$session = new StartSession();
+$user = $session->get('user');
+if(!$user) {
+    header('location: /'); 
+    exit();
 }
 
+if(!isset($_GET['uuid'])) {
+    header ('location: ../dashboard/index.php?deleted_file=false');
+    exit();
+}
+
+$uuid = htmlspecialchars($_GET['uuid']);
+$file = new FileManager(array('uuid' => $uuid));
+$file->load('uuid');
+
+if($user->has_role("System Admin") || $file->users_id == $user->id) {
+    $file->delete();
+} else {
+    header ('location: ../dashboard/index.php?permission_denied');
+    exit();
+}
+
+header ('location: ../dashboard/index.php?deleted_file=true');
+
+?>

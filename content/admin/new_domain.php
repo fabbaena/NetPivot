@@ -1,18 +1,21 @@
 <?php
 
-require '../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
  
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario');
-$id= $sesion->get('id'); 
-$user_type = $sesion->get('type');
-$roles = $sesion->get('roles');
+$session = new StartSession();
+$user = $session->get('user');
+$session->set('filename', '');
 
-
-if($usuario == false || !isset($roles[1])) {
-    header('location: ../');
+if(!($user && $user->has_role("System Admin"))) { 
+    header('location: /'); 
     exit();
 }
+
+
+$id= $user->id; 
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,8 +24,8 @@ if($usuario == false || !isset($roles[1])) {
         <title>NetPivot - Domain Administration</title>  
 	    <script language="javascript">
 	    $().ready( function() {
-	        $(".domainmanagement").click(function() {document.location="admin_domains.php";});
-            $(".adminconsole").click(function() {document.location="./";});
+	        $("#domainmanagement").click(function() {document.location="admin_domains.php";});
+            $("#adminconsole").click(function() {document.location="./";});
 		    })
 	    </script>
     </head>
@@ -32,8 +35,8 @@ if($usuario == false || !isset($roles[1])) {
     <div class="col-md-10 content">
         <div class="panel panel-default">
             <ol class="breadcrumb panel-heading">
-                <li><a class="adminconsole" href="#">Admin Console</a></li>
-                <li><a class="domainmanagement" href="#">Domain Management</a></li>
+                <li><a id="adminconsole" href="#">Admin Console</a></li>
+                <li><a id="domainmanagement" href="#">Domain Management</a></li>
                 <li class="active">New Domain</li>
             </ol>
             <div class="panel-body">

@@ -1,7 +1,5 @@
 <?php
-
-require '../model/Crud.php';
-require 'functions.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
 include('Mail.php');
 
 
@@ -12,37 +10,24 @@ $token = get_token($_GET);
 $password = get_password($_GET);
 
 if(isset($token) && isset($password)) {
-    $model = new Crud();
-    $model->select = "id";
-    $model->from = "users";
-    $model->condition = "email='$email' and validation_string='$token'";
-    $model->Read();
-    np_check(isset($model->rows[0]), "Invalid password reset request.");
-    $uid = $model->rows[0]['id'];
 
-    $model->update = "users";
-    $model->set = "password='". password_hash($password, PASSWORD_BCRYPT). "'";
-    $model->set .= ", validation_string = ''";
-    $model->condition = "id=$uid";
-    $model->Update();
+    $u = new User(array(
+        'email' => $email, 
+        'validation_string' => $token,
+        'password' => $password));
+    np_check($u->valid_token(), "Invalid password reset request.");
+    $u->setPassword();
+
     $result["message"] = "Password has been reset.";
 
-} else {
-    $model = new Crud();
-    $model->select = "id";
-    $model->from = "users";
-    $model->condition = "email='$email'";
-    $model->Read();
+} else if(isset($email)) {
+    $u = new User(array('email' => $email));
+    $u->load2(array('email'));
 
-    np_check(isset($model->rows[0]), "If you already have an account an email ".
+    np_check($u->load2(array('email')), "If you already have an account an email ".
         "has been sent to your inbox with a link to reset your password.");
 
-    $r = RandomString();
-    $model = new Crud();
-    $model->update = "users";
-    $model->set = "validation_string='". $r. "'";
-    $model->condition = "email='$email'";
-    $model->Update();
+    $r = $u->new_token();
 
     $from = 'NetPivot DO_NOT_REPLY <noreply@netpivot.io>';
     $to = "<$email>";

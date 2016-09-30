@@ -6,50 +6,53 @@
  * and open the template in the editor.
  */
 
-require '../model/StartSession.php';
-require '../model/Crud.php';
-require '../model/CheckUser.php';
-require '../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/functions.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario');
-$id= $sesion->get('id'); 
-$user_type = $sesion->get('type');
-$roles = $sesion->get('roles');
+$session   = new StartSession();
+$user   = $session->get('user');
 
+$username        = get_username($_POST);
+$password        = get_password($_POST);
+$type            = get_validstring($_POST, 'type');
+$max_files       = get_int($_POST, 'max_files');
+$max_conversions = get_int($_POST, 'max_conversions');
+$email           = get_email($_POST);
+$company         = get_validstring($_POST, 'company');
+$position        = get_validstring($_POST, 'position');
+$firstname       = get_validstring($_POST, 'firstname');
+$lastname        = get_validstring($_POST, 'lastname');
 
-if($usuario == false || !isset($roles[1]) || 
-    !isset($_POST['username']) || !isset($_POST['password']) ||
-        !isset($_POST['max_files']) || !isset($_POST['max_conversions'])) {
+if(!($user && $user->has_role("System Admin"))) {
     header('location: ../');
     exit();
 }
 
-$username = htmlspecialchars($_POST['username']);
-$password = htmlspecialchars($_POST['password']);
-$type = htmlspecialchars(isset($_POST['usertype'])?$_POST['usertype']:"");
-$max_files = htmlspecialchars($_POST['max_files']);
-$max_conversions = htmlspecialchars($_POST['max_conversions']);
-
-$user = new User(array(
-    "id" => 0, 
+$newuser = new User(array(
     "name" => $username, 
     "type" => "", 
     "max_files" => $max_files, 
     "max_conversions" => $max_conversions, 
     "used_files" => 0,
-    "used_conversions" => 0
+    "used_conversions" => 0,
+    "email" => $email,
+    "company" => $company,
+    "position" => $position,
+    "firstname" => $firstname,
+    "lastname" => $lastname
     ));
 
-$user->password = $password;
+$newuser->password = $password;
 
 for($i=1; $i<4; $i++) {
     if(isset($_POST["role_". $i])) {
-        array_push($user->roles, $i);
+        $role = new Role(array("id" => $i));
+        $newuser->addRole($role);
     }
 }
 
-$user->save();
+$newuser->save();
 
 header('location: ../admin/admin_users.php')
 

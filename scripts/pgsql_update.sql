@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS f5_attributes_json (
 ALTER TABLE f5_attributes_json OWNER TO demonio;
 
 \echo '>>> Create f5_json_id_seq sequence'
+\echo '>>> Change owner of f5_json_id_seq to demonio'
+\echo '>>> Assign sequence f5_json_id_seq to column id of table f5_attributes_json'
 DO $$ 
 BEGIN
     IF NOT EXISTS ( 
@@ -35,15 +37,12 @@ BEGIN
             NO MINVALUE 
             NO MAXVALUE 
             CACHE 1; 
+        ALTER TABLE f5_json_id_seq OWNER TO demonio;
+        ALTER SEQUENCE f5_json_id_seq OWNED BY f5_attributes_json.id;
+        ALTER TABLE ONLY f5_attributes_json ALTER COLUMN id SET DEFAULT nextval('f5_json_id_seq'::regclass);
     END IF;
 END$$;
 
-\echo '>>> Change owner of f5_json_id_seq to demonio'
-ALTER TABLE f5_json_id_seq OWNER TO demonio;
-
-\echo '>>> Assign sequence f5_json_id_seq to column id of table f5_attributes_json'
-ALTER SEQUENCE f5_json_id_seq OWNED BY f5_attributes_json.id;
-ALTER TABLE ONLY f5_attributes_json ALTER COLUMN id SET DEFAULT nextval('f5_json_id_seq'::regclass);
 
 \echo '>>> Create f5_json_pkey primary key for table f5_attributes_json'
 DO $$
@@ -90,6 +89,8 @@ CREATE TABLE IF NOT EXISTS f5_stats_features (
 ALTER TABLE f5_stats_features OWNER TO demonio;
 
 \echo '>>> Create f5_stats_features_id_seq sequence'
+\echo '>>> Change owner of f5_stats_features_id_seq to demonio'
+\echo '>>> Assign sequence f5_stats_features_id_seq to column id of table f5_stats_features'
 DO $$ 
 BEGIN
     IF NOT EXISTS ( 
@@ -104,14 +105,12 @@ BEGIN
             NO MAXVALUE
             CACHE 1;
             END IF;
+        ALTER TABLE f5_stats_features_id_seq OWNER TO demonio;
+        ALTER SEQUENCE f5_stats_features_id_seq OWNED BY f5_stats_features.id;
+        ALTER TABLE ONLY f5_stats_features ALTER COLUMN id SET DEFAULT nextval('f5_stats_features_id_seq'::regclass);
 END$$;
 
-\echo '>>> Change owner of f5_stats_features_id_seq to demonio'
-ALTER TABLE f5_stats_features_id_seq OWNER TO demonio;
 
-\echo '>>> Assign sequence f5_stats_features_id_seq to column id of table f5_stats_features'
-ALTER SEQUENCE f5_stats_features_id_seq OWNED BY f5_stats_features.id;
-ALTER TABLE ONLY f5_stats_features ALTER COLUMN id SET DEFAULT nextval('f5_stats_features_id_seq'::regclass);
 
 \echo '>>> Create f5_stats_features_files_uuid_feature unique constraint of table f5_stats_features'
 DO $$
@@ -163,6 +162,8 @@ CREATE TABLE IF NOT EXISTS f5_stats_modules (
 ALTER TABLE f5_stats_modules OWNER TO demonio;
 
 \echo '>>> Create f5_stats_modules_id_seq sequence'
+\echo '>>> Change owner of f5_stats_modules_id_seq to demonio'
+\echo '>>> Assign sequence f5_stats_modules_id_seq to column id of table f5_stats_modules'
 DO $$ 
 BEGIN
     IF NOT EXISTS ( 
@@ -177,14 +178,11 @@ BEGIN
             NO MAXVALUE
             CACHE 1;
             END IF;
+        ALTER TABLE f5_stats_modules_id_seq OWNER TO demonio;
+        ALTER SEQUENCE f5_stats_modules_id_seq OWNED BY f5_stats_modules.id;
+        ALTER TABLE ONLY f5_stats_modules ALTER COLUMN id SET DEFAULT nextval('f5_stats_modules_id_seq'::regclass);
 END$$;
 
-\echo '>>> Change owner of f5_stats_modules_id_seq to demonio'
-ALTER TABLE f5_stats_modules_id_seq OWNER TO demonio;
-
-\echo '>>> Assign sequence f5_stats_modules_id_seq to column id of table f5_stats_modules'
-ALTER SEQUENCE f5_stats_modules_id_seq OWNED BY f5_stats_modules.id;
-ALTER TABLE ONLY f5_stats_modules ALTER COLUMN id SET DEFAULT nextval('f5_stats_modules_id_seq'::regclass);
 
 \echo '>>> Create f5_stats_modules_pkey primary key for table f5_stats_modules'
 DO $$
@@ -242,6 +240,8 @@ CREATE TABLE IF NOT EXISTS domains (
 ALTER TABLE domains OWNER TO demonio;
 
 \echo '>>> Create user_domains_id_seq sequence'
+\echo '>>> Change owner of user_domains_id_seq to demonio'
+\echo '>>> Assign sequence user_domains_id_seq to column id of table domains'
 DO $$ 
 BEGIN
     IF NOT EXISTS ( 
@@ -256,14 +256,10 @@ BEGIN
             NO MAXVALUE
             CACHE 1;
             END IF;
+        ALTER TABLE user_domains_id_seq OWNER TO demonio;
+        ALTER SEQUENCE user_domains_id_seq OWNED BY domains.id;
+        ALTER TABLE ONLY domains ALTER COLUMN id SET DEFAULT nextval('user_domains_id_seq'::regclass);
 END$$;
-
-\echo '>>> Change owner of user_domains_id_seq to demonio'
-ALTER TABLE user_domains_id_seq OWNER TO demonio;
-
-\echo '>>> Assign sequence user_domains_id_seq to column id of table domains'
-ALTER SEQUENCE user_domains_id_seq OWNED BY domains.id;
-ALTER TABLE ONLY domains ALTER COLUMN id SET DEFAULT nextval('user_domains_id_seq'::regclass);
 
 
 \echo '>>> Create domains_name_key unique constraint of table domain'
@@ -342,4 +338,163 @@ BEGIN
 	        ADD COLUMN lastname character varying;
     END IF;
 END$$;
+
+-- Added 20160930
+\echo '>> rename column time_conversion to conversion_time on table conversions'
+DO $$
+BEGIN
+    IF EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='time_conversion')
+    THEN 
+        ALTER TABLE conversions 
+            RENAME COLUMN time_conversion TO conversion_time ;
+    END IF;
+END$$;
+
+\echo '>> rename column id_conversions to id on table conversions'
+DO $$
+BEGIN
+    IF EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='id_conversions')
+    THEN 
+        ALTER TABLE conversions 
+            RENAME COLUMN id_conversions TO id ;
+    END IF;
+END$$;
+
+\echo '>> Add json_file column to table conversions'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='json_file')
+    THEN 
+        ALTER TABLE conversions 
+            ADD COLUMN json_file character varying;
+    END IF;
+END$$;
+
+\echo '>> Add module_id column to table f5_attributes_json'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='f5_attributes_json' and column_name='module_id')
+    THEN 
+        ALTER TABLE f5_attributes_json 
+            ADD COLUMN module_id integer;
+    END IF;
+END$$;
+
+\echo '>>> Create foreign key f5_attribute_module_id_fkey on table f5_attributes_json'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'f5_attribute_module_id_fkey' )
+    THEN 
+        ALTER TABLE ONLY f5_attributes_json
+            ADD CONSTRAINT f5_attribute_module_id_fkey FOREIGN KEY (module_id) REFERENCES f5_stats_modules(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    END IF;
+END$$;
+
+
+\echo '>> Add conversion_id column to table f5_stats_features'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='f5_stats_features' and column_name='conversion_id')
+    THEN 
+        ALTER TABLE f5_stats_features 
+            ADD COLUMN conversion_id bigint;
+    END IF;
+END$$;
+
+\echo '>>> Create foreign key f5_stats_features_conversion_id_fkey on table f5_stats_features'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'f5_stats_features_conversion_id_fkey' )
+    THEN 
+        ALTER TABLE ONLY f5_stats_features
+            ADD CONSTRAINT f5_stats_features_conversion_id_fkey FOREIGN KEY (conversion_id) REFERENCES conversions(id) ON DELETE CASCADE;
+    END IF;
+END$$;
+
+
+ALTER TABLE ONLY f5_stats_features
+    ADD CONSTRAINT f5_stats_features_conversion_id FOREIGN KEY (conversion_id) REFERENCES conversions(id) ON DELETE CASCADE;
+
+
+\echo '>>> Create foreign key f5_stats_features_conversion_id on table f5_stats_features'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'f5_stats_features_conversion_id' )
+    THEN 
+        ALTER TABLE ONLY f5_stats_features
+            ADD CONSTRAINT f5_stats_features_conversion_id FOREIGN KEY (module_id) REFERENCES conversions(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    END IF;
+END$$;
+
+\echo '>>> Create users_email_ukey unique constraint of table users'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'users_email_ukey' )
+    THEN 
+        ALTER TABLE ONLY users
+            ADD CONSTRAINT users_email_ukey UNIQUE (email);
+    END IF;
+END$$;
+
+
+--- Remove old tables, sequences and views
+\echo '>>> DROP IF EXISTS view obj_grps_view'
+DO $$
+BEGIN
+    IF EXISTS (select 1 from information_schema.views where table_name='obj_grps_view') 
+    THEN
+        RAISE NOTICE 'DROP VIEW obj_grps_view';
+        DROP VIEW obj_grps_view;
+    END IF;
+END$$;
+
+\echo '>>> DROP IF EXISTS view obj_names_view'
+DO $$
+BEGIN
+    IF EXISTS (select 1 from information_schema.views where table_name='obj_names_view') 
+    THEN
+        RAISE NOTICE 'DROP VIEW obj_names_view';
+        DROP VIEW obj_names_view;
+    END IF;
+END$$;
+
+\echo '>>> DROP IF EXISTS view modules_view'
+DO $$
+BEGIN
+    IF EXISTS (select 1 from information_schema.views where table_name='modules_view') 
+    THEN
+        RAISE NOTICE 'DROP VIEW modules_view';
+        DROP VIEW modules_view;
+    END IF;
+END$$;
+
+
+
+DROP TABLE IF EXISTS details;
+DROP TABLE IF EXISTS f5_monitor_json;
+DROP TABLE IF EXISTS f5_node_json;
+DROP TABLE IF EXISTS f5_persistence_json;
+DROP TABLE IF EXISTS f5_pool_json;
+DROP TABLE IF EXISTS f5_profile_json;
+DROP TABLE IF EXISTS f5_snat_translation_json;
+DROP TABLE IF EXISTS f5_snatpool_json;
+DROP TABLE IF EXISTS f5_virtual_address_json;
+DROP TABLE IF EXISTS f5_virtual_json;
+DROP TABLE IF EXISTS attributes;
+DROP TABLE IF EXISTS obj_names;
+DROP TABLE IF EXISTS obj_grps;
+DROP TABLE IF EXISTS modules;
+DROP SEQUENCE IF EXISTS f5_snat_translation_json_id_seq;
+DROP SEQUENCE IF EXISTS f5_snatpool_json_id_seq;
+ALTER SEQUENCE f5_json_id_seq RENAME TO f5_attributes_json_id_seq;
+ALTER SEQUENCE user_domains_id_seq RENAME TO domains_id_seq;
 
