@@ -350,7 +350,7 @@ BEGIN
     IF EXISTS ( 
         select 1 from information_schema.columns where table_name='conversions' and column_name='time_conversion')
     THEN 
-        ALTER TABLE users 
+        ALTER TABLE conversions 
             RENAME COLUMN time_conversion TO conversion_time ;
     END IF;
 END$$;
@@ -388,6 +388,16 @@ BEGIN
     END IF;
 END$$;
 
+\echo '>>> DROP IF EXISTS view obj_grps_view'
+DO $$
+BEGIN
+    IF EXISTS (select 1 from information_schema.views where table_name='obj_grps_view') 
+    THEN
+        RAISE NOTICE 'DROP VIEW obj_grps_view';
+        DROP VIEW obj_grps_view;
+    END IF;
+END$$;
+
 \echo '>>> DROP IF EXISTS view obj_names_view'
 DO $$
 BEGIN
@@ -408,15 +418,6 @@ BEGIN
     END IF;
 END$$;
 
-\echo '>>> DROP IF EXISTS view obj_grps_view'
-DO $$
-BEGIN
-    IF EXISTS (select 1 from information_schema.views where table_name='obj_grps_view') 
-    THEN
-        RAISE NOTICE 'DROP VIEW obj_grps_view';
-        DROP VIEW obj_grps_viewqq;
-    END IF;
-END$$;
 
 
 DROP TABLE IF EXISTS details;
