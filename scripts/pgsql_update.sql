@@ -407,6 +407,22 @@ BEGIN
     END IF;
 END$$;
 
+\echo '>>> Create foreign key f5_stats_features_conversion_id_fkey on table f5_stats_features'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'f5_stats_features_conversion_id_fkey' )
+    THEN 
+        ALTER TABLE ONLY f5_stats_features
+            ADD CONSTRAINT f5_stats_features_conversion_id_fkey FOREIGN KEY (conversion_id) REFERENCES conversions(id) ON DELETE CASCADE;
+    END IF;
+END$$;
+
+
+ALTER TABLE ONLY f5_stats_features
+    ADD CONSTRAINT f5_stats_features_conversion_id FOREIGN KEY (conversion_id) REFERENCES conversions(id) ON DELETE CASCADE;
+
+
 \echo '>>> Create foreign key f5_stats_features_conversion_id on table f5_stats_features'
 DO $$
 BEGIN
