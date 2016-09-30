@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-require '../model/Crud.php';
+require_once dirname(__FILE__) .'/../model/Crud.php';
 
 $timezone = htmlspecialchars($_POST['Time_Zone']);
 

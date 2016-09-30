@@ -1,19 +1,21 @@
 <?php
-require '../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario'); 
-$uuid = $sesion->get('uuid');
-$roles = $sesion->get('roles');
-if($usuario == false ) { 
+$session = new StartSession();
+$user = $session->get('user');
+
+if(!($user && $user->has_role("Engineer")) ) { 
     header('location: /'); 
     exit();
 }
 
 if (isset($_POST['uuid'])) {
      $uuid = htmlspecialchars($_POST['uuid']);
-     $sesion->set('uuid', $uuid);
-} 
+     $session->set('uuid', $uuid);
+} else {
+    $uuid = $session->get('uuid');
+}
 
 ?>
 

@@ -25,7 +25,7 @@ class StartSession {
      if (isset ( $_SESSION [$nombre] )) {
         return $_SESSION [$nombre];
      } else {
-         return false;
+         return null;
      }
   }
   
@@ -36,5 +36,6 @@ class StartSession {
       $_SESSION = array();
       session_destroy ();
   }
+
 }
 ?>

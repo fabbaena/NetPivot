@@ -1,27 +1,27 @@
 <?php
-require '../model/StartSession.php';
-require '../model/Crud.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/F5Objects.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario'); //Get username
-$uuid = $sesion->get('uuid');
-$npmodules2 = $sesion->get('npmodules2');
-if($usuario == false || !isset($npmodules2) || 
-    !isset ($_GET['object_name']) || !isset($_GET['object_group'])) { 
+$session = new StartSession();
+$user = $session->get('user');
+
+if(!($user && ($user->has_role("Engineer") || $user->has_role("Sales")))) {
     header('location: /'); 
-    exit();
+    exit();	
 }
-$objid = $_GET['objid'];
+$uuid = $session->get('uuid');
+$npmodules2 = $session->get('npmodules2');
 
-$attributes = new Crud();
-$attributes->select='attributes';
-$attributes->from="f5_attributes_json" ;
-$attributes->condition="id=$objid";
-
-$attributes->Read2();
-$a = $attributes->fetchall;
-
-if(isset($a[0])) {
-    echo $a[0]["attributes"];
+try {
+	if(!isset($_GET['objid'])) throw new Exception("No data as input", 1);
+	$objid = $_GET['objid'];
+	$o = new F5Object(false, array('files_uuid' => $uuid, 'id' => $objid));
+	if(!$o->load('id')) throw new Exception("No data found", 1);
+	
+} catch (Exception $e) {
+	echo json_encode($e->getMessage());
+	exit();
 }
+echo $o->attributes;
 ?>

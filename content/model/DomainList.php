@@ -32,8 +32,10 @@ class Domain {
 		}
 		$model->Read();
 		$domainresult = $model->rows;
+		if(!isset($domainresult[0])) return false;
 		$this->name = $domainresult[0]['name'];
 		$this->id = $domainresult[0]['id'];
+		return true;
 	}
 
 	function delete() {
@@ -42,7 +44,9 @@ class Domain {
 			$model->deleteFrom = "domains";
 			$model->condition = "id=". $this->id;
 			$model->Delete();
+			return true;
 		}
+		return false;
 	}
 
 	function modify() {

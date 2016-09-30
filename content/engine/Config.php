@@ -8,6 +8,7 @@ class Config {
 	private $_filecmd;
 	private $_services;
 	private $_orphan;
+	private $_use_cache;
 
 	function __construct(
 			$uuid       = null, 
@@ -24,8 +25,12 @@ class Config {
 		$this->_filecmd = $filecmd;
 		$this->_services = $services;
 		$this->_orphan = 0;
+		$this->_ignore_cache = true;
 
+	}
 
+	function ignore_cache() {
+		return $this->_ignore_cache;
 	}
 
 	function set_uuid($uuid) {
@@ -98,7 +103,7 @@ class Config {
 				" -s ". $this->services_file().
 				$this->convert_orphan().
 				" -g";
-			error_log($command);
+			syslog(LOG_INFO, $command);
 			return $command;			
 		} else 
 			return false;

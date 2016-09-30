@@ -1,5 +1,5 @@
 <?php
-	require "StartSession.php";
+	require_once dirname(__FILE__) ."/../model/StartSession.php";
 	
 	$sesion = new StartSession();
 	$usuario = $sesion->get("usuario");	
