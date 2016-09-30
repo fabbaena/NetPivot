@@ -343,3 +343,70 @@ BEGIN
     END IF;
 END$$;
 
+
+\echo '>> rename column time_conversion to conversion_time on table conversions'
+DO $$
+BEGIN
+    IF EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='time_conversion')
+    THEN 
+        ALTER TABLE users 
+            RENAME COLUMN time_conversion TO time_conversion character varying;
+    END IF;
+END$$;
+
+\echo '>> Add module_id column to table f5_attributes_json'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='f5_attributes_json' and column_name='module_id')
+    THEN 
+        ALTER TABLE f5_attributes_json 
+            ADD COLUMN module_id integer;
+    END IF;
+END$$;
+
+\echo '>> Add conversion_id column to table f5_stats_features'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='f5_stats_features' and column_name='conversion_id')
+    THEN 
+        ALTER TABLE f5_stats_features 
+            ADD COLUMN conversion_id bigint;
+    END IF;
+END$$;
+
+\echo '>>> Create foreign key f5_attribute_module_id_fkey on table f5_attributes_json'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'f5_attribute_module_id_fkey' )
+    THEN 
+        ALTER TABLE ONLY f5_attributes_json
+            ADD CONSTRAINT f5_attribute_module_id_fkey FOREIGN KEY (module_id) REFERENCES f5_stats_modules(id) ON DELETE CASCADE;
+    END IF;
+END$$;
+
+DROP TABLE IF EXISTS details;
+DROP TABLE IF EXISTS f5_monitor_json;
+DROP TABLE IF EXISTS f5_node_json;
+DROP TABLE IF EXISTS f5_persistence_json;
+DROP TABLE IF EXISTS f5_pool_json;
+DROP TABLE IF EXISTS f5_profile_json;
+DROP TABLE IF EXISTS f5_snat_translation_json;
+DROP TABLE IF EXISTS f5_snatpool_json;
+DROP TABLE IF EXISTS f5_virtual_address_json;
+DROP TABLE IF EXISTS f5_virtual_json;
+DROP TABLE IF EXISTS modules;
+
+\echo '>>> Create users_email_ukey unique constraint of table users'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'users_email_ukey' )
+    THEN 
+        ALTER TABLE ONLY users
+            ADD CONSTRAINT users_email_ukey UNIQUE (email);
+    END IF;
+END$$;
