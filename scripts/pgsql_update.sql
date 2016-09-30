@@ -351,7 +351,7 @@ BEGIN
         select 1 from information_schema.columns where table_name='conversions' and column_name='time_conversion')
     THEN 
         ALTER TABLE users 
-            RENAME COLUMN time_conversion TO time_conversion character varying;
+            RENAME COLUMN time_conversion TO time_conversion ;
     END IF;
 END$$;
 
@@ -398,6 +398,9 @@ DROP TABLE IF EXISTS f5_snat_translation_json;
 DROP TABLE IF EXISTS f5_snatpool_json;
 DROP TABLE IF EXISTS f5_virtual_address_json;
 DROP TABLE IF EXISTS f5_virtual_json;
+DROP TABLE IF EXISTS attributes;
+DROP TABLE IF EXISTS obj_names;
+DROP TABLE IF EXISTS obj_grps;
 DROP TABLE IF EXISTS modules;
 
 \echo '>>> Create users_email_ukey unique constraint of table users'
