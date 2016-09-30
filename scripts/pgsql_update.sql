@@ -343,7 +343,7 @@ BEGIN
     END IF;
 END$$;
 
-
+-- Added 20160930
 \echo '>> rename column time_conversion to conversion_time on table conversions'
 DO $$
 BEGIN
@@ -352,6 +352,17 @@ BEGIN
     THEN 
         ALTER TABLE conversions 
             RENAME COLUMN time_conversion TO conversion_time ;
+    END IF;
+END$$;
+
+\echo '>> rename column id_conversions to id on table conversions'
+DO $$
+BEGIN
+    IF EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='id_conversions')
+    THEN 
+        ALTER TABLE conversions 
+            RENAME COLUMN id_conversions TO id ;
     END IF;
 END$$;
 
@@ -366,6 +377,18 @@ BEGIN
     END IF;
 END$$;
 
+\echo '>>> Create foreign key f5_attribute_module_id_fkey on table f5_attributes_json'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'f5_attribute_module_id_fkey' )
+    THEN 
+        ALTER TABLE ONLY f5_attributes_json
+            ADD CONSTRAINT f5_attribute_module_id_fkey FOREIGN KEY (module_id) REFERENCES f5_stats_modules(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    END IF;
+END$$;
+
+
 \echo '>> Add conversion_id column to table f5_stats_features'
 DO $$
 BEGIN
@@ -377,17 +400,30 @@ BEGIN
     END IF;
 END$$;
 
-\echo '>>> Create foreign key f5_attribute_module_id_fkey on table f5_attributes_json'
+\echo '>>> Create foreign key f5_stats_features_conversion_id on table f5_stats_features'
 DO $$
 BEGIN
     IF NOT EXISTS ( 
-        SELECT 1 FROM pg_constraint WHERE conname = 'f5_attribute_module_id_fkey' )
+        SELECT 1 FROM pg_constraint WHERE conname = 'f5_stats_features_conversion_id' )
     THEN 
-        ALTER TABLE ONLY f5_attributes_json
-            ADD CONSTRAINT f5_attribute_module_id_fkey FOREIGN KEY (module_id) REFERENCES f5_stats_modules(id) ON DELETE CASCADE;
+        ALTER TABLE ONLY f5_stats_features
+            ADD CONSTRAINT f5_stats_features_conversion_id FOREIGN KEY (module_id) REFERENCES conversions(id) ON UPDATE CASCADE ON DELETE CASCADE;
     END IF;
 END$$;
 
+\echo '>>> Create users_email_ukey unique constraint of table users'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'users_email_ukey' )
+    THEN 
+        ALTER TABLE ONLY users
+            ADD CONSTRAINT users_email_ukey UNIQUE (email);
+    END IF;
+END$$;
+
+
+--- Remove old tables, sequences and views
 \echo '>>> DROP IF EXISTS view obj_grps_view'
 DO $$
 BEGIN
@@ -439,13 +475,3 @@ DROP SEQUENCE IF EXISTS f5_snatpool_json_id_seq;
 ALTER SEQUENCE f5_json_id_seq RENAME TO f5_attributes_json_id_seq;
 ALTER SEQUENCE user_domains_id_seq RENAME TO domains_id_seq;
 
-\echo '>>> Create users_email_ukey unique constraint of table users'
-DO $$
-BEGIN
-    IF NOT EXISTS ( 
-        SELECT 1 FROM pg_constraint WHERE conname = 'users_email_ukey' )
-    THEN 
-        ALTER TABLE ONLY users
-            ADD CONSTRAINT users_email_ukey UNIQUE (email);
-    END IF;
-END$$;
