@@ -366,6 +366,17 @@ BEGIN
     END IF;
 END$$;
 
+\echo '>> Add json_file column to table conversions'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='json_file')
+    THEN 
+        ALTER TABLE conversions 
+            ADD COLUMN json_file character varying;
+    END IF;
+END$$;
+
 \echo '>> Add module_id column to table f5_attributes_json'
 DO $$
 BEGIN
