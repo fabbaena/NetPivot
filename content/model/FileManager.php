@@ -54,7 +54,6 @@ class FileManager extends NPObject {
 		foreach($this as $key => $value) {
 			if($key[0] != '_' && $key != 'id' && isset($this->$key)) $db->data[$key] = $value;
 		}
-		print_r($db->data);
 		$db->Create2();
 		return true;
 	}

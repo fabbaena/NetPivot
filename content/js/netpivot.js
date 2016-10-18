@@ -23,8 +23,11 @@ function loaddata() {
 function showBreadcrumbs() {
     var b = $(".breadcrumb")
         .html($("<li>").html($("<a>")
-            .html("Files")
-            .attr("href", "index.php")))
+            .html("Home")
+            .attr("href", "./")))
+        .append($("<li>").html($("<a>")
+            .html("Conversion Manager")
+            .attr("href", "convert.php")))
         .append($("<li>").html(filename));
     for(i=0; i<breadcrumbs.length; i++) {
         var link_mod = breadcrumbs[i].mod;
@@ -46,7 +49,8 @@ function clickBreadcrumb(event) {
     var link_name = $(event.target).attr("link_name");
 
     for(i=0; i<breadcrumbs.length; i++) {
-        if(breadcrumbs[i].mod == link_mod && breadcrumbs[i].og == link_og && breadcrumbs[i].on == link_name) {
+        if(breadcrumbs[i].mod == link_mod && breadcrumbs[i].og == link_og && 
+            breadcrumbs[i].on == link_name) {
             breadcrumbs.splice(i);
             break;
         }
@@ -56,12 +60,14 @@ function clickBreadcrumb(event) {
 }
 
 function showBrief() {
-    $(".nav_buttons").removeClass("disabled");
-    $(".nav_brief").addClass("disabled");
+    if($(this).hasClass("active")) return;
+    $("#nav_dashboard").addClass("active");
+    $("#nav_objects").removeClass("active");
+    $("#nav_modules").removeClass("active");
+
+    $("#content").html("");
+
     curnav = "brief";
-    $(".nav_title").html("Dashboard");
-    $(".objects").remove();
-    $(".modules").remove();
     if(typeof npmodules2 == 'undefined') {
         $.getJSON("../engine/npmodules2.php", showBrieftable);
     } else {
@@ -184,14 +190,14 @@ function showBriefBigstats(out) {
 }
 
 function showModules() {
-    $(".nav_buttons").removeClass("disabled");
-    $(".nav_modules").addClass("disabled");
+    if($(this).hasClass("active")) return;
+    $("#nav_dashboard").removeClass("active");
+    $("#nav_objects").removeClass("active");
+    $("#nav_modules").addClass("active");
+
+    $("#content").html("");
+
     curnav = "modules";
-    $(".nav_title").html("Module Details");
-    $(".modules").remove();
-    $(".dashboard_view").remove();
-    $(".objects_view").remove();
-    $(".tabs_view").remove();
     showModuleTabs($("#content"));
     showModuleTable();
     getModuleData(curmodule);
@@ -402,15 +408,14 @@ function sortStats_desc(a, b) {
 }
 
 function showObjects() {
-    $(".nav_buttons").removeClass("disabled");
-    $(".nav_objects").addClass("disabled");
-    curnav = "objects";
-    $(".nav_title").html("Object Details")
-    $(".objects").remove();
-    $(".dashboard_view").remove();
-    $(".objectstats_view").remove();
-    $(".tabs_view").remove();
+    if($(this).hasClass("active")) return;
+    $("#nav_dashboard").removeClass("active");
+    $("#nav_objects").addClass("active");
+    $("#nav_modules").removeClass("active");
 
+    $("#content").html("");
+
+    curnav = "objects";
 
     showObjectTabs();
     showObjectPane();

@@ -1,6 +1,6 @@
 /* Will be used for future custom CSS needed for NetPivot. Particularly, any CSS needed to override the base bootstrap style */
 body {
-    min-width: 1205px; 
+    /*min-width: 1205px; */
     width: auto !important;  /* Firefox will set width as auto */
     overflow-x: scroll;
 }

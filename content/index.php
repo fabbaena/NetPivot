@@ -10,8 +10,8 @@ require_once dirname(__FILE__) .'/model/StartSession.php';
 $session = new StartSession();
 $user = $session->get('user');
 
-if($user) {
-    $session->termina_session();  
+if(isset($user)) {
+    $session->termina_sesion();  
     header('location: /');
     exit();
 }
@@ -35,7 +35,7 @@ if($user) {
         <div class="container-fluid">  
             <form class="form-signin" method="POST" action="engine/loginuser.php">
                 <div class="row">
-                    <div class="col-md-3 col-md-offset-4">
+                    <div class="col-xs-12 col-sm-4 col-sm-offset-4">
                         <h2 class="form-signin-heading">Please Login</h2>
                             <label for="inputUsername">Username</label>
                             <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Username"> 
@@ -45,18 +45,18 @@ if($user) {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 col-md-offset-4">
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="col-sm-4 col-sm-offset-4">
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
                     </div>
                 </div>
             </form>
             <div class="row">
-                <div class="col-md-4 col-md-offset-4">
+                <div class="col-sm-4 col-sm-offset-4">
                     <a class="resetpass" href="#">Reset password</a>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 col-md-offset-4">
+                <div class="col-sm-4 col-sm-offset-4">
                     <a class="register" href="#">Register</a>
                 </div>
         </div> 

@@ -34,10 +34,11 @@ if(isset($_GET['e'])) {
 <html lang="en">
     <head>
         <?php include ('../engine/css.php');?>
+        <script src="/js/hw_compare.js" language="javascript"></script>        
         <script language="javascript">
         $().ready(function() {
-            $("#conv_tool").click(function() {document.location="convert.php";});
-            $("#hw_tool").click(function() {document.location="compare.php";});
+            $("#home").click(function() {document.location="./";});
+            hw_table();
         });
         </script>
         <title>NetPivot</title>  
@@ -45,26 +46,17 @@ if(isset($_GET['e'])) {
     <body>
     <?php include ('../engine/menu1.php');?>
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-                <div class="jumbotron text-center">
-                    <h1 class="display-3">Welcome to NetPivot</h1>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <ol class="breadcrumb panel-heading">
+                <li><a id="home" href="#">Home</a></li>
+                <li class="active">Hardware Compare</li>
+            </ol>
         </div>
-        <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-xs-12 col-md-5 content">
-                <button id="conv_tool" type="button" class="btn btn-secondary btn-block btn-lg">
-                    F5 Configuration Converter
-                </button>
-            </div>
-            <div class="col-xs-12 col-md-5 content">
-                <button id="hw_tool" type="button" class="btn btn-secondary btn-block btn-lg">
-                    Hardware Compare
-                </button>
-            </div>
-        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <?php include "hw_compare.inc"; ?>
     </div>
     <footer class="pull-left footer">
         <p class="col-md-12">

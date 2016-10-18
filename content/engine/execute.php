@@ -14,19 +14,22 @@ require_once dirname(__FILE__) .'/Config.php';
 
 $session = new StartSession();
 $user    = $session->get('user');
-$uuid    = $session->get('uuid');
 
 if(!($user && ($user->has_role("Engineer") || $user->has_role("Sales")))) {
     header('location: ../');
     exit();
 }
 
-$c = new Config($uuid);
-$c->convert_orphan(true);
 
+$process = array();
 try {
+    if(!isset($_GET['uuid'])) throw new Exception("Did not receive any file to convert.");
+    $uuid = $_GET['uuid'];
 
+    $c = new Config($uuid);
+    $c->convert_orphan(true);
     $pwd = exec($c->command(), $pwd_out,$pwd_error); //this is the command executed on the host  
+    if($pwd_error) throw new Exception("There was an error with the conversion process. Please contact the administrator with the following information ". $uuid);
     $time = new TimeManager();
     $time->Today_Date();
     $today = $time->full_date;
@@ -41,17 +44,21 @@ try {
         ));
     ;
 
-    if ($conversion->save()) {
+    if (!$conversion->save()) {
+        throw new Exception("Could not save conversion to database. Please contact the administrator with the following information: ". $uuid);
+        /*
         $string = file_get_contents($c->json_file());
         $json_a = json_decode($string, true);
         $conversion->loadJSON($json_a);
         $conversion->saveData();
-
-        header ('location:../dashboard/content.php');
-    } else {
-        header ('location:command.php?error');
+        */
     }
+    $process["result"] = "ok";
+    $process["message"] = "Conversion finished.";
+    $process["uuid"] = $uuid;
 } catch (Exception $ex) {
-    header ('location:command.php?fatal');
+    $process["result"] = "error";
+    $process["message"] = $ex->getMessage();
 }
 
+echo json_encode($process);

@@ -17,7 +17,7 @@ class NPObject {
 		$db->Read3();
 
 		if(!isset($db->rows[0])) {
-			error_log($this->_tablename. " $key ". $this->$key. " not found");
+			//error_log($this->_tablename. " $key ". $this->$key. " not found");
 			return false;
 		}
 
