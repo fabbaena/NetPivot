@@ -83,24 +83,24 @@ $user_id = get_int($_GET, 'id');
                     <div class="row">
                         <div class="col-sm-6 form-group has-feedback">
                             <label class="control-label" for="firstname">First Name:</label>
-                            <input class="form-control" id="firstname" type="text" name="firstname" placeholder="John" pattern="^[.A-z0-9 \']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
+                            <input class="form-control" id="firstname" type="text" name="firstname" placeholder="John" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
                             <div class="help-block with-errors"></div>
                         </div>
                         <div class="col-sm-6 form-group has-feedback">
                             <label class="control-label" for="lastname">Last Name:</label>
-                            <input class="form-control" id="lastname" type="text" name="lastname" placeholder="Doe" pattern="^[.A-z0-9 \']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
+                            <input class="form-control" id="lastname" type="text" name="lastname" placeholder="Doe" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-6 form-group has-feedback">
                             <label class="control-label" for="company">Company:</label>
-                            <input class="form-control" id="company" type="text" name="company" placeholder="Citrix" pattern="^[.A-z0-9 \']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
+                            <input class="form-control" id="company" type="text" name="company" placeholder="Citrix" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
                             <div class="help-block with-errors"></div>
                         </div>
                         <div class="col-sm-6 form-group has-feedback">
                             <label class="control-label" for="position">Job Title:</label>
-                            <input class="form-control" id="position" type="text" name="position" placeholder="Sales Engineer" pattern="^[.A-z0-9 \']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
+                            <input class="form-control" id="position" type="text" name="position" placeholder="Sales Engineer" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
