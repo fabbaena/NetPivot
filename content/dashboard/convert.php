@@ -36,6 +36,7 @@ $filelist = new FileList(array('users_id' =>$id));
         <script language="javascript">
         $().ready( function() {
             $("#home").click(function() {document.location="./";});
+            initFileUpload();
             })
         </script>
     </head>
