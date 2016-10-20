@@ -7,19 +7,14 @@
  * and open the template in the editor.
  */
 
-require '../model/StartSession.php';
-require '../model/Crud.php';
-require '../model/TimeManager.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
  
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario'); //Get username
-$id= $sesion->get('id'); //Get user id
-$user_type = $sesion->get('type'); //Get user type = administrator or user
-$max_files = $sesion->get('max_files');
-$sesion->set('filename', '');
-$roles = $sesion->get('roles');
+$session = new StartSession();
+$user = $session->get('user');
+$session->set('filename', '');
 
-if($usuario == false || !isset($roles[1])) { 
+if(!($user && $user->has_role("System Admin"))) { 
     header('location: /'); 
     exit();
 }
@@ -52,11 +47,6 @@ if($usuario == false || !isset($roles[1])) {
                 <div class="row">
                     <div class="col-md-12">
                         <a href="admin_domains.php">Domain Administration</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="settings.php">Time Zone Settings</a>
                     </div>
                 </div>
             </div>

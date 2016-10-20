@@ -6,18 +6,14 @@
  * and open the template in the editor.
  */
 
-require '../model/StartSession.php';
-require '../model/Crud.php';
-require '../model/DomainList.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/DomainList.php';
  
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario');
-$id= $sesion->get('id'); 
-$user_type = $sesion->get('type');
-$roles = $sesion->get('roles');
+$session = new StartSession();
+$user = $session->get('user');
 
-
-if($usuario == false || !isset($roles[1])) {
+if(!($user && $user->has_role("System Admin"))) {
     header('location: ../');
     exit();
 }
@@ -33,8 +29,8 @@ $domainlist = new DomainList();
         <title>NetPivot - Domain Administration</title>
         <script language="javascript">
         $().ready( function() {
-            $(".adminconsole").click(function() {document.location="./";});
-            $(".btn-newdomain").click(function() { document.location="new_domain.php";});
+            $("#adminconsole").click(function() {document.location="./";});
+            $("#btn-newdomain").click(function() { document.location="new_domain.php";});
             })
         </script>
     </head>
@@ -44,7 +40,7 @@ $domainlist = new DomainList();
     <div class="col-md-10 content">
         <div class="panel panel-default">
             <ol class="breadcrumb panel-heading">
-                <li><a class="adminconsole" href="#">Admin Console</a></li>
+                <li><a id="adminconsole" href="#">Admin Console</a></li>
                 <li class="active">Domain Management</li>
             </ol>
             <div class="panel-body">
@@ -65,7 +61,7 @@ $domainlist = new DomainList();
                         echo '<p class="text-primary">Error deleting domain, please try again.</p>';
                      }
                 ?>
-                <div class="btn btn-default btn-newdomain">New Domain</div>
+                <div class="btn btn-default" id="btn-newdomain">New Domain</div>
                 <h4>Domains Created</h4>
                 <table class="table table-bordred table-striped">
                     <tr>

@@ -26,3 +26,4 @@ Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete
 <script src="../js/bootstrap-filestyle.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/netpivot.js" language="javascript"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />

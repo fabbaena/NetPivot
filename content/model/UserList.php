@@ -1,16 +1,19 @@
 <?php
 
-include_once '../model/Crud.php';
+require_once 'Crud.php';
+require_once dirname(__FILE__) .'/../engine/functions.php';
 
 class Role {
 	public $id;
 	public $name;
 	public $starturl;
 
-	function __construct($record) {
-		$this->id = $record["roleid"];
-		$this->name = $record["rolename"];
-		$this->starturl = $record["starturl"];
+	function __construct($record = null) {
+		if(!isset($record)) return;
+		foreach($this as $attrname => $attrvalue) {
+			if(isset($record[$attrname])) 
+				$this->$attrname = $record[$attrname];
+		}
 	}
 }
 
@@ -22,7 +25,7 @@ class RoleList {
 		$this->rolenames_list = [];
 		$this->roles = [];
 		$conn = new Crud();
-		$conn->select = "id as roleid, name as rolename, starturl";
+		$conn->select = "id, name, starturl";
 		$conn->from = "roles";
 		$conn->Read();
 		$result = $conn->rows;
@@ -71,7 +74,7 @@ class User {
 	}
 
 	function addRole($role) {
-		$this->roles[$role->id] = $role;
+		array_push($this->roles, $role);
 	}
 
 	function rmRole($id) {
@@ -95,7 +98,10 @@ class User {
 		$model = new Crud();
         $model->insertInto = 'users';
         foreach($this as $key => $value) {
-        	if($key != 'roles' && isset($value)) {
+        	if($key != 'roles' && 
+        		$key != "used_files" && 
+        		$key != "used_conversions" && 
+        		isset($value)) {
         		$model->data[$key] = $value;
         	}
         }
@@ -106,12 +112,12 @@ class User {
         $mensaje = $model->mensaje;
         $user_id = $model->id;
 
-        foreach($this->roles as $role_id => $role) {
+        foreach($this->roles as $role) {
 	        $newrole = new Crud();
 	        $newrole->insertInto = 'user_role';
 	        $newrole->data = array(
 	        	"user_id" => $user_id,
-	        	"role_id" => $role_id);
+	        	"role_id" => $role->id);
 	        $newrole->Create2();
         }
         if($ajax) return;
@@ -121,10 +127,22 @@ class User {
             header ('location:../admin/admin_users.php?new_error');
         }    
 	}
+
+	function setPassword() {
+		$db = new Crud();
+	    $db->update = "users";
+	    $db->data = array(
+	        'password' => password_hash($this->password, PASSWORD_BCRYPT),
+	        'validation_string' => '');
+	    $db->condition = new Condition( new Column('id'), '=', new Value($this->id));
+	    $db->Update3();
+	}
+
 	function load() {
 		$conn = new Crud();
 		$conn->select = "*";
 		$conn->from = "users";
+
 		if(isset($this->name)) {
 			$conn->condition = "name='". $this->name. "'";
 		} elseif(isset($this->id)){
@@ -132,10 +150,11 @@ class User {
 		}
 		$conn->Read();
 		$userresult = $conn->rows;
+		if(!isset($conn->rows[0])) return false;
 		$this->setData($userresult[0]);
 
 		$conn2 = new Crud();
-		$conn2->select = "*";
+		$conn2->select = "roleid as id, rolename as name, starturl";
 		$conn2->from = "user_role_view";
 		$conn2->condition = "userid=". $this->id;
 		$conn2->Read();
@@ -146,6 +165,52 @@ class User {
 				$this->addRole($role);
 			}
 		}
+		return true;
+	}
+	function load2($cols) {
+		if(!is_array($cols)) return false;
+
+		$conn = new Crud();
+		$conn->select = "*";
+		$conn->from = "users";
+
+		$first = true;
+		foreach($cols as $col) {
+			if(!isset($this->$col)) throw new Exception("Column $col doesn't exist");
+			if($first) $first = false;
+			else {
+				$c = new Condition($c, 'and', new Condition(new Column($col), '=', new Value($this->$col)));
+			}
+			$c = new Condition(new Column($col), '=', new Value($this->$col));
+		}
+		$conn->condition = &$c;
+		if($conn->Read5() > 1) return false;
+		$userresult = $conn->rows;
+		if(!isset($conn->rows[0])) return false;
+		$this->setData($userresult[0]);
+
+		$conn2 = new Crud();
+		$conn2->select = "roleid as id, rolename as name, starturl";
+		$conn2->from = "user_role_view";
+		$conn2->condition = "userid=". $this->id;
+		$conn2->Read();
+		$roleresult = $conn2->rows;
+		if($roleresult) {
+			foreach($roleresult as $rolerecord) {
+				$role = new Role($rolerecord);
+				$this->addRole($role);
+			}
+		}
+		return true;
+	}
+
+	function delete() {
+		if(!isset($this->id)) return false;
+		$db = new Crud();
+		$db->deleteFrom = 'users';
+		$db->condition = "id=". $this->id;
+		$db->Delete();
+		return true;
 	}
 	function modify($newvalues) {
 		if(isset($newvalues)) {
@@ -191,6 +256,83 @@ class User {
 			}
 		}
 	}
+
+	public function login($username, $password) {
+		$db = new Crud();
+		$db->select = "*";
+		$db->from = "users";
+		$db->condition = new Condition(new Column('name'), '=', new Value($username));
+		
+		if($db->Read5() == 0) {
+			error_log("User doesn't exist $username");
+			return false;
+		}
+
+		$userdata = $db->rows[0];
+		if (! password_verify($password, $userdata['password'])) {
+			error_log("Password incorrect for user $username");
+			return false;
+		}
+		foreach ($this as $key => $value) {
+			if(isset($userdata[$key])) $this->$key = $userdata[$key];
+		}
+		$db->select = "roleid as id, rolename as name, starturl";
+		$db->from = "user_role_view";
+		$db->condition = new Condition(new Column('userid'), '=', new Value($this->id));
+		$db->Read5();
+		foreach($db->rows as $rolerecord) {
+			$role = new Role($rolerecord);
+			$this->addRole($role);
+		}
+		return true;
+	}
+
+	public function has_role($role) {
+		if(!isset($this->roles)) return false;
+		foreach($this->roles as $userrole) {
+			if($role == $userrole->name) return true;
+		} 
+		return false;
+	}
+
+	function new_token() {
+		$this->validation_string = RandomString();
+
+		$db = new Crud();
+		$db->update = "users";
+		$db->data = array('validation_string' => $this->validation_string);
+		$db->condition = new Condition(new Column('id'), '=', new Value($this->id));
+		$db->Update3();
+		return $this->validation_string;
+	}
+
+
+	public function valid_token() {
+		if(!isset($this->email) || !isset($this->validation_string))
+			return false;
+	    $db = new Crud();
+	    $db->select = "id";
+	    $db->from = "users";
+	    $db->condition = new Condition(
+	    	new Condition(
+	    		new Column('email'), 
+	    		'=', 
+	    		new Value($this->email)
+	    		), 
+	    	'and', new Condition(
+	    		new Column('validation_string'), 
+	    		'=', 
+	    		new Value($this->validation_string)
+	    		)
+	    	);
+	    $db->Read5();
+	    if(isset($db->rows[0])) {
+	        $this->id = $db->rows[0]['id'];
+	        return true;
+	    }
+	    return false;
+
+	}
 }
 
 class UserList {
@@ -207,7 +349,7 @@ class UserList {
 		foreach($userresult as $record) {
 			$user = new User($record);
 			$conn2 = new Crud();
-			$conn2->select = "*";
+			$conn2->select = "roleid as id, rolename as name, starturl";
 			$conn2->from = "user_role_view";
 			$conn2->condition = "userid=". $user->id;
 			$conn2->Read();

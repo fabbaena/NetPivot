@@ -2,7 +2,7 @@
 
 /* 
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template filename, choose Tools | Templates
  * and open the template in the editor.
  */
 
@@ -12,49 +12,120 @@
  * @author gonzalorodriguez
  */
 
-class FileManager {
-    
-  public $file;
-  public $array_files;
-  public $message;
-  private $path_files;
+require_once 'NPObject.php';
+require_once 'Conversions.php';
+require_once 'Crud.php';
 
-  function __construct($path_files) {
-    $this->path_files = $path_files;
-  }
-  
-  public function ListFiles() {
-    $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->path_files));
-    $it->rewind();
-    $this -> array_files = $it;
-  }
-    
-  public function DeleteFile() {
-    $delete = $this->file;
-    try {
-        unlink($this->path_files . $delete);
-        $this-> message = 'true';
-      } catch (Exception $ex) {
-        $error = $e->getMessage();
-        $this-> message = $error;
-    }
+class FileManager extends NPObject {
+	public $uuid;
+	public $filename;
+	public $upload_time;
+	public $users_id;
+	public $_message;
+	public $_conversion;
+	private $_path_files;
 
-  }
+	function __construct($record = null) {
+		$this->_tablename = "files";
+		if(!is_array($record)) return;
 
-  public function CheckFile() {
-    $filecheck = $this->file;
-    $directory = $this->path_files;
-    $path = $directory.$filecheck;
-    if (file_exists($path)) {
-      $this->message = true;
-    } else {
-      $this->message = false;
-    }
-  }
-    
-  public function GetNumbers($name){
-    $file = file_get_contents($name);
-    preg_match_all('!\d+!', $file, $matches);
-    return $matches;
-  }
+		foreach($this as $key => $value) {
+			if(isset($record[$key])) $this->$key = $record[$key];
+		}
+
+	}
+
+	public function DeleteFile() {
+		$delete = $this->filename;
+		try {
+			unlink($this->_path_files . $delete);
+			$this->_message = 'true';
+		} catch (Exception $ex) {
+			$error = $e->getMessage();
+			$this->_message = $error;
+		}
+
+	}
+
+	function save() {
+
+		$db = new Crud();
+		$db->insertInto = $this->_tablename;
+		foreach($this as $key => $value) {
+			if($key[0] != '_' && $key != 'id' && isset($this->$key)) $db->data[$key] = $value;
+		}
+		$db->Create2();
+		return true;
+	}
+
+	function delete() {
+		if(!isset($this->uuid)) return false;
+
+		$db = new Crud();
+		$db->deleteFrom = $this->_tablename;
+		$db->condition = "uuid='". $this->uuid. "'";
+		$db->Delete();
+		$this->id = null;
+		return true;
+	}
+
+
+	function update() {
+		if(!isset($this->uuid)) return false;
+
+		$db = new Crud();
+		$db->update = $this->_tablename;
+		foreach($this as $key => $value) {
+			if($key[0] != '_' && $key != 'id' && isset($this->$key)) 
+				$db->data[$key] = $value;
+		}
+		$db->condition = "uuid='". $this->uuid. "'";
+		$db->Update2();
+		return true;
+	}
+
+
+	public function CheckFile() {
+		if (file_exists($this->_path_files. $this->uuid)) {
+			$this->_message = true;
+		} else {
+			$this->_message = false;
+		}
+	}
+
+	public function loadChild() {
+		$c = new Conversion(array('files_uuid' => $this->uuid));
+		$c->load('files_uuid');
+		$this->_conversion = $c;
+	}
+}
+
+class FileList {
+	public $files;
+	public $users_id;
+	public $count;
+
+	function __construct($record = null) {
+		if(isset($record)) {
+			foreach($this as $key => $value) {
+				if(isset($record[$key])) $this->$key = $record[$key];
+			}
+		}
+		$this->count = 0;
+		$this->files = [];
+
+		$db = new Crud();
+		$db->select = '*';
+		$db->from = 'files';
+		$db->condition = array('=' => array('users_id' => $this->users_id));
+		$db->orderby = array('column' => 'upload_time', 'direction' => 'DESC');
+		$db->Read4();
+
+		foreach($db->rows as $f) {
+			$this->count++;
+			$fm = new FileManager($f);
+			$fm->loadChild();
+			array_push($this->files, $fm);
+		}
+	}
 }

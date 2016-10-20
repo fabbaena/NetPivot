@@ -5,19 +5,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require 'model/StartSession.php';
+require_once dirname(__FILE__) .'/model/StartSession.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario'); //Get username
-$id= $sesion->get('id'); //Get user id
-$user_type = $sesion->get('type'); //Get user type = administrator or user
-$max_files = $sesion->get('max_files');
-$roles = $sesion->get('roles');
-$starturl = $sesion->get('starturl');
+$session = new StartSession();
+$user = $session->get('user');
 
-if($usuario == true && $roles == true) {
-    $sesion->termina_sesion();  
-    header('location: '. $starturl);
+if(isset($user)) {
+    $session->termina_sesion();  
+    header('location: /');
     exit();
 }
 ?> 
@@ -38,30 +33,30 @@ if($usuario == true && $roles == true) {
     <body>
         <link href="css/signing.css" rel="stylesheet">
         <div class="container-fluid">  
-            <form class="form-signin" method="POST" action="model/LoginUser.php">
+            <form class="form-signin" method="POST" action="engine/loginuser.php">
                 <div class="row">
-                    <div class="col-md-3 col-md-offset-4">
+                    <div class="col-xs-12 col-sm-4 col-sm-offset-4">
                         <h2 class="form-signin-heading">Please Login</h2>
                             <label for="inputUsername">Username</label>
-                            <input type="text" class="form-control" id="inputUsername" name="inputUsername" placeholder="Username"> 
+                            <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Username"> 
                             <label for="inputPassword">Password</label>
                             <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
                         <p class="text-danger"><?= isset($_GET['error'])? "Wrong username or password, please check.": "" ?></p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 col-md-offset-4">
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="col-sm-4 col-sm-offset-4">
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
                     </div>
                 </div>
             </form>
             <div class="row">
-                <div class="col-md-4 col-md-offset-4">
+                <div class="col-sm-4 col-sm-offset-4">
                     <a class="resetpass" href="#">Reset password</a>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 col-md-offset-4">
+                <div class="col-sm-4 col-sm-offset-4">
                     <a class="register" href="#">Register</a>
                 </div>
         </div> 

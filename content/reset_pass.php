@@ -1,24 +1,14 @@
 <?php
 
-
-require 'model/Crud.php';
-require 'engine/functions.php';
-
+require_once dirname(__FILE__) .'/engine/functions.php';
+require_once dirname(__FILE__) .'/model/UserList.php';
 
 $email = get_email($_GET);
 $token = get_token($_GET);
 
-if(isset($email) && isset($token)) {
+$u = new User(array('email' => $email, 'validation_string' => $token));
+if($u->valid_token()) $uid = $u->id;
 
-    $model = new Crud();
-    $model->select = "id";
-    $model->from = "users";
-    $model->condition = "email='$email' AND validation_string='$token'";
-    $model->Read();
-    if(isset($model->rows)) {
-        $uid = $model->rows[0]['id'];
-    }
-}
 
 ?>
 

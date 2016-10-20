@@ -1,27 +1,28 @@
 <?php
-require '../model/StartSession.php';
-require '../model/Crud.php';
-require 'Config.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/F5Objects.php';
+require_once dirname(__FILE__) .'/Config.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario'); //Get username
-if($usuario == false || !isset($_GET["objid"])) { 
+$session = new StartSession();
+$user = $session->get('user');
+
+if(!($user && ($user->has_role("Engineer") || $user->has_role("Sales")))) {
     header('location: /'); 
     exit();
 }
-$uuid = $sesion->get('uuid');
+
+$uuid = $session->get('uuid');
 $objid = $_GET["objid"];
 
 $c = new Config($uuid);
 
-$objname = new Crud();
-$objname->select='line, lineend, attributes';
-$objname->from='f5_attributes_json';
-$objname->condition="id=$objid";
-$objname->Read();
-$linestart = $objname->rows[0]["line"];
-$lineend = $objname->rows[0]["lineend"];
-$attrs = json_decode($objname->rows[0]["attributes"]);
+$obj = new F5Object(false, array('files_uuid' => $uuid, 'id' => $objid));
+$obj->load('id');
+
+$linestart = $obj->line;
+$lineend = $obj->lineend;
+$attrs = json_decode($obj->attributes);
 
 $handle = file($c->f5_file());
 
@@ -30,14 +31,14 @@ for($i=$linestart-1; $i < $lineend; $i++) {
 	$out[$i + 1]["converted"] = -1;
 }
 
-
-foreach ($attrs as $a) {
-	$l = $a->line;
-	$out[$l]["name"] = $a->name;
-	$out[$l]["converted"] = $a->converted;
+if(count($attrs) > 0) {
+	foreach ($attrs as &$a) {
+		if(is_string($a)) continue;
+		$l = $a->line;
+		$out[$l]["name"] = $a->name;
+		$out[$l]["converted"] = $a->converted;
+	}
 }
-
-
 
 echo json_encode($out);
 ?>

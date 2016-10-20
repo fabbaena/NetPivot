@@ -6,26 +6,21 @@
  * and open the template in the editor.
  */
 
-require '../model/StartSession.php';
-require '../model/Crud.php';
-require '../model/CheckUser.php';
-require '../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/functions.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario');
-$id= $sesion->get('id'); 
-$user_type = $sesion->get('type');
-$roles = $sesion->get('roles');
+$session   = new StartSession();
+$user   = $session->get('user');
 
-$modified = $_GET;
-
-if($usuario == false || !isset($roles[1]) || !isset($modified["id"])) {
+if(!($user && $user->has_role("System Admin")) || !isset($_GET['id'])) {
     header('location: ../');
     exit();
 }
 
-$user = new User();
-$user->id = $modified["id"];
+$modified = $_GET;
+
+$user = new User(array('id' => $modified["id"]));
 $user->load();
 
 $user->modify($modified);

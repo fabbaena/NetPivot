@@ -29,6 +29,7 @@ class Crud {
     public $uuid;
     public $fetchall;
     public $data;
+    public $orderby;
 
     private $_conn;
     
@@ -94,6 +95,7 @@ class Crud {
         $sql = "SELECT $select FROM $from $condition";
         $consulta = $this->_conn->prepare($sql);
         $consulta->execute();
+        $this->rows = [];
         while ($filas = $consulta->fetch()){
             $this->rows[] = $filas;
         }
@@ -114,6 +116,98 @@ class Crud {
 
     }
     
+    public function Read3(){
+        $select = $this->select;
+        $from = $this->from;
+        $condition = '';
+        $data = [];
+        foreach($this->condition as $operator => $elements) {
+            if($operator == 'and' || $operator == 'or') {
+                $condition .= " $operator ";
+                continue;
+            }
+            if(!is_array($elements)) continue;
+            foreach($elements as $key => $value) {
+                $condition .= "$key $operator ? ";
+                array_push($data, $value);
+            }
+        }
+        if ( $condition != ''){
+            $condition = " WHERE " .$condition;
+        }
+        $sql = "SELECT $select FROM $from $condition";
+        $consulta = $this->_conn->prepare($sql);
+        $consulta->execute($data);
+        $this->rows = [];
+        while ($filas = $consulta->fetch()){
+            $this->rows[] = $filas;
+        }
+
+    }
+
+    public function Read4(){
+        $select = $this->select;
+        $from = $this->from;
+        $condition = '';
+        $orderby = '';
+        $data = [];
+        if(is_array($this->condition)) {
+            foreach($this->condition as $bool => $elements) {
+                $first = true;
+                foreach($elements as $key => $e) {
+                    if(is_array($e)) {
+                        foreach($e as $operator => $keyval) {
+                            if($first) $first = false;
+                            else $condition = "$condition $bool ";
+
+                            foreach($keyval as $key => $val) {
+                                $condition = "$condition $key $operator ? ";
+                                array_push($data, $val);
+                            }
+                        }
+                    } else {
+                        $operator = $bool;
+                        $val = $e;
+                        $condition = "$condition $key $operator ? ";
+                        array_push($data, $val);
+                    }
+                }
+            }
+            $condition = " WHERE $condition";
+        }
+        if(is_array($this->orderby)) {
+            $orderby = "ORDER BY ". $this->orderby["column"]. " ". $this->orderby["direction"];
+        }
+        $sql = "SELECT $select FROM $from $condition $orderby";
+        $consulta = $this->_conn->prepare($sql);
+        $consulta->execute($data);
+        $this->rows = [];
+        while ($filas = $consulta->fetch()){
+            $this->rows[] = $filas;
+        }
+
+    }
+
+    public function Read5(){
+        $select = $this->select;
+        $from = $this->from;
+        $condition = '';
+        $orderby = '';
+        $this->data = [];
+        if(is_a($this->condition, "Condition")) {
+            $condition = "WHERE ". $this->condition->toString();
+        }
+        $this->condition->toValue($this->data);
+
+        if(is_array($this->orderby)) {
+            $orderby = "ORDER BY ". $this->orderby["column"]. " ". $this->orderby["direction"];
+        }
+        $sql = "SELECT $select FROM $from $condition $orderby";
+        $consulta = $this->_conn->prepare($sql);
+        $consulta->execute($this->data);
+        $this->rows = $consulta->fetchall();
+        return count($this->rows);
+    }
     
     public function Update(){
         $update = $this->update;
@@ -132,6 +226,62 @@ class Crud {
         }
     }
     
+    public function Update2() {
+        $condition = $this->condition;
+        $updateColumnsArray = array();
+        $updateValuesArray = array();
+        $updateValuesQArray = array();
+
+        $update = $this->update;
+
+        foreach($this->data as $column => $value) {
+            if(!is_numeric($column)) {
+                array_push($updateColumnsArray, "$column=?");
+                array_push($updateValuesArray, $value);
+            }
+        }
+        $updateColumns = implode(",", $updateColumnsArray);
+        $sql = "UPDATE $update SET $updateColumns WHERE $condition";
+        $consulta = $this->_conn->prepare($sql);
+        if (!$consulta){
+            $this->mensaje = errorInfo();
+        } else {
+            $consulta->execute($updateValuesArray);
+            $this->mensaje = TRUE;
+        }  
+    }
+
+    public function Update3() {
+        $condition = '';
+
+        $updateColumnsArray = array();
+        $updateValuesArray = array();
+        $updateValuesQArray = array();
+
+        $update = $this->update;
+
+        foreach($this->data as $column => $value) {
+            if(!is_numeric($column)) {
+                array_push($updateColumnsArray, "$column=?");
+                array_push($updateValuesArray, $value);
+            }
+        }
+        if(is_a($this->condition, "Condition")) {
+            $condition = "WHERE ". $this->condition->toString();
+        } 
+        $this->condition->toValue($updateValuesArray);
+
+        $updateColumns = implode(",", $updateColumnsArray);
+        $sql = "UPDATE $update SET $updateColumns $condition";
+        $consulta = $this->_conn->prepare($sql);
+        if (!$consulta){
+            $this->mensaje = errorInfo();
+        } else {
+            $consulta->execute($updateValuesArray);
+            $this->mensaje = TRUE;
+        }  
+    }
+
     public function Delete(){
         $deleteFrom = $this->deleteFrom;
         $condition = $this->condition;
@@ -203,6 +353,7 @@ class Crud {
                 $feature = $obj["feature"];
                 $module = $obj["module"];
                 foreach ($obj["attributes"] as $attr => $a) {
+                    if(!is_array($a)) continue;
                     $c += isset($a["converted"])?$a["converted"]:0;
                     $t += 1;
                 }
@@ -267,4 +418,54 @@ class Crud {
         }
     }
     
+}
+
+class Condition {
+    public $oper;
+    public $A;
+    public $B;
+
+    function __construct($A, $o, $B) {
+        $this->A = $A;
+        $this->oper = $o;
+        $this->B = $B;
+    }
+    function toString() {
+        if(!isset($this->A) || !isset($this->oper) || !isset($this->B)) return "";
+        $outA = $this->A->toString(); 
+        $outB = $this->B->toString();
+        $outOper = $this->oper;
+        return "($outA $outOper $outB)";
+    }
+    function toValue(&$arr) {
+        if(!is_array($arr)) return;
+        $this->A->toValue($arr);
+        $this->B->toValue($arr);
+    }
+}
+
+class Column {
+    public $name;
+
+    function __construct($v) {
+        $this->name = $v;
+    }
+    function toString() {
+        return $this->name;
+    }
+    function toValue(&$arr) {}
+}
+
+class Value {
+    public $v;
+    function __construct($v) {
+        $this->v = $v;
+    }
+    function toString() {
+        return "?";
+    }
+    function toValue(&$arr) {
+        if(!is_array($arr)) return;
+        array_push($arr, $this->v);
+    }
 }

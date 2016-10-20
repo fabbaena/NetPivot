@@ -5,31 +5,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require '../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../engine/functions.php';
+ 
+$session   = new StartSession();
+$user   = $session->get('user');
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario');
-$id= $sesion->get('id'); 
-$user_type = $sesion->get('type');
-$roles = $sesion->get('roles');
-
-
-if($usuario == false || !isset($roles[1])) {
+if(!($user && $user->has_role("System Admin"))) {
     header('location: ../');
     exit();
 }
-$user_id = htmlspecialchars($_GET['id']);
-
+$user_id = get_int($_GET, 'id');
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
 
         <?php include ('../engine/css.php');?>
         <title>NetPivot</title>
+        <script language="javascript" src="../js/validator.js"></script>
         <script language="javascript">
         var modified = {};
+        var userdata;
         function modifyData(event) {
             if(event.target.type == "checkbox") {
                 if(typeof modified.roles == "undefined") {
@@ -37,6 +35,7 @@ $user_id = htmlspecialchars($_GET['id']);
                 }
                 modified.roles[event.target.id.substring(5)] = event.target.checked;
             } else {
+                userdata[event.target.id] = event.target.value;
                 modified[event.target.id] = event.target.value;
             }
         }
@@ -57,14 +56,14 @@ $user_id = htmlspecialchars($_GET['id']);
             event.preventDefault();
         }
         $().ready( function() {
+            $("#usermanagement").click(function() {document.location="admin_users.php";});
+            $("#adminconsole").click(function() {document.location="./";});
             modified.id = <?=$user_id?>;
-            $(".btn-cancel").click(function() {document.location="admin_users.php";});
             $("#password").change(modifyData);
-            $("#max_files").change(modifyData);
-            $("#max_conversions").change(modifyData);
             $(".form-submit").submit(validate);
             loadRoles(modifyData);
             loadUser(modified.id);
+
         });
         </script>
     </head>
@@ -73,17 +72,48 @@ $user_id = htmlspecialchars($_GET['id']);
     <div class="col-md-1"></div>
     <div class="col-md-10 content">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-sm-4"><h4 id="panel-title">Modify User </h4></div>
-                    <div class="col-sm-8 text-right">&nbsp;
-                        <div class="btn btn-default btn-cancel">Cancel</div>
-                    </div>
-                </div>
-            </div>
+            <ol class="breadcrumb panel-heading">
+                <li><a id="adminconsole" href="#">Admin Console</a></li>
+                <li><a id="usermanagement" href="#">User Management</a></li>
+                <li class="active">Modify User</li>
+            </ol>
             <div class="panel-body">
                 <h4>Settings</h4><hr >
                 <form class="form-submit" role="form" data-toggle="validator" method="POST">
+                    <div class="row">
+                        <div class="col-sm-6 form-group has-feedback">
+                            <label class="control-label" for="firstname">First Name:</label>
+                            <input class="form-control" id="firstname" type="text" name="firstname" placeholder="John" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="col-sm-6 form-group has-feedback">
+                            <label class="control-label" for="lastname">Last Name:</label>
+                            <input class="form-control" id="lastname" type="text" name="lastname" placeholder="Doe" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 form-group has-feedback">
+                            <label class="control-label" for="company">Company:</label>
+                            <input class="form-control" id="company" type="text" name="company" placeholder="Citrix" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="col-sm-6 form-group has-feedback">
+                            <label class="control-label" for="position">Job Title:</label>
+                            <input class="form-control" id="position" type="text" name="position" placeholder="Sales Engineer" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="email">E-Mail:</label>
+                        <input class="form-control" id="email" type="text" name="email" placeholder="John.Doe@citrix.com" pattern="^[._A-z0-9]{1,}@[._A-z0-9]{1,}\.[_A-z]{1,}$" data-pattern-error="Please use a valid email. No spaces" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="name">Username:</label>
+                        <input class="form-control" id="name" type="text" name="username" placeholder="JohnDoe" pattern="^[_A-z0-9@.]{1,}$" data-pattern-error="Please use just letters and numbers. No spaces" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
                     <div class="form-group">
                         <label for="password" class="control-label">Password:</label>
                         <div class="row">
@@ -97,13 +127,17 @@ $user_id = htmlspecialchars($_GET['id']);
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="files" class="control-label">Max Number of files:</label>
-                        <input class="form-control" type="number" id="max_files" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="conversions" class="control-label">Max Number of conversions:</label>
-                        <input class="form-control" type="number" id="max_conversions" required>
+                    <div class="row">
+                        <div class="col-sm-6 form-group has-feedback">
+                            <label for="files" class="control-label">Max Number of files:</label>
+                            <input class="form-control" type="number" id="max_files" name="max_files" value="1" required>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="col-sm-6 form-group has-feedback">
+                            <label for="conversions" class="control-label">Max Number of conversions:</label>
+                            <input class="form-control" type="number" id="max_conversions" name="max_conversions" value="1" required>
+                            <div class="help-block with-errors"></div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label">User Roles</label>

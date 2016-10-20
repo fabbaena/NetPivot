@@ -1,105 +1,81 @@
 <?php
-require '../model/StartSession.php';
-require '../model/Crud.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/Conversions.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario'); 
-$uuid = $sesion->get('uuid');
-if($usuario == false || !isset($uuid)) { 
+$session = new StartSession();
+$user = $session->get('user');
+
+$namemap = array( 
+	"ltm" => "LOADBALANCING",
+	"apm" => "AAA",
+	"gtm" => "GSLB",
+	"asm" => "APPFIREWALL"
+	);
+
+if(!($user && ($user->has_role("Engineer") || $user->has_role("Sales")))) {
     header('location: /'); 
     exit();
 }
-$filename = $sesion->get('filename');
-$npmodules2 = $sesion->get('npmodules2');
+$uuid = $session->get('uuid');
+$npmodules2 = $session->get('npmodules2');
+
 if(!isset($npmodules2) || !$npmodules2 || true) {
 	$npmodules2 = [];
-	$npm = new Crud();
-	/*
-	$npm->select='id, name, objgrp_count, object_count, attribute_count, attribute_converted, attribute_omitted';
-	$npm->from='modules_view';
-	*/
-	$npm->select='id, '.
-				'name, '.
-				'modules as objgrp_count, '.
-				'objects as object_count, '.
-				'attributes as attribute_count, '.
-				'converted as attribute_converted, '.
-				'0 as attribute_omitted';
-	$npm->from='f5_stats_features';
-	$npm->condition="files_uuid='$uuid'";
-
-	$npm->Read();
-
-	$npmodules2["_data"]["files_uuid"] = $uuid;
+	$c = new Conversion(array('files_uuid' => $uuid));
+	$c->load('files_uuid');
+	if(!$c->loadChildren()) {
+		error_log("could not load features");
+	}
 	$i = 0;
-	$totalattributes = 0;
-	foreach ($npm->rows as $value) {
-		$i++;
-		if($value["attribute_count"] && $value["attribute_count"] > 0) {
-			$p_converted = round($value["attribute_converted"] / $value["attribute_count"] * 100);
-		} else {
-			$p_converted = 0;
-		}
-	    $npmodules2[$value["name"]]["id"]                  = $value["id"];
-	    $npmodules2[$value["name"]]["friendly_name"]       = $value["name"];
-	    $npmodules2[$value["name"]]["objgrp_count"]        = $value["objgrp_count"];
-	    $npmodules2[$value["name"]]["object_count"]        = $value["object_count"];
-	    $npmodules2[$value["name"]]["attribute_count"]     = $value["attribute_count"];
-	    $npmodules2[$value["name"]]["attribute_converted"] = $value["attribute_converted"];
-	    $npmodules2[$value["name"]]["attribute_omitted"]   = $value["attribute_omitted"];
-	    $npmodules2[$value["name"]]["p_converted"]         = $p_converted;
-	    $totalattributes += $value["attribute_count"];
-	    switch ($value["name"]) {
-	        case 'ltm':
-	            $npmodules2[$value["name"]]["ns_name"] = 'LOADBALANCING';
-	            break;
-	        case 'apm':
-	            $npmodules2[$value["name"]]["ns_name"] = 'AAA';
-	            break;
-	        case 'gtm':
-	            $npmodules2[$value["name"]]["ns_name"] = 'GSLB';
-	            break;
-	        case 'asm':
-	            $npmodules2[$value["name"]]["ns_name"] = 'APPFIREWALL';
-	            break;
-	        default:
-	            $npmodules2[$value["name"]]["ns_name"] = '';
-	    }
-	    if($value["name"] == "ltm") {
-	        $ltmid = $value["id"];
-	        $npo = new Crud();
-	        /*
-	        $npo->select='id, object_count, attribute_count, attribute_converted, attribute_omitted';
-	        $npo->from='obj_grps_view';
-	        $npo->condition="module_id='$ltmid' AND name='rule'";
-	        */
-	        $npo->select='id, objects as object_count, attributes as attribute_count, converted as attribute_converted, 0 as attribute_omitted';
-	        $npo->from='f5_stats_modules';
-	        $npo->condition="feature_id='$ltmid' AND name='rule'";
+	foreach($c->_features as &$f) {
+		$npmodules2[$f->name] = [];
+		$npm = &$npmodules2[$f->name];
 
-	        $npo->Read();
-			if($npo->rows[0]["attribute_count"] && $npo->rows[0]["attribute_count"] > 0) {
-				$p_converted = round($npo->rows[0]["attribute_converted"] / $npo->rows[0]["attribute_count"] * 100);
-			} else {
-				$p_converted = 0;
-			}
-			$i++;
-	        $npmodules2["rule"]["friendly_name"]       = "iRULE";
-	        $npmodules2["rule"]["id"]                  = $npo->rows[0]["id"];
-	        $npmodules2["rule"]["object_count"]        = $npo->rows[0]["object_count"];
-	        $npmodules2["rule"]["attribute_count"]     = $npo->rows[0]["attribute_count"];
-	        $npmodules2["rule"]["attribute_converted"] = $npo->rows[0]["attribute_converted"];
-	        $npmodules2["rule"]["attribute_omitted"]   = $npo->rows[0]["attribute_omitted"];
-	        $npmodules2["rule"]["ns_name"]             = "APPEXPERT";
-		    $npmodules2["rule"]["p_converted"]         = $p_converted;
+		$p_converted = ($f->attributes && $f->attributes > 0) ?
+						round($f->converted / $f->attributes * 100) : 0;
 
-	        $npmodules2["ltm"]["attribute_count"]     -= $npmodules2["rule"]["attribute_count"];
-	        $npmodules2["ltm"]["attribute_converted"] -= $npmodules2["rule"]["attribute_converted"];
-	        $npmodules2["ltm"]["attribute_omitted"]   -= $npmodules2["rule"]["attribute_omitted"];
-	    }
+		$npm["id"]                  = $f->id;
+		$npm["friendly_name"]       = $f->name;
+	    $npm["objgrp_count"]        = $f->modules;
+	    $npm["object_count"]        = $f->objects;
+	    $npm["attribute_count"]     = $f->attributes;
+	    $npm["attribute_converted"] = $f->converted;
+	    $npm["attribute_omitted"]   = 0;
+	    $npm["p_converted"]         = $p_converted;
+	    $npm["ns_name"]             = isset($namemap[$f->name]) ? $namemap[$f->name] : "";
+
+		if($f->name == 'ltm') {
+			$f->loadChild(array('name' => 'rule'));
+			if(isset($f->_modules['rule'])) {
+				$rule = &$f->_modules['rule'];
+				$npmodules2['rule'] = [];
+				$npm2 = &$npmodules2['rule'];
+
+				$p_converted = ($rule->attributes && $rule->attributes > 0) ?
+					round($rule->converted / $rule->attributes * 100) : 0;
+
+		        $npm2["id"]                  = $rule->id;
+		        $npm2["friendly_name"]       = "iRULE";
+		        $npm2["object_count"]        = $rule->objects;
+		        $npm2["attribute_count"]     = $rule->attributes;
+		        $npm2["attribute_converted"] = $rule->converted;
+		        $npm2["attribute_omitted"]   = 0;
+		        $npm2["ns_name"]             = "APPEXPERT";
+			    $npm2["p_converted"]         = $p_converted;
+
+		        $npm["attribute_count"]     -= $npm2["attribute_count"];
+		        $npm["attribute_converted"] -= $npm2["attribute_converted"];
+		        $npm["attribute_omitted"]   -= 0;
+				$i++;
+			} 
+		} 
+
+	    $i++;
 	}
 	$npmodules2["_data"]["module_count"] = $i;
-	$sesion->set('npmodules2', $npmodules2);
+
+	$session->set('npmodules2', $npmodules2);
 }
 
 echo json_encode($npmodules2)

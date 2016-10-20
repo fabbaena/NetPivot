@@ -5,17 +5,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require '../model/StartSession.php';
-require '../model/TimeManager.php';
-require '../model/Crud.php';
-require '../engine/Config.php';
+require_once '../model/StartSession.php';
+require_once '../model/FileManager.php';
+require_once '../model/UserList.php';
+require_once '../model/Conversions.php';
+require_once '../engine/Config.php';
 
-$sesion    = new StartSession();
-$usuario   = $sesion->get('usuario');
-$id        = $sesion->get('id');
-$user_type = $sesion->get('type'); 
+$session    = new StartSession();
+$user = $session->get('user');
 
-if($usuario == false ) { 
+if(!($user && ($user->has_role("Engineer") || $user->has_role("Sales")))) { 
     header('location: /'); 
     exit();
 }
@@ -27,16 +26,9 @@ $c = new Config($uuid);
 $c->convert_orphan(true);
 
 try {
-    $time = new TimeManager();
-    $time->Today_Date();
-    $today = $time->full_date;
-
-    $file_rec = new Crud();
-    $file_rec->select = "*";
-    $file_rec->from = "files";
-    $file_rec->condition = "uuid='$uuid'";
-    $file_rec->Read();
-    $file_data = $file_rec->rows[0];
+    $file = new FileManager(array('uuid' => $uuid));
+    if(!$file->load('uuid')) 
+        throw new Exception('Cannot load file data.');
 
     if(file_exists($c->stats_file()))
         unlink($c->stats_file());
@@ -49,59 +41,27 @@ try {
 
     $pwd = exec($c->command(), $pwd_out,$pwd_error); 
 
-    $converted_rec = new Crud();
-    $converted_rec->select = "*";
-    $converted_rec->from = "conversions";
-    $converted_rec->condition = "files_uuid='$uuid'";
-    $converted_rec->Read();
-    $converted_data = $converted_rec->rows[0];
+    $conversion = new Conversion(array('files_uuid' => $uuid));
+    if(!$conversion->load('files_uuid')) 
+        throw new Exception('Cannot load conversion data.');
 
+    $conversion->id = null;
+    $file->delete();
+    if(!$file->save()) 
+        throw new Exception('Cannot save file data.');
+    if(!$conversion->save()) 
+        throw new Exception('Cannot save conversion data');
 
-    $model = new Crud();
-    $model->deleteFrom = 'files';
-    $model->condition = "uuid='$uuid'";
-    $model->Delete();
+    $string = file_get_contents($c->json_file());
+    $json_a = json_decode($string, true);
+    $conversion->loadJSON($json_a);
+    if(!$conversion->saveData()) 
+        throw new Exception('Cannot save JSON data');
 
-    $model = new Crud();
-    $model->insertInto = "files";
-    $model->data = $file_data;
-    $model->Create2();
+    header ('location:../dashboard/content.php');
 
-    $model = new Crud();
-    $model->insertInto = "conversions";
-    $model->data = $converted_data;
-    $model->Create2();
-
-
-
-    $msg = $model->mensaje;
-    if ($msg == true) {
-        /*
-        $load = new Crud();
-        $load->filename = $c->stats_file();
-        $load->uuid = $uuid;
-        $load->Load();
-        */
-        $sesion->set('uuid', $uuid);
-
-        $string = file_get_contents($c->json_file());
-        $json_a = json_decode($string, true);
-
-        $conn = new Crud();
-        $conn->uploadJSON2($uuid, $json_a);
-        /*
-        foreach($json_a as $objectgroup => $obj) {
-            uploadJSON($conn, $uuid, $objectgroup, $obj);
-
-        }
-        */
-
-        header ('location:../dashboard/content.php');
-    }
-    else {
-        header ('location:command.php?error');
-    }
 } catch (Exception $ex) {
-    header ('location:command.php?fatal');
+    header ('location: '. $_SERVER['HTTP_REFERER'].'?fatal');
+    error_log($ex->getMessage());
 }
 

@@ -1,66 +1,74 @@
 <?php
-require '../model/FileManager.php';
-require '../model/Crud.php';
-require '../model/UUID.php';
-require '../model/TimeManager.php';
-require '../model/StartSession.php';
-require 'Config.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario');
-$id= $sesion->get('id');
-if($usuario == false ) { 
-    header('location: /'); 
+require_once '../model/StartSession.php';
+require_once '../model/UserList.php';
+require_once '../model/FileManager.php';
+require_once '../model/UUID.php';
+require_once '../model/TimeManager.php';
+require_once 'Config.php';
+
+$session = new StartSession();
+$user = $session->get('user');
+
+if(!($user && ($user->has_role("Engineer") || $user->has_role("Sales")))) {
+    header('location: ../');
     exit();
 }
 
+$id= $user->id;
 
 $c = new Config();
 
-$file_name = $_FILES['InputFile']['name'];
 
-$file = new FileManager($c->path_files());
-$file->file = $file_name;
-$file->CheckFile(); 
-$so = $file->message;
+$uuid = new UUID(); //get UUID
+$uuid = $uuid->v4();
+$file = new FileManager(array( 
+    '_path_files' => $c->path_files(), 
+    'uuid' => $uuid));
 
-if ($so==false) {
-        $uuid = new UUID(); //get UUID
-        $value_uuid = $uuid->v4();
-        $sesion->set('uuid', $value_uuid);
-        $c->set_uuid($value_uuid);
-        if(move_uploaded_file($_FILES['InputFile']['tmp_name'], $c->f5_file())) {
-            try {
-                $time = new TimeManager(); //get Date
-                $time->Today_Date();
-                $date = $time->full_date;
-                
-                $asciibin = exec($c->file_type());
-                if(strpos($asciibin, "ASCII text") === false) {
-                    unlink($c->f5_file());
-                    $sesion->delete("uuid");
-                    header("location: ../dashboard/?e=1");
-                    exit(0);
-                }
+$process = array(
+    'result' => 'error',
+    'message' => 'Unknown error.',
+    'next' => 'none'
+    );
 
-                $add = new Crud();
-                $add->insertInto = 'files';
-                $add->data = array(
-                    "uuid"        => $value_uuid,
-                    "filename"    => $file_name, 
-                    "upload_time" => $date, 
-                    "users_id"    => $id
-                    );
-                $add->Create2();
-                header ('location:execute.php');
-            } catch (Exception $ex) {
-                    header ('location:../dashboard/index.php?upload_error');
-            }
-            
-        } else{
-            header ('location:../dashboard/index.php?upload_error');
-        }
-   } else {
-            header ('location:../dashboard/index.php?exist_file='.$file_name.'');
+try {
+    if($_SERVER['CONTENT_LENGTH'] > 8388608) 
+        throw new Exception("File exceeds size of 8M. Please try another file");
+    $file_name = $_FILES['InputFile']['name'];
+    $file->CheckFile(); 
+    $so = $file->_message;
+    if($so != false) throw new Exception("File already exists. Please try another file");
+    $session->set('uuid', $uuid);
+    $c->set_uuid($uuid);
+    syslog(LOG_INFO, "Uploaded file ". $_FILES['InputFile']['tmp_name']. " to ". $c->f5_file());
+    if(!move_uploaded_file($_FILES['InputFile']['tmp_name'], $c->f5_file())) 
+        throw new Exception("Unable to move file. Internal Error. Please contact the administrator. (". 
+            $_FILES['InputFile']['tmp_name']. ")");
+
+    $time = new TimeManager(); //get Date
+    $time->Today_Date();
+    $date = $time->full_date;
+    
+    $asciibin = exec($c->file_type());
+    if(strpos($asciibin, "ASCII text") === false) {
+        unlink($c->f5_file());
+        $session->delete("uuid");
+        throw new Exception("File is of type $asciibin. <br>Cannot process this type of file. Sorry.");
     }
+    $file->uuid = $uuid;
+    $file->filename = $file_name;
+    $file->upload_time = $date;
+    $file->users_id = $id;
+
+    $file->save();
+    $progress["result"] = "Done";
+    $progress["message"] = "Uploaded";
+    $progress["next"] = "convert";
+    $progress["uuid"] = $uuid;
+} catch (Exception $ex) {
+    $progress["message"] = $ex->getMessage();
+    $progress["result"] = "Error";
+}
+echo json_encode($progress);
 ?>

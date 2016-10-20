@@ -5,30 +5,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require '../model/StartSession.php';
-require '../model/Crud.php';
-require '../model/CheckUser.php';
-require '../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/StartSession.php';
+require_once dirname(__FILE__) .'/../model/DomainList.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
 
-$sesion = new StartSession();
-$usuario = $sesion->get('usuario');
-$roles = $sesion->get('roles');
-
-if($usuario == false || !isset($roles[1]) || !isset($_GET['id'])) {
-    header('location: ../');
+$session = new StartSession();
+$user = $session->get('user');
+if(!($user && $user->has_role("System Admin"))) {
+    header('location: /'); 
     exit();
 }
 
-
 $domain_id = htmlspecialchars($_GET['id']);
 try {
-    $model = new Crud();
-    $model->deleteFrom = 'domains';
-    $model->condition = "id=$domain_id";
-    $model->Delete();
-    $mensaje = $model->mensaje;
+    $domain = new Domain(array('id' => $domain_id));
+    if(!$domain->load()) {
+        header ('location:../admin/admin_domains.php?delete_error');
+        exit();
+    }
 
-    if ($mensaje == true) {
+    if ($domain->delete() == true) {
          header ('location:../admin/admin_domains.php?delete_ok');
     } else {
          header ('location:../admin/admin_domains.php?delete_error');
