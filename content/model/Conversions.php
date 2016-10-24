@@ -27,9 +27,24 @@ class Conversion extends NPObject {
 	}
 
 	function loadJSON($data) {
+		$total_count = 0;
+		$cur_count = 0;
+		$perc = 0;
+		$process_file = $this->json_file. ".process";
+		foreach($data as $k1 => $v1) {
+			foreach($v1 as $k2 => $v2) {
+				$total_count++;
+			}
+		}
+		file_put_contents( $process_file , "Starting process $total_count objects\n");
 		foreach($data as $NPModule => $NPMi) {
 			if(!is_array($NPMi)) continue;
 			foreach($NPMi as $object) {
+				$cur_count++;
+				if(intval($cur_count / $total_count * 100) > $perc) {
+					$perc = intval($cur_count / $total_count * 100);
+					file_put_contents( $process_file , "$perc\n", FILE_APPEND);
+				}
 				if(!is_array($object)) continue;
 				$object['files_uuid'] = $this->files_uuid;
 				$o = new F5Object(true, $object);

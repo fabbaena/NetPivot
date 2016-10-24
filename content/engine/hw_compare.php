@@ -12,12 +12,12 @@ require_once dirname(__FILE__) .'/../model/HWModel.php';
 
 $session = new StartSession();
 $user    = $session->get('user');
-/*
+
 if(!($user && ($user->has_role("Engineer") || $user->has_role("Sales")))) {
     header('location: ../');
     exit();
 }
-*/
+
 try {
     if(!isset($_GET['brand'])) 
         throw new Exception("Did not receive data.");
