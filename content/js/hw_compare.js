@@ -19,8 +19,8 @@ function hw_table() {
 		$("#compare").append(hw_row(cat));
 	}
 
-	addTypes("F5", ["BigIP", "Viprion Blade"]);
-	addTypes("NetScaler", ["MPX", "SDX"]);
+	addTypes("F5", {"BigIP": "BigIP", "Viprion": "Viprion Blade"});
+	addTypes("NetScaler", {"MPX": "MPX", "SDX": "SDX"});
 	loadModels("F5", $("#F5_selectedType").html());
 	loadModels("NetScaler", $("#NetScaler_selectedType").html());
 }
@@ -31,6 +31,7 @@ function addTypes(brand, types) {
 			$("<li>").html(
 				$("<a>").attr("href", "#")
 					.html(types[i])
+					.attr("id", brand+i)
 					.click({"brand": brand, "type": types[i]}, loadModels2))
 			);
 	}
@@ -61,19 +62,30 @@ function loadModels(brand, type) {
 						.append($("<li>").html(
 							$("<a>")
 								.attr("href", "#")
+								.attr("id", d.data[i]["type"]+d.data[i]["model"])
 								.html(d.data[i]["model"])
 								.click(d.data[i], clickModel)
 
 							));
 				}
 			}
+			if(ns_model_map != null)
+				$("#" + ns_type_map + ns_model_map).trigger("click");
 		},
 		error: function() { alert(error); }
 	});	
 }
 
+var ns_type_map;
+var ns_model_map;
+
 function clickModel(e) {
 	$("#np" + e.data.brand).html(e.data.model);
+	if(e.data.ns_type_map != null) {
+		ns_model_map = e.data.ns_model_map;
+		ns_type_map = e.data.ns_type_map;
+		$("#NetScaler" + e.data.ns_type_map).trigger("click");
+	}
 	for(cat in categories) {
 		$("#" + cat + "_" + e.data.brand).html(e.data[cat]);
 

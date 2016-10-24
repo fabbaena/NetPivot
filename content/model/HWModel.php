@@ -57,6 +57,8 @@ class HWModel extends NPObject {
 	public $op_hum;
 	public $safety;
 	public $suscept;
+	public $ns_type_map;
+	public $ns_model_map;
 
 
 	function __construct($record = null) {
