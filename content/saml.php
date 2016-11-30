@@ -1,5 +1,5 @@
 <?php
-require_once('/var/www/simplesamlphp/lib/_autoload.php');
+require_once('/var/www/simplesaml/lib/_autoload.php');
 require_once dirname(__FILE__) .'/model/StartSession.php';
 require_once dirname(__FILE__) .'/model//UserList.php';
 
