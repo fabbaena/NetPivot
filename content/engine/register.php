@@ -10,6 +10,11 @@ $company = get_validstring($_GET, 'company');
 $position = get_validstring($_GET, 'position');
 $firstname = get_validstring($_GET, 'firstname');
 $lastname = get_validstring($_GET, 'lastname');
+if(isset($_GET['saml'])) {
+    $saml = $_GET['saml'];
+} else {
+    $saml = false;
+}
 
 np_check(isset($email), "Data entered is invalid.");
 np_check(isset($company), "Data entered is invalid.");
@@ -46,27 +51,29 @@ $user = new User(array(
 $user->addRole($role);
 $user->save(true);
 
-$from = "NetPivot DO_NOT_REPLY <noreply@netpivot.io>";
-$to = "<$email>";
-$subject = 'NetPivot Account Created';
-$body = "Hi,\n\nPlease use the following link to set your password.\n".
-        "http://". $_SERVER['HTTP_HOST']. "/reset_pass.php?email=". 
-        urlencode($email). "&token=". urlencode($r);
+if(!$saml) {
+    $from = "NetPivot DO_NOT_REPLY <noreply@netpivot.io>";
+    $to = "<$email>";
+    $subject = 'NetPivot Account Created';
+    $body = "Hi,\n\nPlease use the following link to set your password.\n".
+            "http://". $_SERVER['HTTP_HOST']. "/reset_pass.php?email=". 
+            urlencode($email). "&token=". urlencode($r);
 
-$headers = array(
-    'From' => $from,
-    'To' => $to,
-    'Subject' => $subject
-);
-$smtp = Mail::factory('smtp', array(
-        'host' => 'ssl://smtp.gmail.com',
-        'port' => '465',
-        'auth' => true,
-        'username' => 'noreply@netpivot.io',
-        'password' => 'U&0MQ7/4(f}_M'
-    ));
+    $headers = array(
+        'From' => $from,
+        'To' => $to,
+        'Subject' => $subject
+    );
+    $smtp = Mail::factory('smtp', array(
+            'host' => 'ssl://smtp.gmail.com',
+            'port' => '465',
+            'auth' => true,
+            'username' => 'noreply@netpivot.io',
+            'password' => 'U&0MQ7/4(f}_M'
+        ));
 
-$mail = $smtp->send($to, $headers, $body);
+    $mail = $smtp->send($to, $headers, $body);
+}
 
 $result["message"] = "Account has been created. ".
     "Please check your email to activate your account.";
