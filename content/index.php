@@ -27,6 +27,7 @@ if(isset($user)) {
         $().ready( function() {
             $(".resetpass").click(function() {document.location="reset_pass.php";});
             $(".register").click(function() { document.location="register.php";});
+            $(".saml").click(function() { document.location="saml.php";});
             })
         </script>
     </head>
@@ -59,6 +60,12 @@ if(isset($user)) {
                 <div class="col-sm-4 col-sm-offset-4">
                     <a class="register" href="#">Register</a>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 col-sm-offset-4">
+                    If you are a Citrix employee, click <a class="saml" href="#">here</a>
+                </div>
+            </div>
         </div> 
     </body>
 </html>
