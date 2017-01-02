@@ -488,6 +488,38 @@ DROP SEQUENCE IF EXISTS f5_snatpool_json_id_seq;
 ALTER SEQUENCE f5_json_id_seq RENAME TO f5_attributes_json_id_seq;
 ALTER SEQUENCE user_domains_id_seq RENAME TO domains_id_seq;
 
+
+
+CREATE TABLE events (
+    id integer NOT NULL,
+    "timestamp" timestamp without time zone NOT NULL,
+    company_id integer NOT NULL,
+    user_id integer NOT NULL,
+    event character varying NOT NULL,
+    event_code integer
+);
+
+
+ALTER TABLE events OWNER TO demonio;
+CREATE SEQUENCE events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE events_id_seq OWNER TO demonio;
+ALTER SEQUENCE events_id_seq OWNED BY events.id;
+ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
+ALTER TABLE ONLY events
+    ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY events
+    ADD CONSTRAINT events_company_id_fkey FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE;
+ALTER TABLE ONLY events
+    ADD CONSTRAINT events_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+
+
 DROP TABLE IF EXISTS adc_hw;
 
 CREATE TABLE adc_hw (
@@ -665,35 +697,5 @@ F5	4300	Viprion Blade	2.5	1.4	na	36	80	40	12	30	20	No	na	na	80	1.2	20	64bit	1	6	
 F5	2250	Viprion Blade	2	1	14	48	155	80	10	44	36	No	na	na	60	1	40	64bit	1	20	Intel Xeon	1	10	64	800	1	SSD	na	1	na	na	4	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	MPX	14080
 F5	2150	Viprion Blade	1	0.4	7	24	40	18	4	10	9	No	na	na	40	0.4	10	64bit	1	8	Intel Xeon	1	4	32	400	1	SSD	na	1	na	8	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	MPX	14080
 F5	2100	Viprion Blade	1	0.4	7	12	40	18	4	10	9	No	na	na	40	0.4	10	64bit	1	4	Intel Xeon	1	4	16	300	1	10,000 RPM	na	1	na	8	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na
-
-CREATE TABLE events (
-    id integer NOT NULL,
-    "timestamp" timestamp without time zone NOT NULL,
-    company_id integer NOT NULL,
-    user_id integer NOT NULL,
-    event character varying NOT NULL,
-    event_code integer
-);
-
-
-ALTER TABLE events OWNER TO demonio;
-CREATE SEQUENCE events_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE events_id_seq OWNER TO demonio;
-ALTER SEQUENCE events_id_seq OWNED BY events.id;
-ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_company_id_fkey FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE;
-ALTER TABLE ONLY events
-    ADD CONSTRAINT events_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
-
 
 
