@@ -10,20 +10,21 @@ require_once dirname(__FILE__) .'/../model/StartSession.php';
 require_once dirname(__FILE__) .'/../model/TimeManager.php';
 require_once dirname(__FILE__) .'/../model/Conversions.php';
 require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/Event.php';
 require_once dirname(__FILE__) .'/Config.php';
 
 $session = new StartSession();
 $user    = $session->get('user');
+$file_name = $session->get('upload_file_name');
 
 if(!($user && ($user->has_role("Engineer") || $user->has_role("Sales")))) {
     header('location: ../');
     exit();
 }
 
-
 $process = array();
 try {
-    if(!isset($_GET['uuid'])) throw new Exception("Did not receive any file to convert.");
+    if(!isset($_GET['uuid'])) throw new Exception("Did not receive any file to generate stats.");
     $uuid = $_GET['uuid'];
 
     $conversion = new Conversion(array("files_uuid" => $uuid));
@@ -31,17 +32,27 @@ try {
 
     $c = new Config($uuid);
     $string = file_get_contents($c->json_file());
+    if(strlen($string) < 5) throw new Exception("Internal Error. Stats couldn't be generated for \"$file_name\". ($uuid)");
     $json_a = json_decode($string, true);
-    $conversion->loadJSON($json_a);
-    $conversion->saveData();
+    if(count($json_a) < 2) throw new Exception("Internal Error. JSON file error for \"$file_name\". ($uuid)");
+    
+    if(!$conversion->loadJSON($json_a)) 
+        throw new Exception("Internal Error. Cannot load data into memory for \"$file_name\". ($uuid)");
+    if(!$conversion->saveData()) 
+        throw new Exception("Internal Error. Cannot load JSON data into database for \"$file_name\". ($uuid)");
 
     $process["result"] = "ok";
     $process["message"] = "Statistics Generated.";
     $process["uuid"] = $uuid;
+    new Event($user, "Statistics generated for \"$file_name\"", 8);
 } catch (Exception $ex) {
     error_log($ex->getMessage());
     $process["result"] = "error";
     $process["message"] = $ex->getMessage();
+    new Event($user, $ex->getMessage());
 }
+$session->set('upload_file_name', null);
 $session->set('uuid', $uuid);
 echo json_encode($process);
+
+?>

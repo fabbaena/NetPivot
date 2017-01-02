@@ -32,11 +32,22 @@ $filelist = new FileList(array('users_id' =>$id));
         <link rel="stylesheet" href="/css/jquery.fileupload.css">
         <script src="/js/vendor/jquery.ui.widget.js"></script>
         <script src="/js/jquery.fileupload.js"></script>
+        <script language="javascript" src="/js/validator.js"></script>
         <script src="/js/fileupload.js" language="javascript"></script>
         <script language="javascript">
         $().ready( function() {
             $("#home").click(function() {document.location="./";});
             initFileUpload();
+            $("#form").validator()
+                .on('valid.bs.validator', function(e, data) {
+                    $("#fu").removeClass("hidden");
+                    })
+                .on('invalid.bs.validator', function(e, data) {
+                    $("#fu").addClass("hidden");
+                    });
+            $("#fileUploadModal").on("shown.bs.modal", function(e, data) {
+                $("#opportunityId").focus();
+                })
             })
         </script>
     </head>
@@ -53,13 +64,11 @@ $filelist = new FileList(array('users_id' =>$id));
     </div>
     <div class="row">
         <div class="col-md-1"></div>
-            <div class="col-xs-12 col-md-4 content">
-                <?php include "file_upload.inc"; ?>
-            </div>
-            <div class="col-xs-12 col-md-6 content">
-                <?php include "file_list.inc" ?>
-            </div>
+        <div class="col-xs-12 col-md-10 content">
+            <?php include "file_list.inc" ?>
+        </div>
     </div>
+    <?php include "file_upload.inc"; ?>
     <footer class="pull-left footer">
         <p class="col-md-12">
             <hr class="divider">

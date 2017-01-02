@@ -1,6 +1,8 @@
 <?php
 require_once dirname(__FILE__) .'/../model/StartSession.php';
 require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/Event.php';
+require_once dirname(__FILE__) .'/../model/FileManager.php';
 
 $session = new StartSession();
 $user = $session->get('user');
@@ -19,6 +21,12 @@ if (isset($_POST['uuid'])) {
 } else {
     $uuid = $session->get('uuid');
 }
+
+$file = new FileManager(array('uuid' => $uuid));
+$file->load('uuid');
+$file_name = $file->filename;
+
+new Event($user, "Viewing file \"$file_name\".", 3);
 
 ?>
 

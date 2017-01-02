@@ -20,8 +20,6 @@ if(!($user && $user->has_role("Engineer") )) {
 }
 $id = $user->id;
 
-$filelist = new FileList(array('users_id' =>$id));
-
 if(isset($_GET['e'])) {
     $reterr = $_GET['e'];
 } else {

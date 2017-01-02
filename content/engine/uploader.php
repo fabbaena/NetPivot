@@ -5,6 +5,7 @@ require_once '../model/UserList.php';
 require_once '../model/FileManager.php';
 require_once '../model/UUID.php';
 require_once '../model/TimeManager.php';
+require_once '../model/Event.php';
 require_once 'Config.php';
 
 $session = new StartSession();
@@ -33,6 +34,10 @@ $process = array(
     );
 
 try {
+
+    if(!isset($_POST['opportunity_id'])) throw new Exception("No opportunity id provided.");
+    $opportunity_id = $_POST['opportunity_id'];
+
     if($_SERVER['CONTENT_LENGTH'] > 8388608) 
         throw new Exception("File exceeds size of 8M. Please try another file");
     $file_name = $_FILES['InputFile']['name'];
@@ -54,19 +59,23 @@ try {
     if(strpos($asciibin, "ASCII text") === false) {
         unlink($c->f5_file());
         $session->delete("uuid");
-        throw new Exception("File is of type $asciibin. <br>Cannot process this type of file. Sorry.");
+        throw new Exception("Cannot process this type of file. Sorry.<br>File \"$file_name\" is of type $asciibin.");
     }
     $file->uuid = $uuid;
     $file->filename = $file_name;
     $file->upload_time = $date;
     $file->users_id = $id;
+    $file->opportunity_id = $opportunity_id;
 
     $file->save();
     $progress["result"] = "Done";
     $progress["message"] = "Uploaded";
     $progress["next"] = "convert";
     $progress["uuid"] = $uuid;
+    $session->set('upload_file_name', $file_name);
+    new Event($user, "File \"$file_name\" was uploaded succesfully.", 6);
 } catch (Exception $ex) {
+    new Event($user, $ex->getMessage());
     $progress["message"] = $ex->getMessage();
     $progress["result"] = "Error";
 }
