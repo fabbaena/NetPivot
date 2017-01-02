@@ -697,5 +697,3 @@ F5	4300	Viprion Blade	2.5	1.4	na	36	80	40	12	30	20	No	na	na	80	1.2	20	64bit	1	6	
 F5	2250	Viprion Blade	2	1	14	48	155	80	10	44	36	No	na	na	60	1	40	64bit	1	20	Intel Xeon	1	10	64	800	1	SSD	na	1	na	na	4	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	MPX	14080
 F5	2150	Viprion Blade	1	0.4	7	24	40	18	4	10	9	No	na	na	40	0.4	10	64bit	1	8	Intel Xeon	1	4	32	400	1	SSD	na	1	na	8	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	MPX	14080
 F5	2100	Viprion Blade	1	0.4	7	12	40	18	4	10	9	No	na	na	40	0.4	10	64bit	1	4	Intel Xeon	1	4	16	300	1	10,000 RPM	na	1	na	8	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na	na
-
-
