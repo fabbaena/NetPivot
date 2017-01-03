@@ -610,7 +610,7 @@ BEGIN
 END$$;
 
 
-CREATE VIEW IF NOT EXISTS events_full AS
+CREATE OR REPLACE VIEW events_full AS
  SELECT e.id AS event_id,
     e."timestamp",
     c.name AS company_name,
