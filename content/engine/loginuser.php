@@ -5,9 +5,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once dirname(__FILE__) .'/../model//UserList.php';
 require_once dirname(__FILE__) .'/../model/StartSession.php';
 require_once dirname(__FILE__) .'/functions.php';
+require_once dirname(__FILE__) .'/../model/Event.php';
 
 $username = get_username($_POST);
 $password = get_password($_POST);
@@ -25,8 +25,11 @@ if ($user->login($username, $password)) { //Establish all the parameters for the
     $session->set('starturl', $user->roles[0]->starturl);
     $session->set('user', $user);
     $starturl = $user->roles[0]->starturl;
+
+    new Event($user, "Logged in.", 1);
     header("location: ../". $starturl);
 } else {
+    new Event($user, "Bad username or password for ". $username);
     header ('location:../index.php?error=1');
 }
         

@@ -2,10 +2,12 @@
 
 require_once '../model/UserList.php';
 require_once '../model/DomainList.php';
+require_once '../model/Event.php';
 require_once 'functions.php';
 include('Mail.php');
 
 $email = get_email($_GET);
+$company_id = get_validstring($_GET, 'company_id');
 $company = get_validstring($_GET, 'company');
 $position = get_validstring($_GET, 'position');
 $firstname = get_validstring($_GET, 'firstname');
@@ -45,11 +47,14 @@ $user = new User(array(
     "email" => $email,
     "validation_string" => $r,
     "company" => $company,
+    "company_id" => $company_id,
     "position" => $position,
     "firstname" => $firstname,
     "lastname" => $lastname));
 $user->addRole($role);
 $user->save(true);
+
+new Event($user, "Registered");
 
 if(!$saml) {
     $from = "NetPivot DO_NOT_REPLY <noreply@netpivot.io>";
@@ -75,8 +80,8 @@ if(!$saml) {
     $mail = $smtp->send($to, $headers, $body);
 }
 
-$result["message"] = "Account has been created. ".
-    "Please check your email to activate your account.";
+$result["message"] = "Account has been created. ". 
+    ($saml ? "Try to login again." : "Please check your email to activate your account.");
 echo json_encode($result);
 ?>
 

@@ -3,11 +3,13 @@ $saml = false;
 if(isset($_GET["NetPivotUID"]) && 
     isset($_GET["givenName"]) && 
     isset($_GET["sn"]) &&
-    isset($_GET["company"])) {
+    isset($_GET["company"]) &&
+    isset($_GET["company_id"])) {
     $NetPivotUID = $_GET['NetPivotUID'];
     $givenName = $_GET['givenName'];
     $sn = $_GET['sn'];
     $company = $_GET['company'];
+    $company_id = $_GET['company_id'];
     $saml = true;
 }
 ?>
@@ -23,6 +25,7 @@ if(isset($_GET["NetPivotUID"]) &&
                 {
                     "email": $("#email").val(),
                     "company": $("#company").val(),
+                    "company_id": $("#company_id").val(),
                     "position": $("#position").val(),
                     "firstname": $("#firstname").val(),
                     "lastname": $("#lastname").val(),
@@ -56,9 +59,9 @@ if(isset($_GET["NetPivotUID"]) &&
                 <h4>Registration</h4>
             </div>
             <div class="panel-body">
+                <p>Welcome to NetPivot registration.</p><p> Fill all the fields in this form and you'll receive an email to assing a password to your account and complete the registration.</p>
                 <form id="form" role="form" data-toggle="validator">
                 <div class="form-group has-feedback">
-                    <p>Welcome to NetPivot registration.</p><p> Fill all the fields in this form and you'll receive an email to assing a password to your account and complete the registration.</p>
                     <label class="control-label" for="firstname">First Name:</label>
                     <input class="form-control" id="firstname" type="text" name="firstname" placeholder="John" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use only aphanumeric, apostrophe or space characters only. Max is 30 characters." <?= isset($givenName)? "value=\"$givenName\"" : "" ?> required>
                     <div class="help-block with-errors"></div>
@@ -80,7 +83,8 @@ if(isset($_GET["NetPivotUID"]) &&
                 </div>
                 <div class="form-group has-feedback">
                     <label class="control-label" for="company">Company:</label>
-                    <input class="form-control" id="company" type="text" name="company" placeholder="Citrix" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use only aphanumeric, apostrophe or space characters only. Max is 30 characters." <?= isset($company)? "value=\"$company\"" : "" ?> required>
+                    <input class="form-control" id="company" type="text" name="company" placeholder="Citrix" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use only aphanumeric, apostrophe or space characters only. Max is 30 characters." <?= isset($company)? "value=\"$company\"" : "" ?> <?= isset($company) ? "disabled" : "required" ?>>
+                    <input class="form-control" id="company_id" type="hidden" name="company_id" value="<?= isset($company_id)? $company_id : "" ?>">
                     <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group has-feedback">

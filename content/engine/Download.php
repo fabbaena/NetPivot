@@ -9,6 +9,8 @@
 require_once dirname(__FILE__) .'/../model/StartSession.php';
 require_once dirname(__FILE__) .'/Config.php';
 require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/Event.php';
+require_once dirname(__FILE__) .'/../model/FileManager.php';
 
 $session = new StartSession();
 $user = $session->get('user');
@@ -24,8 +26,11 @@ $c = new Config($uuid);
 
 $file = $c->ns_file();
 
+new Event($user, "Converted file from \"$filename\" Downloaded", 4);
+
 header( "Content-Type: application/octet-stream");
 header( "Content-Length: ".filesize($file));
 header( "Content-Disposition: attachment; filename=${filename}_ns.conf");
 readfile($file);
-        
+
+?>
