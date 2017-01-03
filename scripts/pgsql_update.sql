@@ -628,6 +628,16 @@ CREATE OR REPLACE VIEW events_full AS
 
 ALTER TABLE events_full OWNER TO demonio;
 
+\echo '>> Add opportunity_id column to table files'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='files' and column_name='opportunity_id')
+    THEN 
+        ALTER TABLE files 
+            ADD COLUMN opportunity_id integer;
+    END IF;
+END$$;
 
 
 \echo '>>> Dropping and Creating table adc_hw'
