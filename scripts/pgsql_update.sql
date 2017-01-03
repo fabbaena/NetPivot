@@ -635,7 +635,7 @@ BEGIN
         select 1 from information_schema.columns where table_name='files' and column_name='opportunity_id')
     THEN 
         ALTER TABLE files 
-            ADD COLUMN opportunity_id integer;
+            ADD COLUMN opportunity_id character varying;
     END IF;
 END$$;
 
