@@ -24,6 +24,7 @@ class FileManager extends NPObject {
 	public $_message;
 	public $_conversion;
 	private $_path_files;
+	public $opportunity_id;
 
 	function __construct($record = null) {
 		$this->_tablename = "files";
@@ -96,7 +97,7 @@ class FileManager extends NPObject {
 	public function loadChild() {
 		$c = new Conversion(array('files_uuid' => $this->uuid));
 		$c->load('files_uuid');
-		$this->_conversion = $c;
+		if(isset($c->id)) $this->_conversion = $c;
 	}
 }
 

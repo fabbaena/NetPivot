@@ -3,6 +3,7 @@
         <h4>Converted Files</h4>
     </div>
     <div class="panel-body">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#fileUploadModal">Add Files</button>
         <div class="table-responsive">
         <table class="table table-bordred table-striped" data-toggle="bootgrid">
             <thead>
@@ -19,13 +20,17 @@
                     <tr uuid="<?= $f->uuid ?>">
                         <td style="width: 55%"><?= $f->filename ?></td>
                         <td style="width: 20%">
-                            <a href="content.php?uuid=<?= $f->uuid ?>">
-                                <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span>
-                            </a>&nbsp;
                             <a href="rename.php?file=<?= $f->uuid ?>">
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                             </a>&nbsp;
-                            <a href="../engine/reprocess.php?file=<?= $f->uuid ?>"><span class="glyphicon glyphicon-retweet" aria-hidden="true"></span></a>
+                            <a href="../engine/reprocess.php?file=<?= $f->uuid ?>">
+                                <span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>
+                            </a>&nbsp;
+                            <?php if(isset($f->_conversion)) { ?>
+                            <a href="content.php?uuid=<?= $f->uuid ?>">
+                                <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span>
+                            </a>&nbsp;
+                            <?php } ?>
                         </td>
                         <td style="width: 25%"><?= explode(" ", $f->upload_time)[0] ?></td>
                     </tr>

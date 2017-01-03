@@ -53,6 +53,7 @@ class User {
 	public $position;
 	public $firstname;
 	public $lastname;
+	public $company_id;
 
 	function __construct($record = NULL) {
 		$this->roles = [];
@@ -99,18 +100,20 @@ class User {
         $model->insertInto = 'users';
         foreach($this as $key => $value) {
         	if($key != 'roles' && 
-        		$key != "used_files" && 
-        		$key != "used_conversions" && 
-        		isset($value)) {
+        			$key != "used_files" && 
+        			$key != "used_conversions" && 
+        			isset($value)) {
         		$model->data[$key] = $value;
         	}
         }
+
         $model->data['password'] = isset($this->password) ? 
         	password_hash($this->password, PASSWORD_BCRYPT) :
 			"PasswordNotSet";
         $model->Create2("id");
         $mensaje = $model->mensaje;
         $user_id = $model->id;
+        $this->id = $model->id;
 
         foreach($this->roles as $role) {
 	        $newrole = new Crud();
@@ -270,6 +273,8 @@ class User {
 
 		$userdata = $db->rows[0];
 		if (! password_verify($password, $userdata['password'])) {
+			$this->id = 0;
+			$this->company_id = 0;
 			error_log("Password incorrect for user $username");
 			return false;
 		}
@@ -379,4 +384,32 @@ class UserList {
 		return $this->users[$name];
 	}
 }
+
+class UserEventList {
+	public $company;
+	public $count;
+	public $userlist;
+
+	function __construct($company, $term) {
+		$this->company = $company;
+		$conn = new Crud();
+		$conn->select = "id, name";
+		$conn->from = "users";
+		$conn->condition = new Condition(
+			new Condition(new Column('company_id'), '=', new Value($this->company)), 
+			"and", 
+			new Condition(new Column('name'), 'like', new Value($term. "%"))
+			);
+		$conn->orderby["column"] = "name";
+		$conn->orderby["direction"] = "ASC";
+		$this->count = $conn->Read5();
+
+		$this->userlist = array();
+		foreach($conn->rows as $f) {
+			array_push($this->userlist, array("id" => $f["id"], "label" => $f["name"]));
+		}
+
+	}
+}
+
 ?>

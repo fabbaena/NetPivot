@@ -38,6 +38,7 @@ if(isset($_GET['e'])) {
         $().ready(function() {
             $("#conv_tool").click(function() {document.location="convert.php";});
             $("#hw_tool").click(function() {document.location="compare.php";});
+            $("#event_log").click(function() {document.location="event_log.php";});
         });
         </script>
         <title>NetPivot</title>  
@@ -53,8 +54,7 @@ if(isset($_GET['e'])) {
             </div>
         </div>
         <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-xs-12 col-md-5 content">
+            <div class="col-xs-12 col-md-offset-1 col-md-5 content">
                 <button id="conv_tool" type="button" class="btn btn-secondary btn-block btn-lg">
                     F5 Configuration Converter
                 </button>
@@ -62,6 +62,14 @@ if(isset($_GET['e'])) {
             <div class="col-xs-12 col-md-5 content">
                 <button id="hw_tool" type="button" class="btn btn-secondary btn-block btn-lg">
                     Hardware Compare
+                </button>
+            </div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-xs-12 col-md-offset-1 col-md-5 content">
+                <button id="event_log" type="button" class="btn btn-secondary btn-block btn-lg">
+                    Event Log
                 </button>
             </div>
         </div>

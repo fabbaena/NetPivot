@@ -488,6 +488,149 @@ DROP SEQUENCE IF EXISTS f5_snatpool_json_id_seq;
 ALTER SEQUENCE f5_json_id_seq RENAME TO f5_attributes_json_id_seq;
 ALTER SEQUENCE user_domains_id_seq RENAME TO domains_id_seq;
 
+\echo '>>> Create table companies'
+CREATE TABLE IF NOT EXISTS companies (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    domain character varying NOT NULL
+);
+
+ALTER TABLE companies OWNER TO demonio;
+DO $$ 
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_class c 
+        JOIN pg_namespace n ON n.oid = c.relnamespace 
+        WHERE c.relname='companies_id_seq' AND n.nspname = 'public') 
+    THEN 
+        CREATE SEQUENCE companies_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+        INSERT INTO companies (id, name, domain) VALUES (0, 'NONE', 'NONE');
+    END IF;
+    ALTER TABLE companies_id_seq OWNER TO demonio;
+    ALTER SEQUENCE companies_id_seq OWNED BY companies.id;
+    ALTER TABLE ONLY companies ALTER COLUMN id SET DEFAULT nextval('companies_id_seq'::regclass);
+END$$;
+
+\echo '>>> Create companies_pkey primary key for table companies'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM information_schema.constraint_column_usage 
+           WHERE table_name = 'companies'  
+           AND constraint_name = 'companies_pkey') 
+    THEN 
+        ALTER TABLE ONLY companies
+            ADD CONSTRAINT companies_pkey PRIMARY KEY (id);
+    END IF;
+END$$;
+
+
+\echo '>> Add company_id column to table users'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='users' and column_name='company_id')
+    THEN 
+        ALTER TABLE users 
+            ADD COLUMN company_id integer;
+        UPDATE users set company_id=0 WHERE company_id IS null;
+        ALTER TABLE ONLY users
+            ADD CONSTRAINT users_company_id_fkey FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE;
+    END IF;
+END$$;
+
+\echo '>>> Creating Events table'
+CREATE TABLE IF NOT EXISTS events (
+    id integer NOT NULL,
+    "timestamp" timestamp without time zone NOT NULL,
+    company_id integer NOT NULL,
+    user_id integer NOT NULL,
+    event character varying NOT NULL,
+    event_code integer
+);
+
+ALTER TABLE events OWNER TO demonio;
+DO $$ 
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_class c 
+        JOIN pg_namespace n ON n.oid = c.relnamespace 
+        WHERE c.relname='events_id_seq' AND n.nspname = 'public') 
+    THEN 
+        CREATE SEQUENCE events_id_seq
+            START WITH 1
+            INCREMENT BY 1
+            NO MINVALUE
+            NO MAXVALUE
+            CACHE 1;
+    END IF;
+    ALTER TABLE events_id_seq OWNER TO demonio;
+    ALTER SEQUENCE events_id_seq OWNED BY events.id;
+    ALTER TABLE ONLY events ALTER COLUMN id SET DEFAULT nextval('events_id_seq'::regclass);
+END$$;
+
+\echo '>>> Create events_pkey primary key for table events'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM information_schema.constraint_column_usage 
+           WHERE table_name = 'events'  
+           AND constraint_name = 'events_pkey') 
+    THEN 
+        ALTER TABLE ONLY events
+            ADD CONSTRAINT events_pkey PRIMARY KEY (id);
+    END IF;
+END$$;
+
+\echo '>>> Create foreign key events_company_id_fkey on table events'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'events_company_id_fkey' )
+    THEN 
+        ALTER TABLE ONLY events
+            ADD CONSTRAINT events_company_id_fkey FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE;
+    END IF;
+END$$;
+
+\echo '>>> Create foreign key events_user_id_fkey on table events'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        SELECT 1 FROM pg_constraint WHERE conname = 'events_user_id_fkey' )
+    THEN 
+        ALTER TABLE ONLY events
+            ADD CONSTRAINT events_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+    END IF;
+END$$;
+
+
+CREATE OR REPLACE VIEW events_full AS
+ SELECT e.id AS event_id,
+    e."timestamp",
+    c.name AS company_name,
+    c.id AS company_id,
+    u.name AS user_name,
+    (((u.firstname)::text || ' '::text) || (u.lastname)::text) AS user_fullname,
+    u.id AS user_id,
+    e.event,
+    e.event_code
+   FROM events e,
+    companies c,
+    users u
+  WHERE ((e.company_id = c.id) AND (e.user_id = u.id));
+
+
+ALTER TABLE events_full OWNER TO demonio;
+
+
+
+\echo '>>> Dropping and Creating table adc_hw'
 DROP TABLE IF EXISTS adc_hw;
 
 CREATE TABLE adc_hw (

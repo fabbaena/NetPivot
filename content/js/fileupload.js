@@ -94,8 +94,8 @@ function convert(uuid) {
 	    		$(".glyphicon-refresh")
 	    			.addClass("glyphicon-ok")
 	    			.removeClass("glyphicon-refresh");
+				stats(data.uuid);
 			}
-			stats(data.uuid);
 		},
 		error: catch_error
 	});
@@ -133,8 +133,8 @@ function stats(uuid) {
 	    		$(".glyphicon-refresh")
 	    			.addClass("glyphicon-ok")
 	    			.removeClass("glyphicon-refresh");
+				goto_dashboard(data.uuid);
 			}
-			goto_dashboard(data.uuid);
 		},
 		error: catch_error
 	});

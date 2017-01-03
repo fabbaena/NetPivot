@@ -4,6 +4,7 @@ require_once "NPObject.php";
 require_once "F5Features.php";
 require_once "F5Objects.php";
 require_once "Crud.php";
+require_once "Event.php";
 
 class Conversion extends NPObject {
 	public $id;
@@ -36,29 +37,35 @@ class Conversion extends NPObject {
 				$total_count++;
 			}
 		}
-		file_put_contents( $process_file , "Starting process $total_count objects\n");
-		foreach($data as $NPModule => $NPMi) {
-			if(!is_array($NPMi)) continue;
-			foreach($NPMi as $object) {
-				$cur_count++;
-				if(intval($cur_count / $total_count * 100) > $perc) {
-					$perc = intval($cur_count / $total_count * 100);
-					file_put_contents( $process_file , "$perc\n", FILE_APPEND);
+		try {
+			file_put_contents( $process_file , "Starting process $total_count objects\n");
+			foreach($data as $NPModule => $NPMi) {
+				if(!is_array($NPMi)) continue;
+				foreach($NPMi as $object) {
+					$cur_count++;
+					if(intval($cur_count / $total_count * 100) > $perc) {
+						$perc = intval($cur_count / $total_count * 100);
+						file_put_contents( $process_file , "$perc\n", FILE_APPEND);
+					}
+					if(!is_array($object)) continue;
+					$object['files_uuid'] = $this->files_uuid;
+					$o = new F5Object(true, $object);
+					$feature_name = $o->feature;
+					if(!isset($this->_features[$feature_name])) {
+						$this->_features[$feature_name] = 
+							new F5Feature(array(
+								'files_uuid' => $this->files_uuid, 
+								'name' =>$feature_name,
+								'conversion_id' => $this->id));
+					}
+					$this->_features[$feature_name]->addObject($o);
 				}
-				if(!is_array($object)) continue;
-				$object['files_uuid'] = $this->files_uuid;
-				$o = new F5Object(true, $object);
-				$feature_name = $o->feature;
-				if(!isset($this->_features[$feature_name])) {
-					$this->_features[$feature_name] = 
-						new F5Feature(array(
-							'files_uuid' => $this->files_uuid, 
-							'name' =>$feature_name,
-							'conversion_id' => $this->id));
-				}
-				$this->_features[$feature_name]->addObject($o);
 			}
+		} catch(Exception $ex) {
+			new Event($user, $ex->getMessage);
+			return false;
 		}
+		return true;
 	}
 
 	function getFeatureStats() {

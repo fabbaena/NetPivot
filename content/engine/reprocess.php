@@ -10,6 +10,7 @@ require_once '../model/FileManager.php';
 require_once '../model/UserList.php';
 require_once '../model/Conversions.php';
 require_once '../engine/Config.php';
+require_once '../model/Event.php';
 
 $session    = new StartSession();
 $user = $session->get('user');
@@ -61,6 +62,7 @@ try {
     header ('location:../dashboard/content.php');
 
 } catch (Exception $ex) {
+    new Event($user, $ex->getMessage());
     header ('location: '. $_SERVER['HTTP_REFERER'].'?fatal');
     error_log($ex->getMessage());
 }

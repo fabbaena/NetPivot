@@ -85,4 +85,14 @@ function get_int(&$data, $name) {
 
 	return $int + 0;
 }
+
+function get_timestamp(&$data, $name) {
+    $validstring = '/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/';
+    if(!isset($data[$name])) return null;
+    $out = urldecode($data[$name]);
+    if(!preg_match($validstring, $out)) return null;
+
+    return $out;
+}
+
 ?>
