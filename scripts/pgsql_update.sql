@@ -609,6 +609,27 @@ BEGIN
     END IF;
 END$$;
 
+
+CREATE VIEW IF NOT EXISTS events_full AS
+ SELECT e.id AS event_id,
+    e."timestamp",
+    c.name AS company_name,
+    c.id AS company_id,
+    u.name AS user_name,
+    (((u.firstname)::text || ' '::text) || (u.lastname)::text) AS user_fullname,
+    u.id AS user_id,
+    e.event,
+    e.event_code
+   FROM events e,
+    companies c,
+    users u
+  WHERE ((e.company_id = c.id) AND (e.user_id = u.id));
+
+
+ALTER TABLE events_full OWNER TO demonio;
+
+
+
 \echo '>>> Dropping and Creating table adc_hw'
 DROP TABLE IF EXISTS adc_hw;
 
