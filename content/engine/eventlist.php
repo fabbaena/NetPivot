@@ -13,6 +13,7 @@ if(!$user) {
 
 $filters = array();
 $out = array();
+$user_id = get_int($_GET, 'user_id');
 
 $filters['user_id'] =  $user->id;
 $filters['company_id'] = $user->company_id;
@@ -22,8 +23,8 @@ $out['status'] = 'ok';
 $filters['oldest_timestamp'] = get_timestamp($_GET, 'oldest_timestamp'). " 00:00:00";
 $filters['newest_timestamp'] = get_timestamp($_GET, 'newest_timestamp'). " 23:59:59";
 $filters['event_code'] = get_int($_GET, 'event_code');
-if($user->has_role("Company Admin")) {
-	$filters['user_id'] = get_int($_GET, 'user_id');
+if($user->has_role("Company Admin") && $user_id != 0) {
+	$filters['user_id'] = $user_id;
 }
 
 if($out['status'] == 'ok') {
