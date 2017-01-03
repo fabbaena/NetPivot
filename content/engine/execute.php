@@ -66,7 +66,7 @@ try {
     new Event($user, $ex->getMessage());
     $process["result"] = "error";
     $process["message"] = $ex->getMessage();
-    $sesion->set('upload_file_name', null);
+    $session->set('upload_file_name', null);
 }
 
 echo json_encode($process);
