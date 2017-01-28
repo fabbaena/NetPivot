@@ -349,6 +349,7 @@ class UserList {
 		$conn = new Crud();
 		$conn->select = "*";
 		$conn->from = "users";
+		$conn->condition = "id <> 0";
 		$conn->Read();
 		$userresult = $conn->rows;
 		foreach($userresult as $record) {

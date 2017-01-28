@@ -84,7 +84,7 @@ if(isset($_GET["NetPivotUID"]) &&
                 <div class="form-group has-feedback">
                     <label class="control-label" for="company">Company:</label>
                     <input class="form-control" id="company" type="text" name="company" placeholder="Citrix" pattern="^[.A-z0-9 ']{1,30}$" data-pattern-error="Please use only aphanumeric, apostrophe or space characters only. Max is 30 characters." <?= isset($company)? "value=\"$company\"" : "" ?> <?= isset($company) ? "disabled" : "required" ?>>
-                    <input class="form-control" id="company_id" type="hidden" name="company_id" value="<?= isset($company_id)? $company_id : "" ?>">
+                    <input class="form-control" id="company_id" type="hidden" name="company_id" value="<?= isset($company_id)? $company_id : "0" ?>">
                     <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group has-feedback">

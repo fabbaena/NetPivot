@@ -21,7 +21,8 @@ $id= $user->id;
 <html lang="en">
     <head>
         <?php include ('../engine/css.php');//Include links to stylesheets and js scripts ?>
-        <title>NetPivot - Domain Administration</title>  
+        <title>NetPivot - Company Administration</title>  
+        <script language="javascript" src="/js/validator.js"></script>
 	    <script language="javascript">
 	    $().ready( function() {
 	        $("#domainmanagement").click(function() {document.location="admin_domains.php";});
@@ -36,18 +37,24 @@ $id= $user->id;
         <div class="panel panel-default">
             <ol class="breadcrumb panel-heading">
                 <li><a id="adminconsole" href="#">Admin Console</a></li>
-                <li><a id="domainmanagement" href="#">Domain Management</a></li>
-                <li class="active">New Domain</li>
+                <li><a id="domainmanagement" href="#">Company Management</a></li>
+                <li class="active">New Company</li>
             </ol>
             <div class="panel-body">
                 <form class="form-newuser" role="form" data-toggle="validator" method="POST" action="../engine/add_domain.php"> 
                     <div class="form-group has-feedback">
-                        <label class="control-label" for="domainname">Domain Name:</label>
-                        <input class="form-control" id="domainname" type="text" name="domainname" placeholder="citrix.com" pattern="^[._A-z0-9]{1,}\.[_A-z0-9]{1,}$" data-match-error="Please use a valid email. No spaces" required>
+                        <label class="control-label" for="name">Company Name:</label>
+                        <input class="form-control" id="name" type="text" name="name" pattern="^[._A-z0-9 \-',]{3,}$" data-pattern-error="Invalid character. Use letters, numbers and the following characters (._-',)" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="domain">Domain Name:</label>
+                        <input class="form-control" id="domain" type="text" name="domain" pattern="^[._A-z0-9]{1,}\.[_A-z0-9]{1,}$" data-pattern-error="Please use a valid domain. No spaces" required>
+                        <div class="help-block with-errors"></div>
                     </div>
                     <br>
                     <div class="form-group">
-	                    <button type="submit" class="btn btn-success">Create Domain</button>
+	                    <button type="submit" class="btn btn-success">Save</button>
 	                </div>
                 </form>
             </div>

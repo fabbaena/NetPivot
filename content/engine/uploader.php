@@ -66,6 +66,7 @@ try {
     $file->upload_time = $date;
     $file->users_id = $id;
     $file->opportunity_id = $opportunity_id;
+    $file->size = $_FILES['InputFile']['size'];
 
     $file->save();
     $progress["result"] = "Done";

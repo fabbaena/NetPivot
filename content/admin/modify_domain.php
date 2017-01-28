@@ -28,7 +28,8 @@ $d->load();
     <head>
 
         <?php include ('../engine/css.php');?>
-        <title>NetPivot</title>
+        <title>NetPivot - Company Administration</title>
+        <script language="javascript" src="/js/validator.js"></script>
         <script language="javascript">
         $().ready( function() {
             $(".domainmanagement").click(function() {document.location="admin_domains.php";});
@@ -43,19 +44,25 @@ $d->load();
         <div class="panel panel-default">
             <ol class="breadcrumb panel-heading">
                 <li><a class="adminconsole" href="#">Admin Console</a></li>
-                <li><a class="domainmanagement" href="#">Domain Management</a></li>
-                <li class="active">Modify Domain</li>
+                <li><a class="domainmanagement" href="#">Company Management</a></li>
+                <li class="active">Modify Company</li>
             </ol>
             <div class="panel-body">
-                <h4>Settings</h4><hr >
+                <h4>Modify</h4><hr >
                 <form class="form-submit" role="form" data-toggle="validator" method="POST" action="../engine/modify_domain.php">
-                    <div class="form-group">
-                        <label class="control-label" for="domainname">Domain Name:</label>
-                        <input class="form-control" id="domainname" type="text" name="name" pattern="^[._A-z0-9]{1,}\.[_A-z0-9]{1,}$" data-match-error="Please use a valid email. No spaces" value="<?= $d->name ?>"required>
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="name">Company Name:</label>
+                        <input class="form-control" id="name" type="text" name="name" pattern="^[._A-z0-9 \-',]{3,}$" data-pattern-error="Invalid character. Use letters, numbers and the following characters (._-',)" value="<?= $d->name ?>" required>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="domain">Domain Name:</label>
+                        <input class="form-control" id="domain" type="text" name="domain" pattern="^[._A-z0-9]{1,}\.[_A-z0-9]{1,}$" data-pattern-error="Please use a valid domain. No spaces" value="<?= $d->domain ?>" required>
+                        <div class="help-block with-errors"></div>
                     </div>
                     <input type=hidden name="id" value="<?= $d->id ?>"
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success">Save Domain</button>
+                        <button type="submit" class="btn btn-success">Save</button>
                     </div>
                 </form>
                 <hr>

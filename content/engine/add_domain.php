@@ -21,12 +21,12 @@ if(!($user && $user->has_role("System Admin"))) {
     header('location: ../');
     exit();
 }
-if(!isset($domainname)) {
+if(!isset($_POST['name']) || !isset($_POST['domain'])) {
 	header('location: ../admin/admin_domains.php');
 	exit();
 }
 
-$domain = new Domain(array("name" => $domainname));
+$domain = new Domain($_POST);
 
 $domain->save();
 
