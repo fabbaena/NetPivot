@@ -33,6 +33,7 @@ new Event($user, "Viewing file \"$file_name\".", 3);
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <script src="/js/Chart.min.js"></script>
         <?php include ('../engine/css.php'); ?>
         <title>NetPivot</title>
         <script language="javascript">
@@ -59,15 +60,16 @@ new Event($user, "Viewing file \"$file_name\".", 3);
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                    <div class="col-md-9">
+                    <div class="col-md-7">
                     <ul class="nav nav-tabs">
                         <li role="presentation" id="nav_dashboard" class="active"><a href="#">Dashboard</a></li>
                         <li role="presentation" id="nav_modules"><a href="#">Module Details</a></li>
                         <li role="presentation" id="nav_objects"><a href="#">Objects</a></li>
                     </ul>
                     </div>
-                    <div class="col-md-3 text-right">
-                        <a href="../engine/Download.php?uuid=<?=$uuid?>" class="btn btn-success">Download Target</a>
+                    <div class="col-md-5 text-right">
+                        <a href="../engine/Source.php?uuid=<?=$uuid?>" class="btn btn-warning">Download F5</a>
+                        <a href="../engine/Download.php?uuid=<?=$uuid?>" class="btn btn-success">Download NS</a>
                     </div>
                     </div>
                 </div>

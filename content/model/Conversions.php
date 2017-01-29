@@ -16,6 +16,13 @@ class Conversion extends NPObject {
 	public $stats_file;
 	public $json_file;
 	public $_features;
+	public $np_version;
+	public $f5_version;
+	public $attribute_count;
+	public $attribute_converted;
+	public $object_count;
+	public $module_count;
+	public $feature_count;
 
 	function __construct($record = null) {
 		$this->_tablename = "conversions";
@@ -100,10 +107,36 @@ class Conversion extends NPObject {
 		$this->_features[$feature]->saveModule($module);
 	}
 
+	function saveVersion() {
+		$db = new Crud();
+		$db->update = "conversions";
+		$db->data["np_version"] = $this->np_version;
+		$db->data["f5_version"] = $this->f5_version;
+		$db->condition = new Condition(new Column('id'), '=', new Value($this->id));
+		$db->Update3();
+	}
+
 	function saveData() {
+		$modules = 0;
+		$objects = 0;
+		$attributes = 0;
+		$converted = 0;
 		foreach($this->_features as $f) {
+			$modules += $f->modules;
+			$objects += $f->objects;
+			$attributes += $f->attributes;
+			$converted += $f->converted;
 			if(!$f->saveData()) return false;
 		}
+		$db = new Crud();
+		$db->update = "conversions";
+		$db->data["feature_count"] = count($this->_features);
+		$db->data["module_count"] = $modules;
+		$db->data["object_count"] = $objects;
+		$db->data["attribute_count"] = $attributes;
+		$db->data["attribute_converted"] = $converted;
+		$db->condition = new Condition(new Column('id'), '=', new Value($this->id));
+		$db->Update3();
 		return true;
 	}
 

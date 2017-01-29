@@ -11,6 +11,92 @@ var curobjname;
 var attributes;
 var breadcrumbs = [];
 
+var lightBlue    = 'rgba(26,  161, 218, 0.2)';
+var darkBlue     = 'rgba(16,   74, 112, 1)';
+var lightPurple  = 'rgba(140, 110, 169, 0.2)';
+var darkPurple   = 'rgba(89,   55, 128, 1)'
+var lightRed     = 'rgba(219,  82,  72, 0.2)';
+var darkRed      = 'rgba(150,   9,  31, 1)';
+var lightOrange  = 'rgba(228, 133,  50, 0.2)';
+var darkOrange   = 'rgba(145,  51,  16, 1)';
+var lightCyan    = 'rgba(27,  174, 178, 0.2)';
+var darkCyan     = 'rgba(20,   92, 103, 1)';
+var lightYellow  = 'rgba(236, 177,  53, 0.2)';
+var darkYellow   = 'rgba(132, 105,  37, 1)';
+var lightMagenta = 'rgba(218,  78, 137, 0.2)';
+var darkMagenta  = 'rgba(147,  23,  68, 1)';
+var lightGreen   = 'rgba(64,  100,  48, 0.2)';
+var darkGreen    = 'rgba(64,  100,  48, 1)';
+var lightGrey    = 'rgba(102, 102, 102, 0.2)';
+var darkGrey     = 'rgba(102, 102, 102, 1)';
+var lightPink    = 'rgba(255, 102, 255, 0.2)';
+var darkPink     = 'rgba(255, 102, 255, 1)';
+
+var feature_icons = {
+    ltm: { 
+        icon: "glyphicon-signal", 
+        color: "btn-success", 
+        nsname: "LOADBALANCING", 
+        bgColorChart:  lightBlue,
+        borderColorChart: darkBlue
+    },
+    asm: { 
+        icon: "glyphicon-fire", 
+        color: "btn-warning", 
+        nsname: "APPFIREWALL", 
+        bgColorChart: lightPurple,
+        borderColorChart: darkPurple
+    },
+    rule: { 
+        icon: "glyphicon-flash", 
+        color: "btn-danger", 
+        nsname: "iRules", 
+        bgColorChart: lightRed,
+        borderColorChart: darkRed
+    },
+    gtm: { 
+        icon: "glyphicon-globe", 
+        color: "btn-warning", 
+        nsname: "GSLB", 
+        bgColorChart: lightOrange,
+        borderColorChart: darkOrange
+    },
+    apm: { 
+        icon: "glyphicon-lock", 
+        color: "btn-warning", 
+        nsname: "AAA", 
+        bgColorChart: lightCyan,
+        borderColorChart: darkCyan
+    },
+    auth: {
+        bgColorChart: lightPink,
+        borderColorChart: darkPink
+    },
+    net: {
+        bgColorChart: lightGreen,
+        borderColorChart: darkGreen
+    },
+    sys: {
+        bgColorChart: lightYellow,
+        borderColorChart: darkYellow
+    },
+    cm: {
+        bgColorChart: lightGrey,
+        borderColorChart: darkGrey
+    },
+    analytics: {
+        bgColorChart: lightMagenta,
+        borderColorChart: darkMagenta
+    },
+    module: { 
+        icon: "glyphicon-home", 
+        color: "btn-primary", 
+        nsname: "MODULES FOUND" 
+    }
+};
+
+var knownFeatures = ["ltm", "asm", "rule", "gtm", "apm"];
+
 function loaddata() {
     if (typeof filename == 'undefined' || filename == '') {
         $.getJSON("../engine/filename.php", function(data) {
@@ -76,18 +162,129 @@ function showBrief() {
     showBreadcrumbs();
 }
 
+function showWidget(perc) {
+    var out;
+
+    var value = perc ? this.p_converted + "%" : this.object_count;
+
+    out = $("<div>").addClass("col-md-4")
+        .append($("<div>").addClass("container-fluid")
+            .append($("<div>").addClass("row")
+                .append($("<div>").addClass("col-md-4")
+                    .append($("<a>").addClass("btn")
+                        .addClass(this.color)
+                        .addClass("btn-lg")
+                        .addClass("glyphicon")
+                        .addClass(this.icon)
+                        .addClass(value==0?'disabled':'')
+                        .addClass("db-button")))
+                    .append($("<div>").addClass("col-md-8")
+                        .append($("<div>").addClass("db-perc")
+                            .html(value))
+                        .append($("<div>").addClass("db-title")
+                            .html(this.nsname)))
+                ));
+    return out;
+}
+
+function tableRow(total_attribute_count, labels, data, bgColorsChart, borderColorsChart) {
+    var oc = parseInt(this.object_count);
+    var ac = parseInt(this.attribute_count);
+    var c = oc > ac ? oc : ac;
+
+    if(c / total_attribute_count < 0.01 ) return;
+
+    var ns = this.ns_name;
+    var modulename = this.friendly_name;
+
+    labels.push(modulename + (ns == "" ? "" : "(" + ns + ")"));
+    data.push(c);
+    bgColorsChart.push(this.bgColorChart)
+    borderColorsChart.push(this.borderColorChart)
+
+
+    var out = $("<tr>")
+        .css("bgcolor", "")
+        .append($("<td>").html(this.friendly_name.toUpperCase()))
+        .append($("<td>").html(this.ns_name.toUpperCase()))
+        .append($("<td>").html(oc).addClass("text-center"))
+        .append($("<td>").html(ac).addClass("text-center"))
+        .append($("<td>").html($("<span>")
+            .html(this.p_converted)
+            .append("%")
+            .addClass("badge")
+            .addClass("badge_bkground_green_sm")
+            ).addClass("text-center"))
+        .append($("<td>").addClass("text-center").html(
+            $("<a>").html("View")))
+        ;
+    return out;
+}
+
+function Feature(name) {
+    this.attribute_converted = 0;
+    this.attribute_count = 0;
+    this.attribute_omitted = 0;
+    this.friendly_name = name;
+    this.id = 0;
+    this.ns_name = "";
+    this.object_count = 0;
+    this.objgrp_count = 0;
+    this.p_converted = 0;
+    this.showWidget = showWidget;
+    Object.assign(this, feature_icons[name]);
+    this.tableRow = tableRow;
+}
+
 function showBrieftable(data) {
     if(typeof npmodules2 == 'undefined') {
         npmodules2 = data;
+        for(var i in npmodules2) {
+            if(npmodules2.hasOwnProperty(i)) {
+                npmodules2[i].showWidget = showWidget;
+                npmodules2[i].tableRow = tableRow;
+                Object.assign(npmodules2[i], feature_icons[i])
+            }
+        }
+        for(var i in knownFeatures) {
+            var f = knownFeatures[i];
+            if(!npmodules2.hasOwnProperty(f)) npmodules2[f] = new Feature(f);
+        }
     }
     $(".objectstats_view").remove();
     $(".tabs_view").remove();
     $(".objects_view").remove();
     showBriefBigstats($("#content"));
     showBriefSmallstats($("#content"));
+    $("#content")
+        .append($("<div>")
+            .addClass("col-md-12")
+            .append($("<div>")
+                .addClass("panel panel-default")
+                .append($("<div>")
+                    .addClass("panel-heading")
+                    .html($("<h3>")
+                        .addClass("panel-title")
+                        .html("Tasks")
+                        )
+                    )
+                .append($("<div>")
+                    .addClass("panel-body")
+                    .html($("<ul>")
+                        .attr('id', 'tasks'))
+                    )
+                )
+            )
+    $.getJSON("../engine/certs.php", showCerts);
+    $.getJSON("../engine/external_monitors.php", showExtMon);
 }
 
 function showBriefSmallstats(out) {
+    var labels = [];
+    var data = [];
+    var bgColorsChart = []
+    var borderColorsChart = []
+
     var row = $("<div>")
         .addClass("row")
         .addClass("dashboard_view")
@@ -96,97 +293,208 @@ function showBriefSmallstats(out) {
     row = $("<div>")
         .addClass("row")
         .addClass("dashboard_view");
+    var total_attribute_count = parseInt(npmodules2._data.attribute_count);
 
-    var table = $("<table>").addClass("table")
-            .append($("<tr>").addClass("active")
-                .append($("<th>").addClass("text-center")
-                    .css("width", "16%")
-                    .html("F5 Module"))
-                .append($("<th>").addClass("text-center")
-                    .css("width", "25%")
-                    .html("NetScaler Module"))
-                .append($("<th>").addClass("text-center")
-                    .css("width", "25%")
-                    .html("Converted"))
-                .append($("<th>").addClass("text-center")
-                    .css("width", "34%")
-                    .html("Actions"))
-            );
+    var table = $("<table>")
+        .addClass("table")
+        .css("table-layout", "fixed")
+        .css("width", "100%")
+        .append($("<tr>").addClass("active")
+            .append($("<th>").addClass("text-center")
+                .css("width", "16%")
+                .html("F5 Module"))
+            .append($("<th>").addClass("text-center")
+                .css("width", "25%")
+                .html("NetScaler Module"))
+            .append($("<th>").addClass("text-center")
+                .css("width", "15%")
+                .html("Objects"))
+            .append($("<th>").addClass("text-center")
+                .css("width", "15%")
+                .html("Attributes"))
+            .append($("<th>").addClass("text-center")
+                .css("width", "15%")
+                .html("Converted"))
+            .append($("<th>").addClass("text-center")
+                .css("width", "14%")
+                .html("Actions"))
+        );
+
     for(var modulename in npmodules2) {
-        if(modulename.substring(0,1) != '_' && npmodules2[modulename]["ns_name"] != '') {
-            table.append($("<tr>")
-                .append($("<td>").html(npmodules2[modulename]["friendly_name"].toUpperCase()))
-                .append($("<td>").html(npmodules2[modulename]["ns_name"].toUpperCase()))
-                .append($("<td>").html($("<span>")
-                    .html(npmodules2[modulename]["p_converted"])
-                    .append("%")
-                    .addClass("badge")
-                    .addClass("badge_bkground_green_sm")
-                    ).addClass("text-center"))
-                .append($("<td>").addClass("text-center").html(
-                    $("<a>").html("View Module")))
-                )
-                ;
+        if(modulename.substring(0,1) != '_') {
+            table.append(npmodules2[modulename].tableRow(
+                total_attribute_count, 
+                labels, 
+                data, 
+                bgColorsChart, 
+                borderColorsChart)
+            );
         }
     }
 
-    row.append($("<div>").addClass("col-xs-7")
+    row.append($("<div>")
+        .addClass("col-xs-8")
         .append(table));
+    row.append($("<div>")
+        .addClass("col-xs-4")
+        .append($("<div>")
+            .addClass("row")
+            .html($("<canvas>")
+                .attr("id", "module_chart")
+                .width("100")
+                .height("70")
+                )
+            )
+        );
 
     out.append(row);
-}
 
-function showBigstat(logo, logotype, name, value, perc) {
-    var out;
+    var ctx = $("#module_chart");
+    var module_chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '# of Attributes',
+                data: data,
+                backgroundColor: bgColorsChart,
+                borderColor: borderColorsChart,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                position: "top",
+                display: false,
+                fullWidth: false,
+                labels: {
+                    boxWidth: 10
+                }
+            }
+        }
+    });
 
-    out = $("<div>").addClass("col-md-4")
-        .append($("<div>").addClass("container-fluid")
-            .append($("<div>").addClass("row")
-                .append($("<div>").addClass("col-md-4")
-                    .append($("<a>").addClass("btn")
-                        .addClass(logotype)
-                        .addClass("btn-lg")
-                        .addClass("glyphicon")
-                        .addClass(logo)
-                        .addClass(value==0?'disabled':'')
-                        .addClass("db-button")))
-                    .append($("<div>").addClass("col-md-8")
-                        .append($("<div>").addClass("db-perc")
-                            .html(value)
-                            .append(perc?"%":""))
-                        .append($("<div>").addClass("db-title")
-                            .html(name)))
-                ));
-    return out;
 }
 
 function showBriefBigstats(out) {
     var row;
 
-    row = $("<div>").addClass("row").addClass("dashboard_view").css("height", "30px");
-    out.append(row);
+    var ver = "Unknown";
+    if(npmodules2._data.f5_version == "TMSH") {
+        ver = "11 or newer (TMSH)";
+    } else if(npmodules2._data.f5_version = "BIGPIPE") {
+        ver = "10 or older (BIGPIPE)";
+    }
 
-    row = $("<div>")
+    var lic = "Standard";
+    if(npmodules2.asm.object_count > 0) {
+        lic = "Platinum";
+    } else if(npmodules2.gtm.object_count > 1) {
+        lic = "Enterprise";
+    }
+
+    out.append($("<div>")
         .addClass("row")
         .addClass("dashboard_view")
-        .append(showBigstat("glyphicon-signal", "btn-success", "LOADBALANCING CONVERSION", 
-            (typeof npmodules2["ltm"] != "undefined")?npmodules2["ltm"]["p_converted"]:0, true))
-        .append(showBigstat("glyphicon-home", "btn-primary", "MODULES FOUND", 
-            npmodules2["_data"]["module_count"], false))
-        .append(showBigstat("glyphicon-flash", "btn-danger", "iRULES", 
-            (typeof npmodules2["rule"] != "undefined")?npmodules2["rule"]["object_count"]:0, false));
+        .css("height", "30px"));
 
-    out.append(row);
-    row = $("<div>")
+    out.append($("<div>")
         .addClass("row")
         .addClass("dashboard_view")
-        .append(showBigstat("glyphicon-globe", "btn-warning", "GSLB", 
-            (typeof npmodules2["gtm"] != "undefined")?npmodules2["gtm"]["object_count"]:0, false))
-        .append(showBigstat("glyphicon-lock", "btn-warning", "AAA", 
-            (typeof npmodules2["apm"] != "undefined")?npmodules2["apm"]["object_count"]:0, false))
-        .append(showBigstat("glyphicon-fire", "btn-warning", "APPFIREWALL", 
-            (typeof npmodules2["asm"] != "undefined")?npmodules2["asm"]["object_count"]:0, false))
-    out.append(row);
+        .append(npmodules2.ltm.showWidget(true))
+        .append(npmodules2.rule.showWidget(true)));
+
+    out.append($("<div>")
+        .addClass("row")
+        .addClass("dashboard_view")
+        .css("height", "30px"));
+
+    out.append($("<div>")
+        .addClass("row")
+        .addClass("dashboard_view")
+        .append($("<div>")
+            .addClass("col-md-4")
+            .append($("<div>")
+                .addClass("panel panel-default")
+                .append($("<div>")
+                    .addClass("panel-heading")
+                    .html($("<h3>")
+                        .addClass("panel-title")
+                        .html("F5 Config & iRule Version")
+                        )
+                    )
+                .append($("<div>")
+                    .addClass("panel-body")
+                    .html(ver)
+                    )
+                )
+            )
+        .append($("<div>")
+            .addClass("col-md-4")
+            .append($("<div>")
+                .addClass("panel panel-default")
+                .append($("<div>")
+                    .addClass("panel-heading")
+                    .html($("<h3>")
+                        .addClass("panel-title")
+                        .html("Recommended NS License")
+                        )
+                    )
+                .append($("<div>")
+                    .addClass("panel-body")
+                    .html(lic)
+                    )
+                )
+            )
+        );
+}
+
+function showCerts(data) {
+    if(data.length > 0) {
+        $("#tasks").append($("<li>")
+            .html("The converted configuration file requires that the " +
+                "following files be copied manually from the F5 to the NetScaler " +
+                "at /nsconfig/ssl:")
+            .append($("<table>")
+                .addClass("table")
+                .attr('id', 'certs')
+                .append($("<tr>")
+                    .append($("<th>").html("&nbsp;"))
+                    .append($("<th>").html("Certificate"))
+                    .append($("<th>").html("Key"))
+                    )
+                )
+            );
+        for (var i = 0; i < data.length; i++) {
+            $("#certs").append($("<tr>")
+                .append($("<td>"))
+                .append($("<td>").html(data[i].cert))
+                .append($("<td>").html(data[i].key)));
+        }
+    }
+}
+
+function showExtMon(data) {
+    if(data.length > 0) {
+        $("#tasks").append($("<li>")
+            .html("This tool does not convert external monitors. " +
+                "Please extract the following files and convert manually to Perl. " +
+                "Then, store them at /nsconfig/monitors:")
+            .append($("<table>")
+                .addClass("table")
+                .attr('id', 'extmon')
+                .append($("<tr>")
+                    .append($("<th>").html("&nbsp;"))
+                    .append($("<th>").html("External Monitor"))
+                    )
+                )
+            );
+        for (var i = 0; i < data.length; i++) {
+            $("#extmon").append($("<tr>")
+                .append($("<td>"))
+                .append($("<td>").html(data[i])));
+        }
+    }
 }
 
 function showModules() {

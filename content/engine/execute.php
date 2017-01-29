@@ -29,6 +29,7 @@ try {
 
     $c = new Config($uuid);
     $c->convert_orphan(true);
+
     $pwd = exec($c->command(), $pwd_out,$pwd_error); //this is the command executed on the host  
     if($pwd_error) throw new Exception(
         "There was an error with the conversion process of \"$file_name\". ".
@@ -51,12 +52,6 @@ try {
     if (!$conversion->save()) {
         throw new Exception("Could not save \"$file_name\" conversion to database. ".
             "Please contact the administrator with the following information: ". $uuid);
-        /*
-        $string = file_get_contents($c->json_file());
-        $json_a = json_decode($string, true);
-        $conversion->loadJSON($json_a);
-        $conversion->saveData();
-        */
     }
     $process["result"] = "ok";
     $process["message"] = "Conversion finished.";

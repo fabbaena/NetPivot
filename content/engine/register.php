@@ -13,7 +13,7 @@ $position = get_validstring($_GET, 'position');
 $firstname = get_validstring($_GET, 'firstname');
 $lastname = get_validstring($_GET, 'lastname');
 if(isset($_GET['saml'])) {
-    $saml = $_GET['saml'];
+    $saml = $_GET['saml'] == "true" ? true : false;
 } else {
     $saml = false;
 }
@@ -31,10 +31,10 @@ $domain = substr($email, strpos($email, "@") + 1);
 $validuser = new User(array('name' => $email));
 np_check(!$validuser->load(), "You have already an account.");
 
-$validdomain = new Domain(array('name' => $domain));
+$validdomain = new Domain(array('domain' => $domain));
 np_check($validdomain->load(), "Your company is not registered ".
     "to be able to use NetPivot. Please contact us at info@samanagroup.co");
-
+if($company_id == 0) $company_id = $validdomain->id;
 
 $r = RandomString();
 
