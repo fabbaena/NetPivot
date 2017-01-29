@@ -25,6 +25,7 @@ class FileManager extends NPObject {
 	public $_conversion;
 	private $_path_files;
 	public $opportunity_id;
+	public $size;
 
 	function __construct($record = null) {
 		$this->_tablename = "files";

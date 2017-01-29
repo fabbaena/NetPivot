@@ -426,9 +426,17 @@ class Condition {
     public $B;
 
     function __construct($A, $o, $B) {
-        $this->A = $A;
+        if(is_string($A) || is_numeric($A)) {
+            $this->A = new Column($A);
+        } else {
+            $this->A = $A;
+        }
         $this->oper = $o;
-        $this->B = $B;
+        if(is_string($B) || is_numeric($B)) {
+            $this->B = new Value($B);
+        } else {
+            $this->B = $B;
+        }
     }
     function toString() {
         if(!isset($this->A) || !isset($this->oper) || !isset($this->B)) return "";
@@ -441,6 +449,11 @@ class Condition {
         if(!is_array($arr)) return;
         $this->A->toValue($arr);
         $this->B->toValue($arr);
+    }
+    function add($o, $B) {
+        $this->A = new Condition($this->A, $this->oper, $this->B);
+        $this->oper = $o;
+        $this->B = $B;
     }
 }
 

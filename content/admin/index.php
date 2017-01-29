@@ -46,7 +46,7 @@ if(!($user && $user->has_role("System Admin"))) {
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <a href="admin_domains.php">Domain Administration</a>
+                        <a href="admin_domains.php">Company Administration</a>
                     </div>
                 </div>
             </div>

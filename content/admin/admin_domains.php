@@ -41,7 +41,7 @@ $domainlist = new DomainList();
         <div class="panel panel-default">
             <ol class="breadcrumb panel-heading">
                 <li><a id="adminconsole" href="#">Admin Console</a></li>
-                <li class="active">Domain Management</li>
+                <li class="active">Company Management</li>
             </ol>
             <div class="panel-body">
                 <?php 
@@ -61,17 +61,19 @@ $domainlist = new DomainList();
                         echo '<p class="text-primary">Error deleting domain, please try again.</p>';
                      }
                 ?>
-                <div class="btn btn-default" id="btn-newdomain">New Domain</div>
-                <h4>Domains Created</h4>
+                <div class="btn btn-default" id="btn-newdomain">New Company</div>
+                <h4>Companies Created</h4>
                 <table class="table table-bordred table-striped">
                     <tr>
+                        <th>Company</th>
                         <th>Domain Name</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
                     <?php foreach ($domainlist->list as $domain_data) { ?>
                     <tr>
-                        <td style="width: 80%"><?= $domain_data->name ?></td>
+                        <td style="width: 40%"><?= $domain_data->name ?></td>
+                        <td style="width: 40%"><?= $domain_data->domain ?></td>
                         <td style="width: 10%">
                             <p data-placement="top" title="Modify domain settings">
                                 <a href="modify_domain.php?id=<?= $domain_data->id ?>" class="btn btn-warning btn-xs" role="button">

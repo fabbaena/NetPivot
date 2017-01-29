@@ -34,6 +34,19 @@ try {
     $string = file_get_contents($c->json_file());
     if(strlen($string) < 5) throw new Exception("Internal Error. Stats couldn't be generated for \"$file_name\". ($uuid)");
     $json_a = json_decode($string, true);
+
+    if(isset($json_a['file_info'])) {
+        $file_info = $json_a['file_info'];
+        unset($json['file_info']);
+        if(isset($file_info['np_version'])) {
+            $conversion->np_version = $file_info['np_version'];
+        }
+        if(isset($file_info['F5_version'])) {
+            $conversion->f5_version = $file_info['F5_version'];
+        }
+        $conversion->saveVersion();
+    }
+
     if(count($json_a) < 2) throw new Exception("Internal Error. JSON file error for \"$file_name\". ($uuid)");
     
     if(!$conversion->loadJSON($json_a)) 

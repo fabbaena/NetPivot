@@ -73,7 +73,14 @@ if(!isset($npmodules2) || !$npmodules2 || true) {
 
 	    $i++;
 	}
-	$npmodules2["_data"]["module_count"] = $i;
+	//$npmodules2["_data"]["module_count"] = $i;
+	$npmodules2["_data"]["attribute_count"] = $c->attribute_count;
+	$npmodules2["_data"]["attribute_converted"] = $c->attribute_converted;
+	$npmodules2["_data"]["object_count"] = $c->object_count;
+	$npmodules2["_data"]["module_count"] = $c->module_count;
+	$npmodules2["_data"]["feature_count"] = $c->feature_count;
+	$npmodules2["_data"]["np_version"] = $c->np_version;
+	$npmodules2["_data"]["f5_version"] = $c->f5_version;
 
 	$session->set('npmodules2', $npmodules2);
 }

@@ -640,6 +640,99 @@ BEGIN
 END$$;
 
 
+\echo '>> Add size column to table files'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='files' and column_name='size')
+    THEN 
+        ALTER TABLE files 
+            ADD COLUMN size integer;
+    END IF;
+END$$;
+
+
+\echo '>> Add feature_count column to table conversions'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='feature_count')
+    THEN 
+        ALTER TABLE conversions 
+            ADD COLUMN feature_count integer;
+    END IF;
+END$$;
+
+\echo '>> Add module_count column to table conversions'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='module_count')
+    THEN 
+        ALTER TABLE conversions 
+            ADD COLUMN module_count integer;
+    END IF;
+END$$;
+
+
+\echo '>> Add object_count column to table conversions'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='object_count')
+    THEN 
+        ALTER TABLE conversions 
+            ADD COLUMN object_count integer;
+    END IF;
+END$$;
+
+\echo '>> Add attribute_count column to table conversions'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='attribute_count')
+    THEN 
+        ALTER TABLE conversions 
+            ADD COLUMN attribute_count integer;
+    END IF;
+END$$;
+
+
+\echo '>> Add attribute_converted column to table conversions'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='attribute_converted')
+    THEN 
+        ALTER TABLE conversions 
+            ADD COLUMN attribute_converted integer;
+    END IF;
+END$$;
+
+
+\echo '>> Add np_version column to table conversions'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='np_version')
+    THEN 
+        ALTER TABLE conversions 
+            ADD COLUMN np_version character varying;
+    END IF;
+END$$;
+
+\echo '>> Add f5_version column to table conversions'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='f5_version')
+    THEN 
+        ALTER TABLE conversions 
+            ADD COLUMN f5_version character varying;
+    END IF;
+END$$;
+
+
 \echo '>>> Dropping and Creating table adc_hw'
 DROP TABLE IF EXISTS adc_hw;
 
