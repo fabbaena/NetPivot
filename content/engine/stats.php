@@ -37,7 +37,7 @@ try {
 
     if(isset($json_a['file_info'])) {
         $file_info = $json_a['file_info'];
-        unset($json['file_info']);
+        unset($json_a['file_info']);
         if(isset($file_info['np_version'])) {
             $conversion->np_version = $file_info['np_version'];
         }
