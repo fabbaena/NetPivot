@@ -1,3 +1,5 @@
+var dialog = "";
+
 function initFileUpload() {
     'use strict';
     // Change this to the location of your server-side upload handler:
@@ -6,6 +8,7 @@ function initFileUpload() {
         url: url,
         dataType: 'json',
         add: function (e, data) {
+        	dialog = "lp";
         	$(".progress-bar").html("Uploading")
 				.removeClass("progress-bar-danger")
 				.removeClass("progress-bar-success")
@@ -62,8 +65,50 @@ function initFileUpload() {
         .parent().addClass($.support.fileInput ? undefined : 'disabled');
 }
 
+
+function purge() {
+	dialog = "lr";
+	$("#lr").html(
+		$("<li>")
+			.html($("<i>")
+				.addClass("glyphicon glyphicon-refresh")
+				.attr("id", "convert_ico"))
+			.append("&nbsp;Purging old data...")
+			.addClass("list-group-item list-group-item-info")
+			.attr("id", "purge")
+		);
+	$.ajax( {
+		url: "/engine/purge.php",
+		data: { 'uuid': reprocess_uuid },
+		dataType: "json",
+		success: function(data) {
+			$("#purge").append(": " + data.message);
+			if(data.result == "error") {
+				$("#purge")
+					.removeClass("list-group-item-success")
+					.removeClass("list-group-item-info")
+	    			.addClass("list-group-item-danger");
+	    		$(".glyphicon-refresh")
+	    			.addClass("glyphicon-remove")
+	    			.removeClass("glyphicon-refresh");
+			} else {
+				$("#purge")
+					.removeClass("list-group-item-danger")
+					.removeClass("list-group-item-info")
+	    			.addClass("list-group-item-success");
+	    		$(".glyphicon-refresh")
+	    			.addClass("glyphicon-ok")
+	    			.removeClass("glyphicon-refresh");
+				convert(reprocess_uuid);
+			}
+		},
+		error: catch_error
+	});
+}
+
+
 function convert(uuid) {
-	$("#lp").append(
+	$("#" + dialog).append(
 		$("<li>")
 			.html($("<i>")
 				.addClass("glyphicon glyphicon-refresh")
@@ -102,7 +147,7 @@ function convert(uuid) {
 }
 
 function stats(uuid) {
-	$("#lp").append(
+	$("#" + dialog).append(
 		$("<li>")
 			.html($("<i>")
 				.addClass("glyphicon glyphicon-refresh")
@@ -141,7 +186,7 @@ function stats(uuid) {
 }
 
 function goto_dashboard(uuid) {
-	$("#lp").append(
+	$("#" + dialog).append(
 		$("<li>")
 			.html("Click here to view the conversion")
 			.addClass("list-group-item list-group-item-info")
@@ -165,3 +210,73 @@ function catch_error(jqxhr, textStatus, errorThrown) {
 		.addClass("glyphicon-remove")
 		.removeClass("glyphicon-refresh");
 }
+
+function showFilelist(data) {
+    if(data.count == 0) return;
+    $("#nofiles").html("");
+    for (var i = 0; i < data.files.length; i++) {
+    	$("#fl").append($("<tr>")
+    		.attr("id", "f_" + data.files[i].uuid)
+    		.append($("<td>")
+				.css("width", "55%")
+				.html(data.files[i].filename)
+				.append("&nbsp;")
+				.append(version_alert(data.files[i]._conversion.np_version)))
+    		.append($("<td>")
+    			.css("width", "20%")
+    			.append(rename_button())
+    			.append("&nbsp;&nbsp;")
+    			.append(reprocess_button())
+    			.append("&nbsp;&nbsp;")
+    			.append(content_button()))
+    		.append($("<td>")
+    			.css("width", "25%")
+    			.html(data.files[i].upload_time.split(" ")[0]))
+    		);
+    }
+}
+
+function version_alert(v) {
+	var file_ver = v.split(".");
+	var np = np_version.split(".");
+	if(np[0] == file_ver[0] && np[1] == file_ver[1] && np[2] == file_ver[2]) return "";
+
+	return $("<span>")
+		.attr("data-toggle", "tooltip")
+		.html("&nbsp;Please re-process")
+		.addClass("glyphicon glyphicon-alert")
+		.css("color", "orange");
+}
+
+function content_button() {
+	return $("<a>")
+		.html($("<span>")
+			.addClass("glyphicon glyphicon-sunglasses")
+			.attr("aria-hidden", "true"))
+		.click(function (e, data) {
+			window.location.replace('content.php?uuid='+e.currentTarget.parentNode.parentNode.id.substring(2));
+		});
+}
+
+function reprocess_button() {
+	return $("<a>")
+		.html($("<span>")
+			.addClass("glyphicon glyphicon-retweet")
+			.attr("data-toggle", "modal")
+			.attr("data-target", "#reprocessModal"))
+		.click(function(e, data) { 
+            reprocess_uuid = e.currentTarget.parentNode.parentNode.id.substring(2);
+            });
+}
+
+function rename_button() {
+	return $("<a>")
+		.html($("<span>")
+			.addClass("glyphicon glyphicon-pencil")
+			.attr("aria-hidden", "true"))
+		.click(function (e, data) {
+			window.location.replace('rename.php?file='+e.currentTarget.parentNode.parentNode.id.substring(2));
+		});
+}
+
+

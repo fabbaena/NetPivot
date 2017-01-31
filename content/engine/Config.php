@@ -110,12 +110,8 @@ class Config {
 	}
 
 	function np_version() {
-		if(isset($this->_uuid)) {
-			$command = $this->f5conv(). " -v 2>&1";
-			return $command;
-		} else {
-			return false;
-		}
+		$command = $this->f5conv(). " -v 2>&1";
+		return $command;
 	}
 
 	function file_type() {

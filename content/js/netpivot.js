@@ -5,11 +5,12 @@ var c = [];
 var curnav="brief";
 var filename;
 var npmodules2;
-var curmodule = "ltm";
+var curmodule = undefined;
 var curobjectgroup = "virtual";
 var curobjname;
 var attributes;
 var breadcrumbs = [];
+var module_chart;
 
 var lightBlue    = 'rgba(26,  161, 218, 0.2)';
 var darkBlue     = 'rgba(16,   74, 112, 1)';
@@ -146,6 +147,7 @@ function clickBreadcrumb(event) {
 }
 
 function showBrief() {
+    curmodule = undefined;
     if($(this).hasClass("active")) return;
     $("#nav_dashboard").addClass("active");
     $("#nav_objects").removeClass("active");
@@ -197,7 +199,7 @@ function tableRow(total_attribute_count, labels, data, bgColorsChart, borderColo
     var ns = this.ns_name;
     var modulename = this.friendly_name;
 
-    labels.push(modulename + (ns == "" ? "" : "(" + ns + ")"));
+    labels.push(modulename);
     data.push(c);
     bgColorsChart.push(this.bgColorChart)
     borderColorsChart.push(this.borderColorChart)
@@ -205,6 +207,7 @@ function tableRow(total_attribute_count, labels, data, bgColorsChart, borderColo
 
     var out = $("<tr>")
         .css("bgcolor", "")
+        .attr("id", "row_" + this.friendly_name)
         .append($("<td>").html(this.friendly_name.toUpperCase()))
         .append($("<td>").html(this.ns_name.toUpperCase()))
         .append($("<td>").html(oc).addClass("text-center"))
@@ -216,9 +219,18 @@ function tableRow(total_attribute_count, labels, data, bgColorsChart, borderColo
             .addClass("badge_bkground_green_sm")
             ).addClass("text-center"))
         .append($("<td>").addClass("text-center").html(
-            $("<a>").html("View")))
+            $("<a>")
+            .html("View")
+            .attr("module", this.friendly_name)
+            .click(briefRowClick)
+            ))
         ;
     return out;
+}
+
+function briefRowClick(e, data) {
+    curmodule = e.target.attributes.module.value;
+    showModules();
 }
 
 function Feature(name) {
@@ -243,6 +255,7 @@ function showBrieftable(data) {
             if(npmodules2.hasOwnProperty(i)) {
                 npmodules2[i].showWidget = showWidget;
                 npmodules2[i].tableRow = tableRow;
+                npmodules2[i].name = i;
                 Object.assign(npmodules2[i], feature_icons[i])
             }
         }
@@ -350,7 +363,7 @@ function showBriefSmallstats(out) {
     out.append(row);
 
     var ctx = $("#module_chart");
-    var module_chart = new Chart(ctx, {
+    module_chart = new Chart(ctx, {
         type: 'pie',
         data: {
             labels: labels,
@@ -370,10 +383,33 @@ function showBriefSmallstats(out) {
                 labels: {
                     boxWidth: 10
                 }
+            },
+            title: {
+                display: true,
+                text: "Config size per feature"
+            },
+            hover: {
+                onHover: chartHover
             }
         }
     });
 
+}
+
+function chartHover(e) {
+    if(typeof e != "undefined" && e.length > 0) {
+        m = e[0]._chart.config.data.labels[e[0]._index];
+        if(curmodule == m) return;
+        if($("#row_" + curmodule).hasClass("active"))
+            $("#row_" + curmodule).removeClass("active");
+        curmodule = m;
+        $("#row_" + m).addClass("active");
+    } else {
+        if($("#row_" + curmodule).hasClass("active")){
+            $("#row_" + curmodule).removeClass("active");
+            curmodule = undefined;
+        }
+    }
 }
 
 function showBriefBigstats(out) {
@@ -498,6 +534,7 @@ function showExtMon(data) {
 }
 
 function showModules() {
+    if(typeof curmodule =='undefined') curmodule = 'ltm';
     if($(this).hasClass("active")) return;
     $("#nav_dashboard").removeClass("active");
     $("#nav_objects").removeClass("active");
