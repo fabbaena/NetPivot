@@ -119,9 +119,9 @@ class FileList {
 		$db = new Crud();
 		$db->select = '*';
 		$db->from = 'files';
-		$db->condition = array('=' => array('users_id' => $this->users_id));
+		$db->condition = new Condition('users_id', '=', $this->users_id);
 		$db->orderby = array('column' => 'upload_time', 'direction' => 'DESC');
-		$db->Read4();
+		$db->Read5();
 
 		foreach($db->rows as $f) {
 			$this->count++;
