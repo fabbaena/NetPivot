@@ -47,6 +47,10 @@ try {
         $conversion->saveVersion();
     }
 
+    if(isset($json_a['OTHER'])) {
+        unset($json_a['OTHER']);
+    }
+
     if(count($json_a) < 2) throw new Exception("Internal Error. JSON file error for \"$file_name\". ($uuid)");
     
     if(!$conversion->loadJSON($json_a)) 
