@@ -33,7 +33,7 @@ if(isset($token) && isset($password)) {
     $to = "<$email>";
     $subject = 'NetPivot Password Reset';
     $body = "Hi,\n\nPlease use the following link to reset your password.\n".
-            "http://". $_SERVER['HTTP_HOST']. "/reset_pass.php?email=". 
+            "https://". $_SERVER['HTTP_HOST']. "/reset_pass.php?email=". 
             urlencode($email). "&token=". urlencode($r);
 
     $headers = array(
