@@ -30,6 +30,7 @@ class Crud {
     public $fetchall;
     public $data;
     public $orderby;
+    public $groupby;
 
     private $_conn;
     
@@ -92,12 +93,37 @@ class Crud {
         if ( $condition != ''){
             $condition = " WHERE " .$condition;
         }
-        $sql = "SELECT $select FROM $from $condition";
+        $groupby = $this->groupby;
+        if($groupby != '') {
+            $groupby = " GROUP BY ". $groupby;
+        }
+        $sql = "SELECT $select FROM $from $condition $groupby";
         $consulta = $this->_conn->prepare($sql);
         $consulta->execute();
         $this->rows = [];
         while ($filas = $consulta->fetch()){
             $this->rows[] = $filas;
+        }
+
+    }
+
+    public function ReadObject(){
+        $select = $this->select;
+        $from = $this->from;
+        $condition = $this->condition;
+        if ( $condition != ''){
+            $condition = " WHERE " .$condition;
+        }
+        $groupby = $this->groupby;
+        if($groupby != '') {
+            $groupby = " GROUP BY ". $groupby;
+        }
+        $sql = "SELECT $select FROM $from $condition $groupby";
+        $consulta = $this->_conn->prepare($sql);
+        $consulta->execute();
+        $this->rows = [];
+        while ($fila = $consulta->fetchObject()){
+            array_push($this->rows, $fila);
         }
 
     }
