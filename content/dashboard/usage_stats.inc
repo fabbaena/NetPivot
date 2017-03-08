@@ -27,7 +27,7 @@
                         <span class="caret"></span></button>
                       </button>
                       <ul class="dropdown-menu" id="etype_items">
-                        <li><a id="l2d" class="dropdown-item" href="#" event_type="3">Logins</a></li>
+                        <li><a id="l2d" class="dropdown-item" href="#" event_type="1">Logins</a></li>
                         <li><a id="lw" class="dropdown-item" href="#" event_type="7">Conversions</a></li>
                       </ul>
                     </div>
