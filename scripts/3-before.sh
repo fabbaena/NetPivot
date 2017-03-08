@@ -1,22 +1,16 @@
 #!/bin/bash
 
 
+DBPATH=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/
+DBPATH=/usr/src/netpivot/frontend/scripts
 create() {
-    local DBCREATE=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/pgsql_create.sql
-    #local DBCREATE=/home/ubuntu/codedeploy/scripts/db_create.sql
-    su - postgres -c "psql -b -f ${DBCREATE}"
-
-#    if [ ! -d /opt/netpivot_kernel ]; then
-#	mkdir -p -m 0755 /opt/netpivot_kernel
-#	chown -R www-data.www-data /opt/netpivot_kernel
-#    fi
+    su - postgres -c "psql -b -f ${DBPATH}/pgsql_create.sql"
+    psql -U demonio -b -f ${DBPATH}/adc_hw.sql netpivot
 }
 
 alter() {
-    local DBALTER=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/pgsql_update.sql
-    #local DBALTER=/home/ubuntu/codedeploy/scripts/db_update.sql
-
-    psql -U demonio -b -f ${DBALTER} netpivot
+    psql -U demonio -b -f ${DBPATH}/pgsql_update.sql netpivot
+    psql -U demonio -b -f ${DBPATH}/adc_hw.sql netpivot
 }
 
 invoke-rc.d --quiet postgresql status
