@@ -63,7 +63,15 @@ ALTER TABLE ONLY adc_hw ALTER COLUMN id SET DEFAULT nextval('adc_hw_id_seq'::reg
 ALTER TABLE ONLY adc_hw
     ADD CONSTRAINT adc_hw_id_pkey PRIMARY KEY (id);
 
-COPY adc_hw (brand, model, type, l7_req_per_sec, l4_con_per_sec, l4_http_req_per_sec, l4_max_con, l4_gbps, l7_gpbs, ssl_tps_incl, ssl_tps_max, ssl_gbps, ssl_fips, ssl_fips_tps, ssl_fips_gbps, ddos_syn_per_sec, cmp_gbps_incl, cmp_gbps_max, software_arch, virtual_instances_incl, virtual_instances_max, proc_type, proc_sock, proc_cor_per_sock, memory, hd_cap, hd_disks, hd_type, hd_raid, eth_cu, eth_1g_sfp, eth_10g_sfp, eth_40g_qsfp, eth_100g_qsfp, pow_supl, pow_max_power, pow_dc, pow_typ_power, pow_voltage, pow_heat, dim_h, dim_w, dim_d, dim_u, dim_weight, op_temp, op_hum, safety, suscept, ns_type_map, ns_model_map) FROM stdin WITH NULL 'na';
+COPY adc_hw (brand, model, type, l7_req_per_sec, l4_con_per_sec, l4_http_req_per_sec, 
+    l4_max_con, l4_gbps, l7_gpbs, ssl_tps_incl, ssl_tps_max, ssl_gbps, ssl_fips, 
+    ssl_fips_tps, ssl_fips_gbps, ddos_syn_per_sec, cmp_gbps_incl, cmp_gbps_max, 
+    software_arch, virtual_instances_incl, virtual_instances_max, proc_type, proc_sock, 
+    proc_cor_per_sock, memory, hd_cap, hd_disks, hd_type, hd_raid, eth_cu, eth_1g_sfp, 
+    eth_10g_sfp, eth_40g_qsfp, eth_100g_qsfp, pow_supl, pow_max_power, pow_dc, 
+    pow_typ_power, pow_voltage, pow_heat, dim_h, dim_w, dim_d, dim_u, dim_weight, 
+    op_temp, op_hum, safety, suscept, ns_type_map, ns_model_map) 
+FROM stdin WITH NULL 'na';
 NetScaler	25160T	MPX	4.6	na	na	na	na	160	2	2	21	No	na	na	na	14	14	64bit	na	na	na	na	na	128	na	na	na	na	0	0	32	0	na	2	1000	Yes	594	100-240VAC full range, 50-60 Hz	na	3.45	17.3	28.25	2	60	0-40C	20%-80%, non-condensing	CSA	FCC (Part 15 Class A), DoC, CE, VCCI, CNS, AN/NES	na	na
 NetScaler	25100T	MPX	3.2	na	na	na	na	100	1.4	1.4	15	No	na	na	na	10	10	64bit	na	na	na	na	na	128	na	na	na	na	0	0	32	0	na	2	1000	Yes	594	100-240VAC full range, 50-60 Hz	na	3.45	17.3	28.25	2	60	0-40C	20%-80%, non-condensing	CSA	FCC (Part 15 Class A), DoC, CE, VCCI, CNS, AN/NES	na	na
 NetScaler	25160TA	MPX	4.6	na	na	na	na	160	2	2	21	No	na	na	na	4	4	64bit	na	na	na	na	na	128	na	na	na	na	0	0	0	8	na	2	1000	Yes	594	100-240VAC full range, 50-60 Hz	na	3.45	17.3	28.25	2	60	0-40C	20%-80%, non-condensing	CSA	FCC (Part 15 Class A), DoC, CE, VCCI, CNS, AN/NES	na	na

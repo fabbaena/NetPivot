@@ -21,6 +21,7 @@ if(!($user && $user->has_role("Engineer") )) {
 $id = $user->id;
 
 $filelist = new FileList(array('users_id' =>$id));
+$admin = $user->has_role("Company Admin");
 
 if(isset($_GET['e'])) {
     $reterr = $_GET['e'];
@@ -39,6 +40,7 @@ if(isset($_GET['e'])) {
             $("#conv_tool").click(function() {document.location="convert.php";});
             $("#hw_tool").click(function() {document.location="compare.php";});
             $("#event_log").click(function() {document.location="event_log.php";});
+            $("#usage_stats").click(function() {document.location="usage_stats.php";});
         });
         </script>
         <title>NetPivot</title>  
@@ -72,6 +74,13 @@ if(isset($_GET['e'])) {
                     Event Log
                 </button>
             </div>
+            <?php if($admin) { ?>
+            <div class="col-xs-12 col-md-5 content">
+                <button id="usage_stats" type="button" class="btn btn-secondary btn-block btn-lg">
+                    Usage Statistics
+                </button>
+            </div>
+            <?php } ?>
         </div>
     </div>
     <footer class="pull-left footer">
