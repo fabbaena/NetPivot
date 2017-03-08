@@ -2,7 +2,7 @@
 
 
 DBPATH=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/
-DBPATH=/usr/src/netpivot/frontend/scripts
+#DBPATH=/usr/src/netpivot/frontend/scripts
 create() {
     su - postgres -c "psql -b -f ${DBPATH}/pgsql_create.sql"
     psql -U demonio -b -f ${DBPATH}/adc_hw.sql netpivot
