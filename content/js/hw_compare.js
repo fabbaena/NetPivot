@@ -19,7 +19,7 @@ function hw_table() {
 		$("#compare").append(hw_row(cat));
 	}
 
-	addTypes("F5", {"BigIP": "BigIP", "Viprion": "Viprion Blade"});
+	addTypes("F5", {"BigIP": "BigIP", "Viprion": "Viprion Blade", "iSeries": "iSeries"});
 	addTypes("NetScaler", {"MPX": "MPX", "SDX": "SDX"});
 	loadModels("F5", $("#F5_selectedType").html());
 	loadModels("NetScaler", $("#NetScaler_selectedType").html());
