@@ -20,6 +20,7 @@ if(!($user && $user->has_role("Engineer") )) {
 }
 $id = $user->id;
 
+
 $filelist = new FileList(array('users_id' =>$id));
 $admin = $user->has_role("Company Admin");
 
@@ -41,6 +42,10 @@ if(isset($_GET['e'])) {
             $("#hw_tool").click(function() {document.location="compare.php";});
             $("#event_log").click(function() {document.location="event_log.php";});
             $("#usage_stats").click(function() {document.location="usage_stats.php";});
+            $("#Customer").click(function() {document.location="Customer/";});
+            $("#Project").click(function() {document.location="Project/";});
+            $("#Tips").click(function() {document.location="Tips/default.php";});
+            
         });
         </script>
         <title>NetPivot</title>  
@@ -82,6 +87,20 @@ if(isset($_GET['e'])) {
             </div>
             <?php } ?>
         </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col-xs-12 col-md-offset-1 col-md-5 content">
+                <button id="Customer" type="button" class="btn btn-secondary btn-block btn-lg">
+                    Customers
+                </button>
+            </div>
+            <div class="col-xs-12 col-md-5 content">
+                <button id="Project" type="button" class="btn btn-secondary btn-block btn-lg">
+                    Quotes
+                </button>
+            </div>
+        </div>
+           
     </div>
     <footer class="pull-left footer">
         <p class="col-md-12">
@@ -90,3 +109,4 @@ if(isset($_GET['e'])) {
     </footer>
 </body>
 </html>
+

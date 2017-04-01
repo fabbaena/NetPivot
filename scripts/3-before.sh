@@ -11,6 +11,7 @@ create() {
 alter() {
     psql -U demonio -b -f ${DBPATH}/pgsql_update.sql netpivot
     psql -U demonio -b -f ${DBPATH}/adc_hw.sql netpivot
+    psql -U demonio -b -f ${DBPATH}/CRMTables.sql netpivot
 }
 
 invoke-rc.d --quiet postgresql status

@@ -53,28 +53,25 @@ new Event($user, "Viewing file \"$file_name\".", 3);
     <?php include ('../engine/menu1.php');?>
     <div class="container-fluid">
     <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-10 content">
-            <ol class="breadcrumb panel-heading">
-            </ol>
+        <div class="col-md-10 col-md-offset-1 content">
+            <ol class="breadcrumb panel-heading"></ol>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
-                    <div class="col-md-7">
-                    <ul class="nav nav-tabs">
-                        <li role="presentation" id="nav_dashboard" class="active"><a href="#">Dashboard</a></li>
-                        <li role="presentation" id="nav_modules"><a href="#">Module Details</a></li>
-                        <li role="presentation" id="nav_objects"><a href="#">Objects</a></li>
-                    </ul>
-                    </div>
-                    <div class="col-md-5 text-right">
-                        <a href="../engine/Source.php?uuid=<?=$uuid?>" class="btn btn-warning">Download F5</a>
-                        <a href="../engine/Download.php?uuid=<?=$uuid?>" class="btn btn-success">Download NS</a>
-                    </div>
+                        <div class="col-md-7">
+                        <ul class="nav nav-tabs">
+                            <li role="presentation" id="nav_dashboard" class="active"><a href="#">Dashboard</a></li>
+                            <li role="presentation" id="nav_modules"><a href="#">Module Details</a></li>
+                            <li role="presentation" id="nav_objects"><a href="#">Objects</a></li>
+                        </ul>
+                        </div>
+                        <div class="col-md-5 text-right">
+                            <a href="../engine/Source.php?uuid=<?=$uuid?>" class="btn btn-warning">Download F5</a>
+                            <a href="../engine/Download.php?uuid=<?=$uuid?>" class="btn btn-success">Download NS</a>
+                        </div>
                     </div>
                 </div>
-    	        <div class="panel-body" id="content">
-    	        </div>
+    	        <div class="panel-body" id="content"></div>
             </div>
         </div>
     </div>
