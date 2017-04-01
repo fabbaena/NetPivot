@@ -223,15 +223,15 @@ function showFilelist(data) {
 				.append("&nbsp;")
 				.append(version_alert(data.files[i]._conversion.np_version)))
     		.append($("<td>")
-    			.css("width", "20%")
-    			.append(rename_button())
-    			.append("&nbsp;&nbsp;")
-    			.append(reprocess_button())
-    			.append("&nbsp;&nbsp;")
-    			.append(content_button()))
-    		.append($("<td>")
     			.css("width", "25%")
     			.html(data.files[i].upload_time.split(" ")[0]))
+    		.append($("<td>")
+    			.css("width", "20%")
+    			.append(content_button())
+    			.append("&nbsp;&nbsp;")
+    			.append(rename_button())
+    			.append("&nbsp;&nbsp;")
+    			.append(reprocess_button()))
     		);
     }
 }
@@ -250,16 +250,23 @@ function version_alert(v) {
 
 function content_button() {
 	return $("<a>")
+        .addClass("btn")
+        .addClass("btn-primary")
+        .addClass("btn-xs")
 		.html($("<span>")
 			.addClass("glyphicon glyphicon-sunglasses")
 			.attr("aria-hidden", "true"))
 		.click(function (e, data) {
-			window.location.replace('content.php?uuid='+e.currentTarget.parentNode.parentNode.id.substring(2));
+			window.location.replace('content.php?uuid='+
+				e.currentTarget.parentNode.parentNode.id.substring(2));
 		});
 }
 
 function reprocess_button() {
 	return $("<a>")
+        .addClass("btn")
+        .addClass("btn-danger")
+        .addClass("btn-xs")
 		.html($("<span>")
 			.addClass("glyphicon glyphicon-retweet")
 			.attr("data-toggle", "modal")
@@ -271,6 +278,9 @@ function reprocess_button() {
 
 function rename_button() {
 	return $("<a>")
+        .addClass("btn")
+        .addClass("btn-warning")
+        .addClass("btn-xs")
 		.html($("<span>")
 			.addClass("glyphicon glyphicon-pencil")
 			.attr("aria-hidden", "true"))
