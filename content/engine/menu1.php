@@ -5,7 +5,7 @@
 		</div>
         <div class="navbar-header">
             <a class="np-navbar-brand" href="../dashboard/index.php">
-                <img src="../images/netpivot_web-logo-small.png">
+                <img src="/images/netpivot_web-logo-small.png">
             </a>
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#account_options" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
@@ -22,12 +22,12 @@
                     </a>
                 <ul class="dropdown-menu">
                 <?php if(isset($user)) foreach($user->roles as $r)  { ?>
-                    <li><a href="../<?= $r->starturl ?>"><?= $r->name ?></a></li>
+                    <li><a href="/<?= $r->starturl ?>"><?= $r->name ?></a></li>
                 <?php } ?>
                 </ul>
                 </li>
                 <?php if(isset($user)) { ?>
-                <li><a href="../engine/endsession.php">Log Out</a></li>
+                <li><a href="/engine/endsession.php">Log Out</a></li>
                 <?php } ?>
             </ul>
         </div>

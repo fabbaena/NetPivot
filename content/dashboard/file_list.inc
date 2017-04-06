@@ -5,12 +5,12 @@
     <div class="panel-body">
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#fileUploadModal">Add Files</button>
         <div class="table-responsive">
-        <table class="table table-bordred table-striped" data-toggle="bootgrid">
+        <table class="table table-striped" data-toggle="bootgrid">
             <thead>
             <tr class="active">
                 <th>File Name</th>
-                <th>Options</th>
                 <th>Upload Date</th>
+                <th>Options</th>
                 
             </tr>
             </thead>

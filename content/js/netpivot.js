@@ -312,7 +312,7 @@ function showBriefSmallstats(out) {
         .addClass("table")
         .css("table-layout", "fixed")
         .css("width", "100%")
-        .append($("<tr>").addClass("active")
+        .append($("<thead>").append($("<tr>").addClass("active")
             .append($("<th>").addClass("text-center")
                 .css("width", "16%")
                 .html("F5 Module"))
@@ -330,20 +330,11 @@ function showBriefSmallstats(out) {
                 .html("Converted"))
             .append($("<th>").addClass("text-center")
                 .css("width", "14%")
-                .html("Actions"))
-        );
+                .html("Actions")))
+            )
+        .append($("<tbody>")
+            .attr("id", "briefSmallStats"));
 
-    for(var modulename in npmodules2) {
-        if(modulename.substring(0,1) != '_') {
-            table.append(npmodules2[modulename].tableRow(
-                total_attribute_count, 
-                labels, 
-                data, 
-                bgColorsChart, 
-                borderColorsChart)
-            );
-        }
-    }
 
     row.append($("<div>")
         .addClass("col-xs-8")
@@ -361,6 +352,17 @@ function showBriefSmallstats(out) {
         );
 
     out.append(row);
+    for(var modulename in npmodules2) {
+        if(modulename.substring(0,1) != '_') {
+            $("#briefSmallStats").append(npmodules2[modulename].tableRow(
+                total_attribute_count, 
+                labels, 
+                data, 
+                bgColorsChart, 
+                borderColorsChart)
+            );
+        }
+    }
 
     var ctx = $("#module_chart");
     module_chart = new Chart(ctx, {
@@ -550,10 +552,24 @@ function showModules() {
 
 function showModuleTabs(out) {
     var tabs;
-    tabs = $("<ul>").addClass("nav").addClass("nav-pills");
-    for(var modulename in npmodules2) {
-        if(modulename.substring(0,1) == '_') continue;
-        tabs.append($("<li>")
+
+    out.append($("<div>")
+        .addClass("row")
+        .addClass("tabs_view")
+        .append($("<div>")
+            .addClass("col-md-12")
+            .append($("<ul>")
+                .attr("id", "module-nav-pills")
+                .addClass("nav")
+                .addClass("nav-pills"))));
+
+
+    var f = ["ltm", "rule", "gtm", "apm", "asm", "auth"];
+
+    for(var index in f) {
+        modulename = f[index];
+        if(npmodules2[modulename].attribute_count == 0) continue;
+        $("#module-nav-pills").append($("<li>")
             .attr("role", "presentation")
             .addClass(curmodule==modulename?"active":"")
             .addClass("tab")
@@ -564,11 +580,40 @@ function showModuleTabs(out) {
                 .click(clickModuleTab)
                 ));
     }
-    out.append($("<div>")
-        .addClass("row")
-        .addClass("tabs_view")
-        .append($("<div>").addClass("col-md-12")
-            .append(tabs)));
+
+    var nonfeature = [];
+    for(var modulename in npmodules2) {
+        if(modulename[0] == '_' || 
+            modulename == "ltm" || 
+            modulename == "auth" || 
+            modulename == "asm" || 
+            modulename == "apm" || 
+            modulename == "rule" || 
+            modulename == "gtm") continue;
+        if(npmodules2[modulename].attribute_count == 0) continue;
+        nonfeature.push({
+            "name": modulename, 
+            "attribute_count": parseInt(npmodules2[modulename].attribute_converted)
+        });
+    }
+    nonfeature.sort(function(a, b) { 
+        return b.attribute_count-a.attribute_count; 
+    });
+
+    for(var index in nonfeature) {
+        modulename = nonfeature[index].name;
+        $("#module-nav-pills").append($("<li>")
+            .attr("role", "presentation")
+            .addClass(curmodule==modulename?"active":"")
+            .addClass("tab")
+            .addClass("tab_"+modulename)
+            .addClass("disabled")
+            .html($("<a>")
+                .html(npmodules2[modulename]["friendly_name"].toUpperCase())
+                .attr("id", modulename)
+                .click(clickModuleTab)
+                ));
+    }
 }
 
 function getModuleData(modulename) {
@@ -596,36 +641,39 @@ function showModuleTable() {
 
     var table = $("<table>")
         .addClass("table")
+        .addClass("table-strippe")
         .addClass("objectstats_view")
-        .addClass("objectstats_table")
-        .append($("<tr>").addClass("active")
-            .append($("<th>")
-                .css("width", "55%")
-                .html(curmodule!='rule'?"F5 Object Groups":"iRule Name")
-                .append("&nbsp;")
-                .append($("<div>")
-                    .addClass("sortStat")
-                    .addClass("sortStatName")
-                    .addClass("glyphicon glyphicon-sort")
-                    .click(clickSortStats)))
-            .append($("<th>").css("width", "15%")
-                .html(curmodule!='rule'?"# Objects":"")
-                .append("&nbsp;")
-                .append($("<div>")
-                    .addClass("sortStat")
-                    .addClass("sortStatObjects")
-                    .addClass(curmodule!='rule'?"glyphicon glyphicon-sort":"")
-                    .click(clickSortStats)))
-            .append($("<th>").css("width", "15%")
-                .html("% Converted")
-                .append("&nbsp;")
-                .append($("<div>")
-                    .addClass("sortStat")
-                    .addClass("sortStatConverted")
-                    .addClass("glyphicon glyphicon-sort")
-                    .click(clickSortStats)))
-            .append($("<th>").css("width", "15%").html("Actions"))
-        );
+        .append($("<thead>")
+            .append($("<tr>").addClass("active")
+                .append($("<th>")
+                    .css("width", "55%")
+                    .html(curmodule!='rule'?"F5 Object Groups":"iRule Name")
+                    .append("&nbsp;")
+                    .append($("<div>")
+                        .addClass("sortStat")
+                        .addClass("sortStatName")
+                        .addClass("glyphicon glyphicon-sort")
+                        .click(clickSortStats)))
+                .append($("<th>").css("width", "15%")
+                    .html(curmodule!='rule'?"# Objects":"")
+                    .append("&nbsp;")
+                    .append($("<div>")
+                        .addClass("sortStat")
+                        .addClass("sortStatObjects")
+                        .addClass(curmodule!='rule'?"glyphicon glyphicon-sort":"")
+                        .click(clickSortStats)))
+                .append($("<th>").css("width", "15%")
+                    .html("% Converted")
+                    .append("&nbsp;")
+                    .append($("<div>")
+                        .addClass("sortStat")
+                        .addClass("sortStatConverted")
+                        .addClass("glyphicon glyphicon-sort")
+                        .click(clickSortStats)))
+                .append($("<th>").css("width", "15%").html("Actions"))
+            ))
+        .append($("<tbody>")
+            .addClass("objectstats_table"));
 
     $("#content").append($("<div>")
         .addClass("objectstats_view")
@@ -789,11 +837,20 @@ function showObjectPane() {
 }
 
 function showObjectTabs() {
-    var tabs;
-    tabs = $("<ul>").addClass("nav").addClass("nav-pills");
-    for(var modulename in npmodules2) {
-        if(modulename.substring(0,1) == '_') continue;
-        tabs.append($("<li>")
+    $("#content").append($("<div>")
+            .addClass("row").addClass("tabs_view")
+            .append($("<div>").addClass("col-md-12")
+                .append($("<ul>")
+                    .addClass("nav")
+                    .addClass("nav-pills")
+                    .attr("id", "object-module-nav-pills"))));
+
+    var f = ["ltm", "rule", "gtm", "apm", "asm", "auth"];
+
+    for(var index in f) {
+        modulename = f[index];
+        if(npmodules2[modulename].attribute_count == 0) continue;
+        $("#object-module-nav-pills").append($("<li>")
             .attr("role", "presentation")
             .addClass(curmodule==modulename?"active":"")
             .addClass("tab")
@@ -804,11 +861,40 @@ function showObjectTabs() {
                 .click(clickObjectTab)
                 ));
     }
-    
-    $("#content").append($("<div>")
-            .addClass("row").addClass("tabs_view")
-            .append($("<div>").addClass("col-md-12")
-                .append(tabs)));
+
+    var nonfeature = [];
+    for(var modulename in npmodules2) {
+        if(modulename[0] == '_' || 
+            modulename == "ltm" || 
+            modulename == "auth" || 
+            modulename == "asm" || 
+            modulename == "apm" || 
+            modulename == "rule" || 
+            modulename == "gtm") continue;
+        if(npmodules2[modulename].attribute_count == 0) continue;
+        nonfeature.push({
+            "name": modulename, 
+            "attribute_count": parseInt(npmodules2[modulename].attribute_converted)
+        });
+    }
+    nonfeature.sort(function(a, b) { 
+        return b.attribute_count-a.attribute_count; 
+    });
+
+    for(var index in nonfeature) {
+        modulename = nonfeature[index].name;
+        $("#object-module-nav-pills").append($("<li>")
+            .attr("role", "presentation")
+            .addClass(curmodule==modulename?"active":"")
+            .addClass("tab")
+            .addClass("tab_"+modulename)
+            .addClass("disabled")
+            .html($("<a>")
+                .html(npmodules2[modulename]["friendly_name"].toUpperCase())
+                .attr("id", modulename)
+                .click(clickObjectTab)
+                ));
+    }    
 }
 
 function clickObjectTab(data) {
@@ -863,6 +949,7 @@ function showObjectSidebar() {
 function showObjectOGData(data) {
     $(".og_sidemenu_item").remove();
     for(var ogname in npmodules2[curmodule]["object_groups"]) {
+        if(ogname == "rule") continue;
         $(".og_sidemenu").append($("<li>")
             .addClass("og_sidemenu_item")
             .addClass(ogname==curobjectgroup?"active":"")
@@ -896,42 +983,46 @@ function showObjectTable() {
         .css("overflow", "scroll")
         .css("height", "800px")
         .html($("<table>")
-        .addClass("table")
-        .addClass("objectObjectsTable")
-        .css("table-layout", "fixed")
-        .css("width", "100%")
-        .append($("<tr>").addClass("active")
-            .append($("<th>")
-                .css("width", "70%")
-                .append("Object Name")
-                .append("&nbsp;")
-                .append($("<div>")
-                    .addClass("glyphicon")
-                    .addClass("glyphicon-sort")
-                    .addClass("sortStat")
-                    .addClass("sortObjectName")
-                    .click(clickSortStats)))
-            .append($("<th>")
-                .css("width", "15%")
-                .append("Attributes")
-                .append("&nbsp;")
-                .append($("<div>")
-                    .addClass("glyphicon")
-                    .addClass("glyphicon-sort")
-                    .addClass("sortStat")
-                    .addClass("sortObjectAttributes")
-                    .click(clickSortStats)))
-            .append($("<th>")
-                .css("width", "15%")
-                .append("Converted")
-                .append("&nbsp;")
-                .append($("<div>")
-                    .addClass("glyphicon")
-                    .addClass("glyphicon-sort")
-                    .addClass("sortStat")
-                    .addClass("sortObjectConverted")
-                    .click(clickSortStats)))
-            ));
+            .addClass("table")
+            .css("table-layout", "fixed")
+            .css("width", "100%")
+            .append($("<thead>")
+                .append($("<tr>")
+                    .addClass("active")
+                    .append($("<th>")
+                        .css("width", "67%")
+                        .append("Object Name")
+                        .append("&nbsp;")
+                        .append($("<div>")
+                            .addClass("glyphicon")
+                            .addClass("glyphicon-sort")
+                            .addClass("sortStat")
+                            .addClass("sortObjectName")
+                            .click(clickSortStats)))
+                    .append($("<th>")
+                        .css("width", "15%")
+                        .append("Attributes")
+                        .append("&nbsp;")
+                        .append($("<div>")
+                            .addClass("glyphicon")
+                            .addClass("glyphicon-sort")
+                            .addClass("sortStat")
+                            .addClass("sortObjectAttributes")
+                            .click(clickSortStats)))
+                    .append($("<th>")
+                        .css("width", "18%")
+                        .append("Converted")
+                        .append("&nbsp;")
+                        .append($("<div>")
+                            .addClass("glyphicon")
+                            .addClass("glyphicon-sort")
+                            .addClass("sortStat")
+                            .addClass("sortObjectConverted")
+                            .click(clickSortStats)))
+            ))
+        .append($("<tbody>")
+            .addClass("objectObjectsTable")
+        ));
 }
 
 function getObjectData() {
@@ -1128,16 +1219,23 @@ function gotoIcon(link) {
 }
 
 function showdata(data) {
-    var attributelist = $("<table>").addClass("table");
+    $("#div_details_" + curobjid)
+        .html($("<table>")
+            .addClass("table")
+            .append($("<thead>")
+                .attr("id", "datatablehead"))
+            .append($("<tbody>")
+                .attr("id", "datatablebody")));
 
-    attributelist.append($("<tr>")
-        .append($("<th>").width("50px").html("Line"))
-        .append($("<th>").width("40px").html("Conv"))
-        .append($("<th>").width("40px").html("Link"))
-        .append($("<th>").html("F5 Source Code")));
+    $("#datatablehead")
+        .append($("<tr>")
+            .append($("<th>").width("50px").html("Line"))
+            .append($("<th>").width("40px").html("Conv"))
+            .append($("<th>").width("40px").html("Link"))
+            .append($("<th>").html("F5 Source Code")));
 
     for(var lineno in data) {
-        attributelist.append($("<tr>")
+        $("#datatablebody").append($("<tr>")
             .append($("<td>")
                 .html(lineno))
             .append($("<td>")
@@ -1149,8 +1247,6 @@ function showdata(data) {
             .attr("id", "lineno" + lineno));
     }
 
-    $("#div_details_" + curobjid)
-        .html(attributelist);
 
     $("#b_details_" + curobjid)
         .removeClass("glyphicon-collapse-down")
