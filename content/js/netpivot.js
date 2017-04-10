@@ -1064,6 +1064,8 @@ function showObjectData() {
         curog_pc = curog["p_converted"];
         $(".objectObjectsTable")
             .append($("<tr>")
+                .attr("og_id", curog_id)
+                .attr("og_name", oname)
                 .addClass("object_item")
                 .append($("<td>")
                     .append($("<span>")
@@ -1075,7 +1077,15 @@ function showObjectData() {
                         .click(clickObjectAttributes))
                     .append($("<span>")
                         .attr("id", "l_details_" + curog_id)
-                        .append(oname)))
+                        .append(oname))
+                    .append("&nbsp;")
+                    .append($("<div>")
+                        .addClass("btn-group btn-group-xs")
+                        .append($("<button>")
+                            .addClass("btn btn-default")
+                            .append("Export")
+                            .click(export_og)))
+                    )
                 .append($("<td>")
                     .append(curog_ac))
                 .append($("<td>")
@@ -1092,6 +1102,7 @@ function showObjectData() {
                     .attr("id", "div_details_" + curog_id))
                 );
 
+        /**** used when clicking link */
         if(typeof curobjname != "undefined" && curobjname != "") {
             if(typeof npmodules2[curmodule]["object_groups"][curobjectgroup] != "undefined") {
                 var refid = npmodules2[curmodule]["object_groups"][curobjectgroup].id;
@@ -1109,6 +1120,9 @@ function showObjectData() {
             var perc_color = curog_pc==100?"text_color_green":"text_color_red";
             $(".objectObjectsTable")
                 .append($("<tr>")
+                    .attr("og_id", curog_id)
+                    .attr("og_name", oname)
+                    .attr("id", "og_" + curog_id)
                     .addClass("object_item")
                     .append($("<td>")
                         .append($("<span>")
@@ -1137,6 +1151,8 @@ function showObjectData() {
                         .attr("id", "div_details_" + curog_id))
                     );
         }
+
+        /**** used when clicking link */
         if(typeof curobjname != "undefined" && curobjname != "") {
             if(typeof npmodules2[curmodule]["object_groups"][curobjectgroup]["objects"][curobjname] != "undefined") {
                 var refid = npmodules2[curmodule]["object_groups"][curobjectgroup]["objects"][curobjname].id;
@@ -1150,9 +1166,14 @@ function showObjectData() {
 
 }
 
+function export_og(e, data) {
+    var og_id = $(e.target).closest("tr").attr("og_id");
+    document.location = "/engine/export.php?objid=" + og_id;
+}
+
 function clickObjectAttributes(event) {
-    var target_id   = $(event.target).attr("id").substring(10);
-    var target_name = $(event.target).attr("objname");
+    var target_id   = $(event.target).closest("tr").attr("og_id");
+    var target_name = $(event.target).closest("tr").attr("og_name");
     breadcrumbs = [];
 
     loadObjectAttributes(target_id, target_name);

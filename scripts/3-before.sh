@@ -5,13 +5,13 @@ DBPATH=/opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID
 #DBPATH=/usr/src/netpivot/frontend/scripts
 create() {
     su - postgres -c "psql -b -f ${DBPATH}/pgsql_create.sql"
-    psql -U demonio -b -f ${DBPATH}/adc_hw.sql netpivot
 }
 
 alter() {
     psql -U demonio -b -f ${DBPATH}/pgsql_update.sql netpivot
     psql -U demonio -b -f ${DBPATH}/adc_hw.sql netpivot
     psql -U demonio -b -f ${DBPATH}/CRMTables.sql netpivot
+    psql -U demonio -b -f ${DBPATH}/F5NSLink.sql netpivot
 }
 
 invoke-rc.d --quiet postgresql status
@@ -29,6 +29,8 @@ if [ $? -ne 0 ]; then
     echo "Creating Database..."
     rm -f /var/www/html/index.html
     create
+    echo "Altering Database..."
+    alter
 else
     echo "Altering Database..."
     alter
