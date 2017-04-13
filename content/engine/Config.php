@@ -84,6 +84,10 @@ class Config {
 		return $this->_path_pivot. $this->_services;
 	}
 
+	function f5nslink_file() {
+		return $this->_path_files. $this->_uuid. "_link.csv";
+	}
+
 	function convert_orphan($o = null) {
 		if(isset($o)) {
 			$this->_orphan = $o;
@@ -101,6 +105,7 @@ class Config {
 				" -O ". $this->ns_file().
 				" -J ". $this->json_file().
 				" -s ". $this->services_file().
+				" -l ". $this->f5nslink_file().
 				$this->convert_orphan().
 				" -g";
 			syslog(LOG_INFO, $command);

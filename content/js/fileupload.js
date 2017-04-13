@@ -178,6 +178,45 @@ function stats(uuid) {
 	    		$(".glyphicon-refresh")
 	    			.addClass("glyphicon-ok")
 	    			.removeClass("glyphicon-refresh");
+				links(data.uuid);
+			}
+		},
+		error: catch_error
+	});
+}
+
+function links(uuid) {
+	$("#" + dialog).append(
+		$("<li>")
+			.html($("<i>")
+				.addClass("glyphicon glyphicon-refresh")
+				.attr("id", "links_ico"))
+			.append("&nbsp;Generating config links")
+			.addClass("list-group-item list-group-item-info")
+			.attr("id", "links")
+		);
+	$.ajax( {
+		url: "/engine/links.php",
+		data: { 'uuid': uuid },
+		dataType: "json",
+		success: function(data) {
+			$("#links").append(": " + data.message);
+			if(data.result == "error") {
+				$("#links")
+					.removeClass("list-group-item-success")
+					.removeClass("list-group-item-info")
+	    			.addClass("list-group-item-danger");
+	    		$(".glyphicon-refresh")
+	    			.addClass("glyphicon-remove")
+	    			.removeClass("glyphicon-refresh");
+			} else {
+				$("#links")
+					.removeClass("list-group-item-danger")
+					.removeClass("list-group-item-info")
+	    			.addClass("list-group-item-success");
+	    		$(".glyphicon-refresh")
+	    			.addClass("glyphicon-ok")
+	    			.removeClass("glyphicon-refresh");
 				goto_dashboard(data.uuid);
 			}
 		},

@@ -43,6 +43,7 @@ new Event($user, "Viewing file \"$file_name\".", 3);
             $("#nav_dashboard").click(showBrief);
             $("#nav_objects").click(showObjects);
             $("#nav_modules").click(showModules);
+            $('[data-toggle="popover"]').popover();
 
             loaddata();
             })
