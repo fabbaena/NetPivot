@@ -260,7 +260,7 @@ function showFilelist(data) {
 				.css("width", "55%")
 				.html(data.files[i].filename)
 				.append("&nbsp;")
-				.append(version_alert(data.files[i]._conversion.np_version)))
+				.append(version_alert(data.files[i])))
     		.append($("<td>")
     			.css("width", "25%")
     			.html(data.files[i].upload_time.split(" ")[0]))
@@ -275,10 +275,14 @@ function showFilelist(data) {
     }
 }
 
-function version_alert(v) {
-	var file_ver = v.split(".");
-	var np = np_version.split(".");
-	if(np[0] == file_ver[0] && np[1] == file_ver[1] && np[2] == file_ver[2]) return "";
+function version_alert(data) {
+
+	if(typeof data._conversion !== "undefined" && typeof data._conversion.np_version !== "undefined") {
+		v = data._conversion.np_version;
+		var file_ver = v.split(".");
+		var np = np_version.split(".");
+		if(np[0] == file_ver[0] && np[1] == file_ver[1] && np[2] == file_ver[2]) return "";
+	}
 
 	return $("<span>")
 		.attr("data-toggle", "tooltip")
