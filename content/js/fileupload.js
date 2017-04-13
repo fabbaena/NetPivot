@@ -278,8 +278,9 @@ function showFilelist(data) {
 function version_alert(data) {
 
 	if(typeof data._conversion !== "undefined" && 
-		data._conversion !== null && 
-		typeof data._conversion.np_version !== "undefined") {
+			data._conversion !== null && 
+			typeof data._conversion.np_version !== "undefined" &&
+			v.np_version !== null) {
 		v = data._conversion.np_version;
 		var file_ver = v.split(".");
 		var np = np_version.split(".");
