@@ -33,6 +33,7 @@ class Crud {
     public $groupby;
 
     private $_conn;
+    private $_req;
     
 
     function __construct() {
@@ -41,6 +42,7 @@ class Crud {
         $host = "localhost";
         $db = "netpivot";
         $this->_conn = new PDO("pgsql:host=$host;dbname=$db", $usuario, $pass);
+        $this->_req = false;
     }
     
     public function Create(){
@@ -85,11 +87,32 @@ class Crud {
             $this->mensaje = TRUE;
         }  
     }
+
+    public function CreateBulk($prepare = false, $insertColumnsArray = array()) {
+        if($prepare) {
+            $insertInto = $this->insertInto;
+            $insertValuesArray = array();
+            foreach($insertColumnsArray as $i) {
+                array_push($insertValuesArray, "?");
+            }
+            $insertColumns = implode(",", $insertColumnsArray);
+            $insertValues = implode(",", $insertValuesArray);
+            $sql = "INSERT INTO $insertInto ($insertColumns) VALUES ($insertValues)";
+            $this->_req = $this->_conn->prepare($sql);
+        } else if($this->_req !== false) {
+            $out = $this->_req->execute($this->data);
+            if($out === false) {
+                $this->mensaje = $this->_conn->errorInfo()[2];
+            }
+            return $out;
+        }
+    }
     
     public function Read(){
         $select = $this->select;
         $from = $this->from;
         $condition = $this->condition;
+        $orderby = $this->orderby;
         if ( $condition != ''){
             $condition = " WHERE " .$condition;
         }
@@ -97,7 +120,7 @@ class Crud {
         if($groupby != '') {
             $groupby = " GROUP BY ". $groupby;
         }
-        $sql = "SELECT $select FROM $from $condition $groupby";
+        $sql = "SELECT $select FROM $from $condition $groupby$orderby";
         $consulta = $this->_conn->prepare($sql);
         $consulta->execute();
         $this->rows = [];
