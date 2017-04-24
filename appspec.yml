@@ -27,12 +27,6 @@ permissions:
     mode: 755
     type:
       - directory
-  - object: /var/www/html/Uploads
-    owner: www-data
-    group: www-data
-    mode: 755
-    type:
-      - directory
 
 hooks:
   ApplicationStop:
