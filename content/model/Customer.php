@@ -106,10 +106,7 @@ class CustomerList {
         $conn->select = "*";
         $conn->from = $this->_tablename;
         $conn->condition = "id <> 0". $usercreate;
-        $conn->orderby = array(
-            "column" => "id",
-            "direction" => "DESC"
-        );
+        $conn->orderby = "ORDER BY id DESC";
         $conn->Read();
         $customerresult = $conn->rows;
         foreach ($customerresult as $record) {

@@ -268,6 +268,14 @@ function showBrieftable(data) {
     $(".objectstats_view").remove();
     $(".tabs_view").remove();
     $(".objects_view").remove();
+    if(typeof projectid === 'undefined') {
+        $("#content").append($("<div>")
+            .addClass("col-md-12")
+            .html($("<button>")
+                .addClass("btn btn-danger btn-block")
+                .html("This conversion has not been associated with a Quote. Click this button to do it.")
+                .click(modalProject)));
+    }
     showBriefBigstats($("#content"));
     showBriefSmallstats($("#content"));
     $("#content")
@@ -291,6 +299,68 @@ function showBrieftable(data) {
             )
     $.getJSON("../engine/certs.php", showCerts);
     $.getJSON("../engine/external_monitors.php", showExtMon);
+}
+
+function modalProject(e) {
+    $.getJSON("../engine/GetCustomer.php", function(data) {
+        if(data["status"] == "ok") {
+            $("#projects").html("");
+            for (var c in data["Customers"]) {
+                $("#projects").append($("<li>").html($("<a>")
+                    .attr("customer_id", data["Customers"][c]["id"])
+                    .attr("customer_name", data["Customers"][c]["name"])
+                    .html(data["Customers"][c]["name"])
+                    .click(selectCustomer)));
+            }
+            $("#associateProject").modal('show');
+        }
+    });
+}
+
+function selectCustomer(e) {
+    var cid = $(e.target).closest("a").attr("customer_id");
+    $("#clistLabel").html($(e.target).closest("a").attr("customer_name"));
+    $("#qlistLabel").html("Select a Quote");
+    $("#modalSave")
+        .removeAttr("projectid")
+        .removeClass("btn-success")
+        .addClass("btn-disabled")
+        .unbind("click");
+    $.getJSON("../engine/GetProject.php", { "customerid": cid }, function(data) {
+        if(data["status"] == "ok") {
+            $("#quotes").html("");
+            for (var q in data["projects"]) {
+                $("#quotes").append($("<li>").html($("<a>")
+                    .attr("projectid", data["projects"][q]["id"])
+                    .attr("project_name", data["projects"][q]["name"])
+                    .html(data["projects"][q]["name"])
+                    .click(setProject)));
+            }
+            $("#project").removeClass("hidden");
+        }
+    });
+}
+
+function setProject(e) {
+    var pid = $(e.target).closest("a").attr("projectid");
+    $("#qlistLabel").html($(e.target).attr("project_name"));
+    $("#modalSave")
+        .attr("projectid", pid)
+        .removeClass("btn-disabled")
+        .addClass("btn-success")
+        .click(saveAssoc);
+}
+
+function saveAssoc(e) {
+    var pid = $(e.target).attr("projectid");
+    $.getJSON("../engine/Conversion.php", { 
+        "id": conversionid,
+        "projectid": pid,
+        "action": "edit"
+    }, function(data) {
+        alert("saved");
+        document.location="content.php";
+    });
 }
 
 function showBriefSmallstats(out) {

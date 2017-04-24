@@ -18,6 +18,7 @@ class Conversion extends NPObject {
 	public $_features;
 	public $np_version;
 	public $f5_version;
+	public $projectid;
 	public $attribute_count;
 	public $attribute_converted;
 	public $object_count;
