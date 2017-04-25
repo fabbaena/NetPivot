@@ -44,22 +44,27 @@ $v = substr(exec($c->np_version(), $v_out,$v_error), 17);
         $().ready( function() {
             $("#home").click(function() {document.location="./";});
             initFileUpload();
-            $("#form").validator()
-                .on('valid.bs.validator', function(e, data) {
-                    $("#fu").removeClass("hidden");
-                    })
-                .on('invalid.bs.validator', function(e, data) {
-                    $("#fu").addClass("hidden");
-                    });
-            $("#fileUploadModal").on("shown.bs.modal", function(e, data) {
-                $("#opportunityId").focus();
-                });
             $("#start_rep").click(function(e, data) {
                 purge();
                 });
             $("#close_rep").click(function(e, data) {
                 $("#lr").html("");
                 });
+            $("#btn_fileupload").click(function(e) {
+                $.getJSON("../engine/GetCustomer.php", function(data) {
+                    if(data['status'] == 'ok') {
+                        $("#customers").html("");
+                        for (var c in data["Customers"]) {
+                            $("#customers").append($("<li>").html($("<a>")
+                                .attr("customer_id", data["Customers"][c]["id"])
+                                .attr("customer_name", data["Customers"][c]["name"])
+                                .html(data["Customers"][c]["name"])
+                                .click(clickCustomer)));
+                        }
+                        $("#fileUploadModal").modal('toggle');
+                    }
+                })
+            });
             $.ajax( {
                 url: "/engine/filelist.php",
                 dataType: "json",
@@ -67,6 +72,32 @@ $v = substr(exec($c->np_version(), $v_out,$v_error), 17);
                 error: function() { alert("error");}
                 })
             });
+
+            function clickCustomer(e) {
+                var cid = $(e.target).closest("a").attr("customer_id");
+                $("#clistLabel").html($(e.target).closest("a").attr("customer_name"));
+                $("#qlistLabel").html("Select a Quote");
+                $.getJSON("../engine/GetProject.php", { "customerid": cid }, function(data) {
+                    if(data["status"] == "ok") {
+                        $("#quotes").html("");
+                        for (var q in data["projects"]) {
+                            $("#quotes").append($("<li>").html($("<a>")
+                                .attr("projectid", data["projects"][q]["id"])
+                                .attr("project_name", data["projects"][q]["name"])
+                                .html(data["projects"][q]["name"])
+                                .click(clickProject)));
+                        }
+                        $("#project").removeClass("hidden");
+                    }
+                });
+            }
+            function clickProject(e) {
+                var pid = $(e.target).closest("a").attr("projectid");
+                $("#qlistLabel").html($(e.target).attr("project_name"));
+                $("#fu").removeClass("hidden");
+                $("#projectid").val(pid);
+            }
+
         </script>
     </head>
     <body>

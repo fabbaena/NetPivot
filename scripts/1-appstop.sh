@@ -4,7 +4,7 @@ WWWDATA=/var/www/html
 
 backup() {
     export PGPASSFILE=/home/ubuntu/.pgpass
-    local DBDUMP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.sql.xz
+    local DBDUMP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.sql.gz
     local BACKUP=/home/ubuntu/netpivot/netpivot-`date "+%F_%H-%M-%S_%Z"`.tbz2
 
     invoke-rc.d --quiet postgresql status
@@ -22,16 +22,18 @@ backup() {
 
     psql -l -U demonio template1 | grep -q netpivot
     if [ $? -eq 0 ]; then
-        echo "Creating Backup..."
-        pg_dump -U demonio netpivot | xz -z9q > ${DBDUMP}
-        echo "Backup Finished."
+        echo "Creating Database Backup..."
+        pg_dump -U demonio netpivot | gzip - > ${DBDUMP}
+        echo "Backup Database Finished."
     fi
 
+    echo "Creating files backup..."
     tar -cvjf ${BACKUP} -C ${WWWDATA} .
+    echo "Finished files backup."
 }
 
 clean() {
-    local FILELIST=( html css map php eot svg ttf woff woff2 png js f5conv detecttype )
+    local FILELIST=( html css map php eot svg ttf woff woff2 png js f5conv detecttype inc)
     local DIRLIST=( `find ${WWWDATA} -type d` )
 
     if [ ! -f ${WWWDATA}/../files/.keep ]; then

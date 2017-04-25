@@ -18,7 +18,6 @@ Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete
 
 
 
-<link rel="stylesheet" href="/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="/css/navigation.css">
 <link rel="stylesheet" href="/css/custom_netpivot.css">

@@ -26,6 +26,8 @@ $process = array();
 try {
     if(!isset($_GET['uuid'])) throw new Exception("Did not receive any file to convert.");
     $uuid = $_GET['uuid'];
+    $projectid = get_int($_GET, 'projectid');
+    if(!isset($projectid)) throw new Exception("Did not receive any project");
 
     $c = new Config($uuid);
     $c->convert_orphan(true);
@@ -45,7 +47,8 @@ try {
         "converted_file"  => $c->ns_file(),
         "error_file"      => $c->error_file(),
         "stats_file"      => $c->stats_file(),
-        "json_file"       => $c->json_file()
+        "json_file"       => $c->json_file(),
+        "projectid"       => $projectid
         ));
     ;
 

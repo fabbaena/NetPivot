@@ -44,8 +44,6 @@ if(isset($_GET['e'])) {
             $("#usage_stats").click(function() {document.location="usage_stats.php";});
             $("#Customer").click(function() {document.location="Customer/";});
             $("#Project").click(function() {document.location="Project/";});
-            $("#Tips").click(function() {document.location="Tips/default.php";});
-            
         });
         </script>
         <title>NetPivot</title>  

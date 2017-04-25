@@ -59,6 +59,25 @@ try {
     if(!$conversion->saveData()) 
         throw new Exception('Cannot save JSON data');
 
+    $string = file_get_contents($c->f5nslink_file());
+    if(strlen($string) < 5) throw new Exception("Internal Error. Links couldn't be generated for \"$file_name\". ($uuid)");
+    $link_array = explode("\n", $string);
+
+    $conn = new Crud();
+    $conn->insertInto = "f5nslink";
+    $conn->CreateBulk(true, array("f5", "ns", "files_uuid"));
+
+    foreach($link_array as $l) {
+        if($l == "") continue;
+        $link = explode(",", $l);
+        array_push($link, $uuid);
+
+        $conn->data = $link;
+        if($conn->CreateBulk() !== true) throw new Exception("DB error loading links. Details: ". $conn->mensaje);
+    }
+
+
+
     header ('location:../dashboard/content.php');
 
 } catch (Exception $ex) {

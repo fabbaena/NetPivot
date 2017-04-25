@@ -11,6 +11,7 @@ var curobjname;
 var attributes;
 var breadcrumbs = [];
 var module_chart;
+var curtoolbar;
 
 var lightBlue    = 'rgba(26,  161, 218, 0.2)';
 var darkBlue     = 'rgba(16,   74, 112, 1)';
@@ -267,6 +268,14 @@ function showBrieftable(data) {
     $(".objectstats_view").remove();
     $(".tabs_view").remove();
     $(".objects_view").remove();
+    if(typeof projectid === 'undefined') {
+        $("#content").append($("<div>")
+            .addClass("col-md-12")
+            .html($("<button>")
+                .addClass("btn btn-danger btn-block")
+                .html("This conversion has not been associated with a Quote. Click this button to do it.")
+                .click(modalProject)));
+    }
     showBriefBigstats($("#content"));
     showBriefSmallstats($("#content"));
     $("#content")
@@ -290,6 +299,68 @@ function showBrieftable(data) {
             )
     $.getJSON("../engine/certs.php", showCerts);
     $.getJSON("../engine/external_monitors.php", showExtMon);
+}
+
+function modalProject(e) {
+    $.getJSON("../engine/GetCustomer.php", function(data) {
+        if(data["status"] == "ok") {
+            $("#projects").html("");
+            for (var c in data["Customers"]) {
+                $("#projects").append($("<li>").html($("<a>")
+                    .attr("customer_id", data["Customers"][c]["id"])
+                    .attr("customer_name", data["Customers"][c]["name"])
+                    .html(data["Customers"][c]["name"])
+                    .click(selectCustomer)));
+            }
+            $("#associateProject").modal('show');
+        }
+    });
+}
+
+function selectCustomer(e) {
+    var cid = $(e.target).closest("a").attr("customer_id");
+    $("#clistLabel").html($(e.target).closest("a").attr("customer_name"));
+    $("#qlistLabel").html("Select a Quote");
+    $("#modalSave")
+        .removeAttr("projectid")
+        .removeClass("btn-success")
+        .addClass("btn-disabled")
+        .unbind("click");
+    $.getJSON("../engine/GetProject.php", { "customerid": cid }, function(data) {
+        if(data["status"] == "ok") {
+            $("#quotes").html("");
+            for (var q in data["projects"]) {
+                $("#quotes").append($("<li>").html($("<a>")
+                    .attr("projectid", data["projects"][q]["id"])
+                    .attr("project_name", data["projects"][q]["name"])
+                    .html(data["projects"][q]["name"])
+                    .click(setProject)));
+            }
+            $("#project").removeClass("hidden");
+        }
+    });
+}
+
+function setProject(e) {
+    var pid = $(e.target).closest("a").attr("projectid");
+    $("#qlistLabel").html($(e.target).attr("project_name"));
+    $("#modalSave")
+        .attr("projectid", pid)
+        .removeClass("btn-disabled")
+        .addClass("btn-success")
+        .click(saveAssoc);
+}
+
+function saveAssoc(e) {
+    var pid = $(e.target).attr("projectid");
+    $.getJSON("../engine/Conversion.php", { 
+        "id": conversionid,
+        "projectid": pid,
+        "action": "edit"
+    }, function(data) {
+        alert("saved");
+        document.location="content.php";
+    });
 }
 
 function showBriefSmallstats(out) {
@@ -1064,6 +1135,8 @@ function showObjectData() {
         curog_pc = curog["p_converted"];
         $(".objectObjectsTable")
             .append($("<tr>")
+                .attr("og_id", curog_id)
+                .attr("og_name", oname)
                 .addClass("object_item")
                 .append($("<td>")
                     .append($("<span>")
@@ -1075,7 +1148,15 @@ function showObjectData() {
                         .click(clickObjectAttributes))
                     .append($("<span>")
                         .attr("id", "l_details_" + curog_id)
-                        .append(oname)))
+                        .append(oname))
+                    .append("&nbsp;")
+                    .append($("<div>")
+                        .addClass("btn-group btn-group-xs")
+                        .append($("<button>")
+                            .addClass("btn btn-default")
+                            .append("Export")
+                            .click(export_og)))
+                    )
                 .append($("<td>")
                     .append(curog_ac))
                 .append($("<td>")
@@ -1092,6 +1173,7 @@ function showObjectData() {
                     .attr("id", "div_details_" + curog_id))
                 );
 
+        /**** used when clicking link */
         if(typeof curobjname != "undefined" && curobjname != "") {
             if(typeof npmodules2[curmodule]["object_groups"][curobjectgroup] != "undefined") {
                 var refid = npmodules2[curmodule]["object_groups"][curobjectgroup].id;
@@ -1109,6 +1191,9 @@ function showObjectData() {
             var perc_color = curog_pc==100?"text_color_green":"text_color_red";
             $(".objectObjectsTable")
                 .append($("<tr>")
+                    .attr("og_id", curog_id)
+                    .attr("og_name", oname)
+                    .attr("id", "og_" + curog_id)
                     .addClass("object_item")
                     .append($("<td>")
                         .append($("<span>")
@@ -1131,12 +1216,15 @@ function showObjectData() {
                     )
                 .append($("<tr>")
                     .addClass("object_item")
+                    .attr("og_id", curog_id)
                     .append($("<td>")
                         .css("border-top", "none")
                         .attr("colspan", 4)
                         .attr("id", "div_details_" + curog_id))
                     );
         }
+
+        /**** used when clicking link */
         if(typeof curobjname != "undefined" && curobjname != "") {
             if(typeof npmodules2[curmodule]["object_groups"][curobjectgroup]["objects"][curobjname] != "undefined") {
                 var refid = npmodules2[curmodule]["object_groups"][curobjectgroup]["objects"][curobjname].id;
@@ -1149,10 +1237,81 @@ function showObjectData() {
 
 
 }
+function showToolbar() {
+    if(typeof curtoolbar !== "undefined") curtoolbar.popover('hide');
+    curtoolbar = $(this).closest("tr");
+    var ret = $("<div>")
+        .addClass("btn-group")
+        .attr("role", "group")
+        .attr("linestart", $(this).closest("table").attr("linestart"))
+        .attr("lineend", $(this).closest("table").attr("lineend"))
+        .attr("og_id", $(this).closest("table").closest("tr").attr("og_id"));
+
+    ret.append($("<button>")
+            .html("View NS")
+            .click(ns_og)
+            .addClass("btn btn-default btn-block"))
+        .append($("<br>"))
+        .append($("<button>")
+            .html("Export F5")
+            .click(export_og2)
+            .addClass("btn btn-default btn-block")
+            );
+
+    if(typeof $(this).attr("link") !== "undefined") {
+        ret.append($("<br>"))
+            .append($("<button>")
+                .html("Follow Link")
+                .addClass("btn btn-default btn-block")
+                .click(clickGotoObject)
+                .attr("link_mod", curtoolbar.attr("mod"))
+                .attr("link_og", curtoolbar.attr("og"))
+                .attr("link_name", curtoolbar.attr("on"))
+                );
+    }
+    return ret;
+}
+
+function comment_og(e) {
+    var b = $(e.target);
+}
+
+function ns_og(e) {
+    curtoolbar.popover('hide');
+    var b = $(e.target);
+    window.open("../engine/getNSLinesHTML.php" + 
+        "?f5start=" + b.closest("div").attr("linestart") + 
+        "&f5end=" + b.closest("div").attr("lineend"), 
+        "NSCommands", "width=700,height=300,scrollbars=yes");
+/*
+    $.getJSON("../engine/getNSLines.php", { 
+        "f5start": b.closest("div").attr("linestart"),
+        "f5end": b.closest("div").attr("lineend")
+    }, function(data) {
+        var a = 1;
+    });
+*/
+}
+
+function export_og(e, data) {
+    var og_id = $(e.target).closest("tr").attr("og_id");
+    document.location = "/engine/export.php?objid=" + og_id;
+}
+
+function export_og(e, data) {
+    var og_id = $(e.target).closest("tr").attr("og_id");
+    document.location = "/engine/export.php?objid=" + og_id;
+}
+
+function export_og2(e, data) {
+    curtoolbar.popover('hide');
+    var og_id = $(e.target).closest("div").attr("og_id");
+    document.location = "/engine/export.php?objid=" + og_id;
+}
 
 function clickObjectAttributes(event) {
-    var target_id   = $(event.target).attr("id").substring(10);
-    var target_name = $(event.target).attr("objname");
+    var target_id   = $(event.target).closest("tr").attr("og_id");
+    var target_name = $(event.target).closest("tr").attr("og_name");
     breadcrumbs = [];
 
     loadObjectAttributes(target_id, target_name);
@@ -1219,9 +1378,19 @@ function gotoIcon(link) {
 }
 
 function showdata(data) {
+    var obj_lines = Object.keys(data);
+    obj_lines.sort();
+    var linestart = obj_lines[0];
+    var lineend = obj_lines[obj_lines.length -1];
     $("#div_details_" + curobjid)
+        .addClass("f5_command")
         .html($("<table>")
             .addClass("table")
+            .attr("linestart", linestart)
+            .attr("lineend", lineend)
+            .attr("mod", curmodule)
+            .attr("og", curobjectgroup)
+            .attr("obj_name", curobjname)
             .append($("<thead>")
                 .attr("id", "datatablehead"))
             .append($("<tbody>")
@@ -1236,6 +1405,8 @@ function showdata(data) {
 
     for(var lineno in data) {
         $("#datatablebody").append($("<tr>")
+            .attr("line", lineno)
+            .addClass("lineToolbar")
             .append($("<td>")
                 .html(lineno))
             .append($("<td>")
@@ -1246,6 +1417,19 @@ function showdata(data) {
                 .html(data[lineno]["source"].replace(/ /g, '&nbsp;')))
             .attr("id", "lineno" + lineno));
     }
+
+    $(".lineToolbar").click(function(e) {
+        var p = $(e.target).closest("tr");
+        p.popover({ 
+            container: "body",
+            html: true,
+            title: "Toolbar",
+            content: showToolbar,
+            trigger: "focus",
+            placement: "bottom"
+        })
+        p.popover('toggle');
+    });
 
 
     $("#b_details_" + curobjid)
@@ -1365,8 +1549,8 @@ function showdata(data) {
                 }
             }
         });
-    var tabletop = $("#b_details_" + curobjid).parent().parent().parent().position().top;
-    var objtop = $("#b_details_" + curobjid).parent().parent().position().top;
+    var tabletop = $("#b_details_" + curobjid).closest("table").position().top;
+    var objtop = $("#b_details_" + curobjid).closest("tr").position().top;
     $(".objectsData").scrollTop(objtop-tabletop);
 }
 
@@ -1377,7 +1561,14 @@ function setLink(line, mod, og, on) {
             "on": on
         };
     //$("#lineno" + line).addClass("linked_line");
-    $("#link" + line).html(gotoIcon(link));
+    var l = $("#link" + line);
+    var tr = l.closest("tr");
+
+    l.html(gotoIcon(link));
+    tr.attr("link", 1)
+        .attr("mod", mod)
+        .attr("og", og)
+        .attr("on", on);
 }
 
 function clickGotoObject(event) {
@@ -1394,6 +1585,7 @@ function gotoObject(link_mod, link_og, link_name) {
     curobjectgroup = link_og;
     curobjname = link_name;
 
+    curtoolbar.popover('toggle');
     $(".active.og_sidemenu_item").removeClass("active");
     $("#" + curobjectgroup).parent().addClass("active");
 
