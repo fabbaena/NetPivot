@@ -34,10 +34,6 @@ $process = array(
     );
 
 try {
-
-    if(!isset($_POST['opportunity_id'])) throw new Exception("No opportunity id provided.");
-    $opportunity_id = $_POST['opportunity_id'];
-
     if($_SERVER['CONTENT_LENGTH'] > 8388608) 
         throw new Exception("File exceeds size of 8M. Please try another file");
     $file_name = $_FILES['InputFile']['name'];
@@ -65,7 +61,6 @@ try {
     $file->filename = $file_name;
     $file->upload_time = $date;
     $file->users_id = $id;
-    $file->opportunity_id = $opportunity_id;
     $file->size = $_FILES['InputFile']['size'];
 
     $file->save();

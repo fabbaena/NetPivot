@@ -9,12 +9,28 @@
                 <h4 class="modal-title">File Upload</h4>
             </div>
             <div class="modal-body">
-                <form id="form" role="form" data-toggle="validator">
-                    <div class="form-group has-feedback">
-                        <label class="control-label" for="opportunity_id">Opportunity ID:</label>
-                        <input class="form-control" id="opportunity_id" type="text" name="opportunity_id" placeholder="https://xxx" pattern="^https?:\/\/[._A-z0-9]{1,40}$" data-pattern-error="Please use a opportunity id. No spaces" data-match-error="Please check your opportunity id." required>
-                        <div class="help-block with-errors"></div>
+                <div id="customer" class="container-fluid">
+                    Please choose the Customer associated with this conversion:
+                    <div class="dropdown">
+                        <button id="clistLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select a Customer<span class="caret"></span></button>
+                        <ul id="customers" class="dropdown-menu" aria-labelledby="clistLabel">
+                            <li><a href="#">hello1</a></li>
+                        </ul>
                     </div>
+                </div>
+                <div class="hidden container-fluid" id="project">
+                    Please choose the Quote associated with this conversion:
+                    <div class="dropdown">
+                        <button id="qlistLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select a Quote<span class="caret"></span></button>
+                        <ul id="quotes" class="dropdown-menu" aria-labelledby="qlistLabel">
+                            <li><a href="#">hello1</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <br>
+                <form id="form" role="form" data-toggle="validator">
+                    <input id="projectid" type="hidden" name="projectid">
                     <div class="container-fluid hidden" id="fu">
                         <span class="btn btn-success fileinput-button">
                             <span>Add file...</span>

@@ -119,7 +119,7 @@ function convert(uuid) {
 		);
 	$.ajax( {
 		url: "/engine/execute.php",
-		data: { 'uuid': uuid },
+		data: { 'uuid': uuid , 'projectid': $("#projectid").val() },
 		dataType: "json",
 		success: function(data) {
 			$("#convert").append(": " + data.message);

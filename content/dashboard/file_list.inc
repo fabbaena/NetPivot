@@ -3,7 +3,7 @@
         <h4>Converted Files (<?= $v ?>)</h4>
     </div>
     <div class="panel-body">
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#fileUploadModal">Add Files</button>
+        <button type="button" class="btn btn-success" id="btn_fileupload" >Add Files</button>
         <div class="table-responsive">
         <table class="table table-striped" data-toggle="bootgrid">
             <thead>

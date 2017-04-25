@@ -7,8 +7,6 @@ files:
     destination: /var/www/html/
   - source: scripts/user_clean.sh
     destination: /home/ubuntu/
-  - source: files
-    destination: /var/www/files/
 
 permissions:
   - object: /var/www/html

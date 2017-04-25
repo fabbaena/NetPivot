@@ -733,3 +733,14 @@ BEGIN
 END$$;
 
 
+\echo '>> Add projectid column to table conversions'
+DO $$
+BEGIN
+    IF NOT EXISTS ( 
+        select 1 from information_schema.columns where table_name='conversions' and column_name='projectid')
+    THEN 
+        ALTER TABLE conversions 
+            ADD COLUMN projectid integer;
+    END IF;
+END$$;
+
