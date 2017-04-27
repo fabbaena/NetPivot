@@ -31,7 +31,7 @@
                 <br>
                 <form id="form" role="form" data-toggle="validator">
                     <input id="projectid" type="hidden" name="projectid">
-                    <div class="container-fluid hidden" id="fu">
+                    <div class="container-fluid" id="fu">
                         <span class="btn btn-success fileinput-button">
                             <span>Add file...</span>
                             <input id="fileupload" type="file" name="InputFile">
