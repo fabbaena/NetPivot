@@ -639,6 +639,7 @@ function showModuleTabs(out) {
 
     for(var index in f) {
         modulename = f[index];
+        if(typeof npmodules2[modulename] === 'undefined') continue;
         if(npmodules2[modulename].attribute_count == 0) continue;
         $("#module-nav-pills").append($("<li>")
             .attr("role", "presentation")
@@ -920,6 +921,7 @@ function showObjectTabs() {
 
     for(var index in f) {
         modulename = f[index];
+        if(typeof npmodules2[modulename] === 'undefined') continue;
         if(npmodules2[modulename].attribute_count == 0) continue;
         $("#object-module-nav-pills").append($("<li>")
             .attr("role", "presentation")
