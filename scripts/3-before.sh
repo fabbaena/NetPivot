@@ -23,6 +23,7 @@ export PGPASSFILE=/home/ubuntu/.pgpass
 echo "localhost:5432:netpivot:demonio:s3cur3s0c" > ${PGPASSFILE}
 echo "localhost:5432:template1:demonio:s3cur3s0c" >> ${PGPASSFILE}
 chmod 0600 ${PGPASSFILE}
+chown ubuntu.ubuntu ${PGPASSFILE}
 
 psql -l -U demonio template1 | grep -q netpivot
 if [ $? -ne 0 ]; then

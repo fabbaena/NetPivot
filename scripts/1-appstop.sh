@@ -15,6 +15,7 @@ backup() {
     echo "localhost:5432:netpivot:demonio:s3cur3s0c" > ${PGPASSFILE}
     echo "localhost:5432:template1:demonio:s3cur3s0c" >> ${PGPASSFILE}
     chmod 0600 ${PGPASSFILE}
+    chown ubuntu.ubuntu ${PGPASSFILE}
 
     if [ ! -d `dirname ${DBDUMP}` ]; then
         mkdir -pv `dirname ${DBDUMP}`
