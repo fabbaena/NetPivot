@@ -52,7 +52,8 @@ try {
     $date = $time->full_date;
     
     $asciibin = exec($c->file_type());
-    if(strpos($asciibin, "ASCII text") === false) {
+    //if(strpos($asciibin, "ASCII text") === false) {
+    if(strpos($asciibin, "ASCII text") === false && strpos($asciibin, "Unicode text") === false) {
         unlink($c->f5_file());
         $session->delete("uuid");
         throw new Exception("Cannot process this type of file. Sorry.<br>File \"$file_name\" is of type $asciibin.");

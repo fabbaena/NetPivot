@@ -20,8 +20,6 @@ if(!($user && $user->has_role("Engineer") )) {
 }
 $id = $user->id;
 
-$filelist = new FileList(array('users_id' =>$id));
-
 $c = new Config();
 
 $v = substr(exec($c->np_version(), $v_out,$v_error), 17);

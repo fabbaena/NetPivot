@@ -21,7 +21,6 @@ if(!($user && $user->has_role("Engineer") )) {
 $id = $user->id;
 
 
-$filelist = new FileList(array('users_id' =>$id));
 $admin = $user->has_role("Company Admin");
 
 if(isset($_GET['e'])) {
