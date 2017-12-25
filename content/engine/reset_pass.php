@@ -46,7 +46,7 @@ if(isset($token) && isset($password)) {
             'port' => '465',
             'auth' => true,
             'username' => 'noreply@netpivot.io',
-            'password' => 'U&0MQ7/4(f}_M'
+            'password' => 'U&0MQ7/4(f}_M.'
         ));
 
     $mail = $smtp->send($to, $headers, $body);
