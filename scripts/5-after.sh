@@ -16,3 +16,5 @@ wget https://s3-us-west-2.amazonaws.com/netpivotkernel/netpivotkernel.tgz -P /va
 tar -xzvf /var/tmp/netpivotkernel.tgz -C /var/tmp
 sudo sh /var/tmp/installer.sh
 rm /var/tmp/netpivotkernel.tgz /var/tmp/installer.sh
+mkdir -p /var/www/nginx_files
+chown www-data.www-data /var/www/nginx_files
