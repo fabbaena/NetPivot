@@ -26,7 +26,7 @@ try {
     $uuid = $_GET['uuid'];
     $projectid = get_int($_GET, 'projectid');
 
-    $command = '/usr/bin/python3 /usr/src/netpivot/samana-prototype/nsconverter.py';
+    $command = '/usr/bin/python3 /opt/netpivot/usr/share/nginx/nsconverter.py';
     $args = " --nsout --nsoutfile /var/www/nginx_files/{$uuid}_ns.conf --errorout /var/www/nginx_files/{$uuid}_error.txt /var/www/nginx_files/{$uuid}";
     $pwd = exec($command. $args, $pwd_out,$pwd_error); //this is the command executed on the host  
     if($pwd_error) throw new Exception(
