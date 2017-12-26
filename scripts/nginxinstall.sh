@@ -6,9 +6,10 @@
 sudo mkdir -p /opt/netpivot/usr/share/
 sudo chown ubuntu.ubuntu /opt/netpivot/usr/share
 cd /opt/netpivot/usr/share/
+sudo apt-get install -y git
 git clone git@gitlab.com:nemacrux/samana-prototype.git nginx
 if [ -d "nginx" ]; then
-    sudo apt-get install python3-pip
+    sudo apt-get install -y python3-pip
     cd nginx
     sudo pip3 install -r requirements.pip
     git clone -b python3-update https://github.com/netscalerconfig/netscaler
