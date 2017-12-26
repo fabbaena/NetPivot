@@ -13,6 +13,13 @@ input.btn.margin_left-max {
     
     margin-left: 43%;
 }
+
+.btn {
+    border-color: #555;
+}
+.btn:hover {
+    background-color: #00000024;
+}
 .number {
     font-size: 80px;
     /*font-weight: 700;*/
