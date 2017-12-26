@@ -18,7 +18,8 @@ if(!isset($_GET['uuid']) || !isset($_GET['file'])) {
 }
 $uuid = $_GET['uuid'];
 $file = $_GET['file'];
-$outfilename = $session->get('upload_file_name').explode('.')[0];
+$outfilename = $session->get('upload_file_name');
+$outfilename = preg_replace('/\.[^.]+$/','',$outfilename);
 
 if($file == 'config') {
     $filename = "{$uuid}_ns.conf";
