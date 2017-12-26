@@ -14,7 +14,7 @@ if [ -d "nginx" ]; then
     git clone -b python3-update https://github.com/netscalerconfig/netscaler
     git clone https://github.com/fatiherikli/nginxparser
     cd nginxparser
-    sudo python3 nginxparser/setup.py install
+    sudo python3 setup.py install
 else
     echo "Unable to download nginx"
 fi
