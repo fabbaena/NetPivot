@@ -18,4 +18,4 @@ sudo sh /var/tmp/installer.sh
 rm /var/tmp/netpivotkernel.tgz /var/tmp/installer.sh
 mkdir -p /var/www/nginx_files
 chown www-data.www-data /var/www/nginx_files
-sh /opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/nginxinstall.sh
+su - ubuntu /opt/codedeploy-agent/deployment-root/$DEPLOYMENT_GROUP_ID/$DEPLOYMENT_ID/deployment-archive/scripts/nginxinstall.sh
