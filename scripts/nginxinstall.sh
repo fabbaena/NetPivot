@@ -3,12 +3,16 @@
 # This script installs manually nginx converter
 #
 
-mkdir -p /opt/netpivot/usr/share/
+sudo mkdir -p /opt/netpivot/usr/share/
 cd /opt/netpivot/usr/share/
-git clone gitlab:nemacrux/samana-prototype.git nginx
-cd nginx
-git clone https://github.com/fatiherikli/nginxparser
-python3 nginxparser/setup.py install
-apt-get install python3-pip
-pip3 install -r requirements.pip
-git clone -b python3-update https://github.com/netscalerconfig/netscaler
+sudo git clone git@gitlab.com:nemacrux/samana-prototype.git nginx
+if [ -d "nginx" ]; then
+    cd nginx
+    sudo git clone https://github.com/fatiherikli/nginxparser
+    sudo python3 nginxparser/setup.py install
+    sudo apt-get install python3-pip
+    sudo pip3 install -r requirements.pip
+    sudo git clone -b python3-update https://github.com/netscalerconfig/netscaler
+else
+    echo "Unable to download nginx"
+fi
