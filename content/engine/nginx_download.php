@@ -18,12 +18,14 @@ if(!isset($_GET['uuid']) || !isset($_GET['file'])) {
 }
 $uuid = $_GET['uuid'];
 $file = $_GET['file'];
-$file_name = $session->get('upload_file_name');
+$outfilename = $session->get('upload_file_name').explode('.')[0];
 
 if($file == 'config') {
     $filename = "{$uuid}_ns.conf";
+    $outfilename .= "_ns.conf";
 } else if($file == 'error') {
     $filename = "{$uuid}_error.txt";
+    $outfilename .= "_error.txt";
 } else {
     print "Invalid Request";
     exit(1);
@@ -33,7 +35,7 @@ $f = fopen("/var/www/nginx_files/{$filename}", "r") or die("Unable to open file!
 
 
 header('Content-Type: text/plain');
-header("Content-Disposition: attachment; filename=\"{$file_name}\"");
+header("Content-Disposition: attachment; filename=\"{$outfilename}\"");
 echo fread($f,filesize("/var/www/nginx_files/{$filename}"));
 fclose($f);
 ?>
