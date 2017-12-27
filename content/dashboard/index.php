@@ -70,6 +70,7 @@ if(isset($_GET['e'])) {
                 </button>
             </div>
         </div>
+        <?php if($user->has_role("Demo")) { ?>
         <div class="row">&nbsp;</div>
         <div class="row">
             <div class="col-xs-12 col-md-offset-1 col-md-5 content">
@@ -79,6 +80,7 @@ if(isset($_GET['e'])) {
             </div>
             <div class="col-xs-12 col-md-5 content">&nbsp;</div>
         </div>
+        <?php } ?>
         <div class="row">&nbsp;</div>
         <div class="row">
             <div class="col-xs-12 col-md-offset-1 col-md-5 content">
