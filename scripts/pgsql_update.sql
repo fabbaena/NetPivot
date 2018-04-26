@@ -744,3 +744,24 @@ BEGIN
     END IF;
 END$$;
 
+\echo '>> Add orphan column to table f5_attributes_json'
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        select 1 from information_schema.columns where table_name='f5_attributes_json' and column_name='orphan')
+    THEN
+        ALTER TABLE f5_attributes_json
+            ADD COLUMN orphan integer NOT NULL DEFAULT 0;
+    END IF;
+END$$;
+
+\echo '>> Add orphan column to table f5_stats_modules'
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        select 1 from information_schema.columns where table_name='f5_stats_modules' and column_name='orphan')
+    THEN
+        ALTER TABLE f5_stats_modules
+            ADD COLUMN orphan integer NOT NULL DEFAULT 0;
+    END IF;
+END$$;

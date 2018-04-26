@@ -62,6 +62,7 @@ if(!isset($npmodules2[$module]["object_groups"][$object_group]["objects"]) || $c
         $npm[$o->name]["attribute_count"]     = $o->total_attr;
         $npm[$o->name]["attribute_converted"] = $o->conv_attr;
         $npm[$o->name]["attribute_omitted"]   = 0;
+        $npm[$o->name]["orphan"]              = $o->orphan;
         $npm[$o->name]["line"]                = $o->line;
         $npm[$o->name]["lineend"]             = $o->lineend;
         $npm[$o->name]["p_converted"]         = $p_converted;
