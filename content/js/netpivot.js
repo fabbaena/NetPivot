@@ -718,7 +718,7 @@ function showModuleTable() {
         .append($("<thead>")
             .append($("<tr>").addClass("active")
                 .append($("<th>")
-                    .css("width", "55%")
+                    .css("width", "50%")
                     .html(curmodule!='rule'?"F5 Object Groups":"iRule Name")
                     .append("&nbsp;")
                     .append($("<div>")
@@ -742,7 +742,15 @@ function showModuleTable() {
                         .addClass("sortStatConverted")
                         .addClass("glyphicon glyphicon-sort")
                         .click(clickSortStats)))
-                .append($("<th>").css("width", "15%").html("Actions"))
+                .append($("<th>").css("width", "10%")
+                    .html("Orphan")
+                    .append("&nbsp;")
+                    .append($("<div>")
+                        .addClass("sortStat")
+                        .addClass("sortStatOrphan")
+                        .addClass("glyphicon glyphicon-sort")
+                        .click(clickSortOrphan)))
+                .append($("<th>").css("width", "10%").html("Actions"))
             ))
         .append($("<tbody>")
             .addClass("objectstats_table"));
@@ -763,17 +771,39 @@ function showModuleData() {
     } 
     for(var keyval in npmodules2[curmodule]["_print_order"]) {
         ogname = npmodules2[curmodule]["_print_order"][keyval]["key"];
-        var color = npmodules2[curmodule]["object_groups"][ogname]["p_converted"] == 100 ? 
-            "text_color_green" : "text_color_red"
+        var color = "";
+        var p_converted  = npmodules2[curmodule]["object_groups"][ogname]["p_converted"];
+        var name         = npmodules2[curmodule]["object_groups"][ogname]["name"];
+        var object_count = npmodules2[curmodule]["object_groups"][ogname]["object_count"];
+        var orphan_col   = npmodules2[curmodule]["object_groups"][ogname]["orphan"];
+        var orphan = "";
+
+        if(p_converted == 100) {
+            color = "text_color_green";
+            p_converted += "%";
+        } else if(p_converted >= 0) {
+            color = "text_color_red";
+            p_converted += "%";
+        }
+        if(curmodule == "rule") {
+            orphan_col = "no";
+            object_count = "&nbsp;";
+            if(npmodules2[curmodule]["object_groups"][ogname]["orphan"]) {
+                color = "text_color_grey";
+                p_converted = "N/A";
+                orphan = "(orphan)";
+                orphan_col = "yes";
+            }
+        }
         table.append($("<tr>")
             .addClass("statsData")
-            .append($("<td>").html(npmodules2[curmodule]["object_groups"][ogname]["name"]))
-            .append($("<td>").html(npmodules2[curmodule]["object_groups"][ogname]["object_count"]))
+            .append($("<td>").html(name + orphan))
+            .append($("<td>").html(object_count))
             .append($("<td>")
                 .addClass(color)
-                .html($("<strong>").html(npmodules2[curmodule]["object_groups"][ogname]["p_converted"]))
-                .append("%")
+                .html($("<strong>").html(p_converted))
                 )
+            .append($("<td>").html(orphan_col))
             .append($("<td>").html(
                 $("<a>").attr("id", "vo_"+ogname).html("View Object").click(
                     function(event) {
@@ -840,6 +870,10 @@ function clickSortStats(data) {
     } else {
         alert("Something is wrong");
     }
+}
+
+function clickSortOrphan(data) {
+
 }
 
 function setOGPrintOrder(byvalue) {
@@ -1023,6 +1057,10 @@ function showObjectOGData(data) {
     $(".og_sidemenu_item").remove();
     for(var ogname in npmodules2[curmodule]["object_groups"]) {
         if(ogname == "rule") continue;
+        var orphan = "";
+        if(curmodule == "rule" && npmodules2[curmodule]["object_groups"][ogname]["orphan"]) {
+            orphan = "(orphan)";
+        }
         $(".og_sidemenu").append($("<li>")
             .addClass("og_sidemenu_item")
             .addClass(ogname==curobjectgroup?"active":"")
@@ -1030,7 +1068,7 @@ function showObjectOGData(data) {
             .html($("<a>")
                 .attr("id", npmodules2[curmodule]["object_groups"][ogname]["name"])
                 .addClass("og_sidemenu_item")
-                .html(npmodules2[curmodule]["object_groups"][ogname]["name"])));
+                .html(npmodules2[curmodule]["object_groups"][ogname]["name"] + orphan)));
     }
     if(curobjectgroup != "") {
         showObjectTable();
@@ -1134,7 +1172,13 @@ function showObjectData() {
         curog_id = curog["id"];
         oname = curog["name"];
         curog_ac = curog["attribute_count"];
-        curog_pc = curog["p_converted"];
+        curog_pc = curog["p_converted"] + "%";
+        var orphan = "";
+        if(curog["orphan"]==1) {
+            orphan = "(orphan)";
+            curog_pc = "N/A";
+            curog_ac = "N/A";
+        }
         $(".objectObjectsTable")
             .append($("<tr>")
                 .attr("og_id", curog_id)
@@ -1150,7 +1194,7 @@ function showObjectData() {
                         .click(clickObjectAttributes))
                     .append($("<span>")
                         .attr("id", "l_details_" + curog_id)
-                        .append(oname))
+                        .append(oname + orphan))
                     .append("&nbsp;")
                     .append($("<div>")
                         .addClass("btn-group btn-group-xs")
@@ -1164,8 +1208,7 @@ function showObjectData() {
                 .append($("<td>")
                     .addClass(perc_color)
                     .append($("<strong>")
-                        .append(curog_pc)
-                        .append("%")))
+                        .append(curog_pc)))
                 )
             .append($("<tr>")
                 .addClass("object_item")
@@ -1189,8 +1232,15 @@ function showObjectData() {
             oname = curog["_print_order"][keyval]["key"];
             var curog_id = curog["objects"][oname]["id"];
             var curog_ac = curog["objects"][oname]["attribute_count"];
-            var curog_pc = curog["objects"][oname]["p_converted"];
+            var curog_pc = curog["objects"][oname]["p_converted"] + "%";
             var perc_color = curog_pc==100?"text_color_green":"text_color_red";
+            var orphan = "";
+            if(curog["objects"][oname]["orphan"]==1) {
+                orphan = "(orphan)";
+                curog_pc = "N/A";
+                curog_ac = "N/A";
+                perc_color = "text_color_grey";
+            }
             $(".objectObjectsTable")
                 .append($("<tr>")
                     .attr("og_id", curog_id)
@@ -1207,14 +1257,13 @@ function showObjectData() {
                             .click(clickObjectAttributes))
                         .append($("<span>")
                             .attr("id", "l_details_" + curog_id)
-                            .append(oname)))
+                            .append(oname + orphan)))
                     .append($("<td>")
                         .append(curog_ac))
                     .append($("<td>")
                         .addClass(perc_color)
                         .append($("<strong>")
-                            .append(curog_pc)
-                            .append("%")))
+                            .append(curog_pc)))
                     )
                 .append($("<tr>")
                     .addClass("object_item")

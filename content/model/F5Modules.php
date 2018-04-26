@@ -11,6 +11,7 @@ class F5Module extends NPObject {
 	public $objects;
 	public $attributes;
 	public $converted;
+	public $orphan;
 
 	public $_objects;
 
@@ -19,6 +20,7 @@ class F5Module extends NPObject {
 		$this->objects = 0;
 		$this->attributes = 0;
 		$this->converted = 0;
+		$this->orphan = 0;
 		if(!isset($record)) return;
 
 		foreach($this as $key => $value) {
@@ -29,8 +31,12 @@ class F5Module extends NPObject {
 	function addObject(&$o) {
 		$this->_objects[$o->name] = $o;
 		$this->objects++;
-		$this->attributes += $o->countAttributes();
-		$this->converted += $o->countConverted();
+		if($o->isOrphan() != 1) {
+			$this->attributes += $o->countAttributes();
+			$this->converted += $o->countConverted();
+		} else {
+			$this->orphan++;
+		}
 	}
 
 	function countAttributes() {

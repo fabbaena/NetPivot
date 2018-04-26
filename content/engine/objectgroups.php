@@ -62,6 +62,7 @@ if(!isset($npmodules2[$module]["object_groups"]) || $c->ignore_cache()) {
         $og[$o->name]["attribute_count"]     = $o->$t["attribute_count"];
         $og[$o->name]["attribute_converted"] = $o->$t["attribute_converted"];
         $og[$o->name]["attribute_ommited"]   = 0;
+        $og[$o->name]["orphan"]              = $o->orphan;
         $og[$o->name]["object_count"]        = $feature ? $o->objects : 1;
         $og[$o->name]["p_converted"]         = $p_converted;
     }
