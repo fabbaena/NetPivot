@@ -58,6 +58,7 @@ class F5Object extends NPObject {
 	public $attributes;
 	public $conv_attr;
 	public $total_attr;
+	public $orphan;
 	public $lineend;
 	public $module_id;
 	public $_attributes;
@@ -97,6 +98,10 @@ class F5Object extends NPObject {
 	}
 	function countConverted() {
 		return $this->conv_attr;
+	}
+
+	function isOrphan() {
+		return $this->orphan;
 	}
 
 	function printObject() {
