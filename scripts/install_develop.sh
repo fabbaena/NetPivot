@@ -6,10 +6,10 @@ DBPATH=${GITPATH}/scripts
 CONTENTPATH=${GITPATH}/content
 PASS="$4manaDefault"
 
-sudo echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" \
-    > /etc/apt/sources.list.d/pgdg.list
+echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" \
+  | sudo tee /etc/apt/sources.list.d/pgdg.list
 sudo wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc \
-    | sudo apt-key add -
+  | sudo apt-key add -
 sudo apt update
 sudo apt install -y postgresql-9.5
 
