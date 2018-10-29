@@ -41,7 +41,7 @@ psql -U demonio -b -f ${DBPATH}/pgsql_update.sql netpivot
 psql -U demonio -b -f ${DBPATH}/adc_hw.sql netpivot
 psql -U demonio -b -f ${DBPATH}/CRMTables.sql netpivot
 psql -U demonio -b -f ${DBPATH}/F5NSLink.sql netpivot
-ADMINPASS=$(php5 -r "echo password_hash(\"$PASS\", PASSWORD_BCRYPT);\')"
+ADMINPASS=$(php5 -r "echo password_hash(\"$PASS\", PASSWORD_BCRYPT);)"
 psql -U demonio -c "update users set password='$ADMINPASS' where id=1" netpivot
 
 sudo apt install -y apache2 php5 php-pear php-mail php5-json php5-pgsql php5-readline
