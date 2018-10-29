@@ -4,7 +4,7 @@ set -x
 GITPATH=/usr/src/develop
 DBPATH=${GITPATH}/scripts
 CONTENTPATH=${GITPATH}/content
-PASS="$4manaDefault"
+PASS="\$4manaDefault"
 
 echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" \
   | sudo tee /etc/apt/sources.list.d/pgdg.list
@@ -38,12 +38,12 @@ psql -U demonio -b -f ${DBPATH}/F5NSLink.sql netpivot
 
 sudo apt install -y apache2 php5 php-pear php-mail php5-json php5-pgsql php5-readline
 
-ADMINPASS=$(php5 -r "echo password_hash(\"$PASS\", PASSWORD_BCRYPT);)"
-psql -U demonio -c "update users set password='$ADMINPASS' where id=1" netpivot
+ADMINPASS=$(php5 -r "echo password_hash(\"$PASS\", PASSWORD_BCRYPT);")
+psql -U demonio -c "update users set password='$ADMINPASS', firstname='admin' where id=1" netpivot
 
 
 cat <<EOF | sudo tee /etc/apache2/conf-available/netpivot.conf
-<Directory /usr/src/develop/content>
+<Directory $CONTENTPATH>
     Options Indexes FollowSymLinks
     AllowOverride None
     Require all granted
@@ -52,7 +52,7 @@ EOF
 
 cd /etc/apache2/conf-enabled
 sudo ln -s ../conf-available/netpivot.conf
-sed -i -e "s|\(\s\+DocumentRoot \).*|\1 ${CONTENTPATH}|" \
+sudo sed -i -e "s|\(\s\+DocumentRoot \).*|\1 ${CONTENTPATH}|" \
     /etc/apache2/sites-enabled/000-default.conf
 
 sudo mkdir /var/www/files
