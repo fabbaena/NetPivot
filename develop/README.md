@@ -15,7 +15,7 @@ chmod 600 ~/.ssh/id_rsa
 
 git clone -b develop git@github.com:/fabbaena/NetPivot
 
-NetPivot/scripts/install_develop.sh
+NetPivot/develop/install_develop.sh
 ```
 
 After this is done, NetPivot should be available through the browser pointing to the IP address of the server.
