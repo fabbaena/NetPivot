@@ -21,5 +21,7 @@ NetPivot/scripts/install_develop.sh
 After this is done, NetPivot should be available through the browser pointing to the IP address of the server.
 
 Source code for development will be stored in `/usr/src/develop`.
+***
 *Please use a new branch.*
+***
 After code has been updated, use git to commit and update
