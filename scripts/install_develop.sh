@@ -35,7 +35,7 @@ chmod 600 ~/.pgpass
 ## Install database
 sudo mkdir -p ${GITPATH}
 sudo chown ubuntu:ubuntu ${GITPATH}
-git clone git:/fabbaena/NetPivot ${GITPATH}
+git clone -b develop git:/fabbaena/NetPivot ${GITPATH}
 sudo su - postgres sh -c psql -f ${DBPATH}/pgsql_create.sql
 psql -U demonio -b -f ${DBPATH}/pgsql_update.sql netpivot
 psql -U demonio -b -f ${DBPATH}/adc_hw.sql netpivot
