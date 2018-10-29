@@ -19,12 +19,6 @@ sudo sed -i -e "s|^\(local\s\+all\s\+all\s\+\)peer|\1md5|" \
 sudo /etc/init.d/postgresql restart
 
 sudo apt install -y git
-cat <<EOF >> ~/.ssh/config
-Host git
-   User git
-   HostName github.com
-   IdentityFile ~/.ssh/netpivot.pem
-EOF
 cat <<EOF > ~/.pgpass
 localhost:5432:netpivot:demonio:s3cur3s0c
 localhost:5432:template1:demonio:s3cur3s0c
@@ -35,7 +29,7 @@ chmod 600 ~/.pgpass
 ## Install database
 sudo mkdir -p ${GITPATH}
 sudo chown ubuntu:ubuntu ${GITPATH}
-git clone -b develop git:/fabbaena/NetPivot ${GITPATH}
+git clone -b develop git@github.com:/fabbaena/NetPivot ${GITPATH}
 sudo su - postgres sh -c psql -f ${DBPATH}/pgsql_create.sql
 psql -U demonio -b -f ${DBPATH}/pgsql_update.sql netpivot
 psql -U demonio -b -f ${DBPATH}/adc_hw.sql netpivot
