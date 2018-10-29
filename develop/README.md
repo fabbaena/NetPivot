@@ -4,8 +4,7 @@ Requirements:
 - Ubuntu 14.04 LTS
 - Disk space 100MB
 
-
-sudo apt update
+`sudo apt update`
 sudo apt install -y git
 cat <<EOF > ~/.ssh/id_rsa
 <put you private key in here>
