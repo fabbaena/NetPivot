@@ -1,8 +1,9 @@
 # NetPivot Development Environment install
 
 Requirements:
-* Ubuntu 14.04 LTS
-* Disk space 100MB
+- Ubuntu 14.04 LTS
+- Disk space 100MB
+
 
 sudo apt update
 sudo apt install -y git
