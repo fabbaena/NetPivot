@@ -48,7 +48,7 @@ if($file_list->count > 0){
 
     $out = [];
     foreach($files as $file){
-        $out[] = [$file->uuid => $file->filename];
+        $out[] = ['id' => $file->uuid,  'filename' => $file->filename];
     }
 
     echo json_encode($out);
