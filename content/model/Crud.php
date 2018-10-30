@@ -7,7 +7,7 @@
  */
 
 /**
- * Description of Crud
+ * This class is meant to be the CRUD for the postgres database.
  *
  * @author gonzalorodriguez
  */
@@ -28,12 +28,12 @@ class Crud {
     public $filename;
     public $uuid;
     public $fetchall;
-    public $data;
+    public $data;               // 
     public $orderby;
     public $groupby;
 
-    private $_conn;
-    private $_req;
+    private $_conn;             // PDO object for database connection
+    private $_req;              // Only used in CreateBulk() (possibly a pdo)
     
 
     function __construct() {
@@ -45,6 +45,16 @@ class Crud {
         $this->_req = false;
     }
     
+    /**
+     * Parameters used:
+     *      - $this->insertInto
+     *      - $this->insertColumns
+     *      - $this->insertValues
+     * 
+     * Parameters with side-effects:
+     *      - $this->mensaje
+     *      - $this->id (if prearing npo returns something a non-trivial statement)
+     */
     public function Create(){
         $insertInto = $this->insertInto;
         $insertColumns = $this->insertColumns;
@@ -60,6 +70,14 @@ class Crud {
         }  
     }
 
+    /**
+     * Parameters used:
+     *      - $this->insertInto
+     *      - $this->data
+     * Parameters with side-effects:
+     *      - $this->mensaje
+     *      - $this->id (if prearing npo returns something a non-trivial statement)
+     */
     public function Create2($returning = null) {
         $insertColumnsArray = array();
         $insertValuesArray = array();
@@ -88,6 +106,15 @@ class Crud {
         }  
     }
 
+    /**
+     * Parameters used:
+     *      - $this->insertInto
+     *      - $this->_req (if $prepare is false or nothing )
+     * Parameters with side-effects:
+     *      - $this->_req (if prepare is not false)
+     *      - $this->mensaje (if $prepare is false or nothing, and 
+     *          $this->_req does not have the value 'false')
+     */
     public function CreateBulk($prepare = false, $insertColumnsArray = array()) {
         if($prepare) {
             $insertInto = $this->insertInto;
@@ -108,6 +135,16 @@ class Crud {
         }
     }
     
+    /**
+     * Parameters used:
+     *      - $this->select
+     *      - $this->from
+     *      - $this->condition
+     *      - $this->orderby
+     *      - $this->groupby
+     * Parameters with side-effects:
+     *      - $this->rows
+     */
     public function Read(){
         $select = $this->select;
         $from = $this->from;
@@ -130,6 +167,15 @@ class Crud {
 
     }
 
+    /**
+     * Parameters used:
+     *      - $this->select
+     *      - $this->from
+     *      - $this->condition
+     *      - $this->groupby
+     * Parameters with side-effects:
+     *      - $this->rows
+     */
     public function ReadObject(){
         $select = $this->select;
         $from = $this->from;
@@ -151,6 +197,14 @@ class Crud {
 
     }
 
+    /**
+     * Parameters used:
+     *      - $this->select
+     *      - $this->from
+     *      - $this->condition
+     * Parameters with side-effects:
+     *      - $this->fetchall
+     */
     public function Read2(){
         $select = $this->select;
         $from = $this->from;
@@ -165,6 +219,15 @@ class Crud {
 
     }
     
+
+    /**
+     * Parameters used:
+     *      - $this->select
+     *      - $this->from
+     *      - $this->condition
+     * Parameters with side-effects:
+     *      - $this->rows
+     */
     public function Read3(){
         $select = $this->select;
         $from = $this->from;
@@ -194,6 +257,15 @@ class Crud {
 
     }
 
+    /**
+     * Parameters used:
+     *      - $this->select
+     *      - $this->from
+     *      - $this->condition
+     *      - $this->orderby
+     * Parameters with side-effects:
+     *      - $this->rows
+     */
     public function Read4(){
         $select = $this->select;
         $from = $this->from;
@@ -237,6 +309,18 @@ class Crud {
 
     }
 
+    /**
+     * Parameters used:
+     *      - $this->select
+     *      - $this->from
+     *      - $this->condition
+     *      - $this->orderby
+     * Parameters with side-effects:
+     *      - $this->data
+     *      - $this->rows
+     * 
+     * @return Length of the $rows parameter after modifications.
+     */
     public function Read5(){
         $select = $this->select;
         $from = $this->from;
@@ -258,6 +342,14 @@ class Crud {
         return count($this->rows);
     }
     
+    /**
+     * Parameters used:
+     *      - $this->update
+     *      - $this->set
+     *      - $this->condition
+     * Parameters with side-effects:
+     *      - $this->mensaje
+     */
     public function Update(){
         $update = $this->update;
         $set = $this->set;
@@ -275,6 +367,14 @@ class Crud {
         }
     }
     
+    /**
+     * Parameters used:
+     *      - $this->condition
+     *      - $this->update
+     *      - $this->data
+     * Parameters with side-effects:
+     *      - $this->mensaje
+     */
     public function Update2() {
         $condition = $this->condition;
         $updateColumnsArray = array();
@@ -300,6 +400,14 @@ class Crud {
         }  
     }
 
+    /**
+     * Parameters used:
+     *      - $this->update
+     *      - $this->data
+     *      - $this->condition
+     * Parameters with side-effects:
+     *      - $this->mensaje
+     */
     public function Update3() {
         $condition = '';
 
@@ -331,6 +439,13 @@ class Crud {
         }  
     }
 
+    /**
+     * Parameters used:
+     *      - $this->deleteFrom
+     *      - $this->condition
+     * Parameters with side-effects:
+     *      - $this->mensaje
+     */
     public function Delete(){
         $deleteFrom = $this->deleteFrom;
         $condition = $this->condition;
@@ -347,9 +462,32 @@ class Crud {
         }
     }
 
+    /**
+     * Parameters used:
+     *      - $this->filename
+     *      - $this->uuid
+     * Parameters with side-effects:
+     *      - $this->mensage
+     */
     public function Load(){
+        $model = new ConnectionBD();
+        $conexion = $model->conectar();
         $filename = $this->filename;
         $uuid = $this->uuid;
+        $sql = "load data infile '$filename' ".
+                "into table details fields terminated by ',' ".
+                "(module, obj_grp, obj_component, obj_name, attribute, converted, omitted, line, files_uuid) ".
+                "set files_uuid=\"$uuid\";";
+        $consulta = $conexion->prepare($sql);
+        if (!$consulta) {
+            $this->mensaje = $consulta->errorInfo();
+        } else {
+            $consulta->execute();
+            $this->mensaje = $consulta->errorInfo();
+        }
+    }
+    
+}
 
         $consulta = $this->_conn->prepare('BEGIN');
         $consulta->execute();
@@ -357,11 +495,7 @@ class Crud {
         $consulta = $this->_conn->prepare($sql);
         $csvfile = fopen($filename, "r") or die("Unable to open $filename!");
         while($line = fgets($csvfile)) {
-            $data = explode(",", $line);
-            $arr = array_splice($data, 0, 8);
-            $arr[5] = intval($arr[5]);
-            $arr[6] = intval($arr[6]);
-            $arr[7] = intval($arr[7]);
+            $arr = explode(",", $line);
             array_push($arr, $uuid);
             $consulta->execute($arr);
         }
@@ -371,6 +505,14 @@ class Crud {
         $this->mensage = $consulta->errorInfo();
     }
 
+    /**
+     * Parameters used:
+     *      ...parameters required in Create2() 
+     * Parameters with side-effects:
+     *      - $this->insertInto
+     *      - $this->data
+     *      ...parameters changed in Create2()
+     */
     function uploadJSON($uuid, $objectgroup, $obj) {
         foreach($obj as $object) {
             if(!isset($object["name"])) continue;
@@ -391,6 +533,15 @@ class Crud {
         }
     }
 
+    /**
+     * Parameters used:
+     *      - $this->id
+     *      ...parameters changed in Create2()
+     * Parameters with side-effects:
+     *      - $this->insertInto
+     *      - $this->data
+     *      ...parameters changed in Create2()
+     */
     function uploadJSON2($uuid, $data) {
         $stats = array();
         foreach($data as $key => $m) {
@@ -469,6 +620,9 @@ class Crud {
     
 }
 
+/**
+ * 
+ */
 class Condition {
     public $oper;
     public $A;
