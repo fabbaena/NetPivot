@@ -20,7 +20,7 @@ $conv = new Conversion(['files_uuid' => $uuid, 'users_id' => $users_id]);
 
 if($conv->load(['files_uuid', 'users_id'])){
 
-    readfile($conv->stats_file);
+    readfile($conv->json_file);
 
 } else{
     echo json_encode([
