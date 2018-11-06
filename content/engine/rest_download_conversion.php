@@ -1,7 +1,7 @@
 <?php
 
 header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
+
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, 
     Access-Control-Allow-Origin, Content-Type, 
@@ -19,10 +19,11 @@ $uuid = $incoming->id;
 $conv = new Conversion(['files_uuid' => $uuid, 'users_id' => $users_id]);
 
 if($conv->load(['files_uuid', 'users_id'])){
-
+    header('Content-Type: text/plain');
     readfile($conv->converted_file);
 
 } else{
+    header('Content-Type: application/json');
     echo json_encode([
         'message' => 'No such conversion.'
     ]);
