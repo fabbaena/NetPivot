@@ -41,6 +41,8 @@ $file = new FileManager(array(
     '_path_files' => $c->path_files(), 
     'uuid' => $uuid));
 
+echo json_encode(['uuid' => $uuid]);
+
 $process = array(
     'result' => 'error',
     'message' => 'Unknown error.',
@@ -58,9 +60,9 @@ try {
     // $session->set('uuid', $uuid);
     $c->set_uuid($uuid);
     syslog(LOG_INFO, "REST: Uploaded file ". $_FILES['file']['tmp_name']. " to ". $c->f5_file());
-    if(!move_uploaded_file($_FILES['InputFile']['tmp_name'], $c->f5_file())) 
+    if(!move_uploaded_file($_FILES['file']['tmp_name'], $c->f5_file())) 
         throw new Exception("Unable to move file. Internal Error. Please contact the administrator. (". 
-        $_FILES['InputFile']['tmp_name']. ")");
+        $_FILES['file']['tmp_name']. ")");
 
     $time = new TimeManager(); //get Date
     $time->Today_Date();
