@@ -19,6 +19,10 @@ header('Access-Control-Allow-Headers: Access-Control-Allow-Origin,
 $users_id = 1;
 $projectid = null;
 
+$prog_conn = new CRUD();
+$prog_conn->insertInto = 'rest_progress';
+$prog_conn->update = 'rest_progress';
+
 /* PUT data comes in on the stdin stream */
 // $putdata = json_decode(file_get_contents("php://input"));
 
@@ -44,12 +48,15 @@ $file = new FileManager(array(
 echo json_encode(['uuid' => $uuid]);
 
 $process = array(
-    'result' => 'error',
-    'message' => 'Unknown error.',
-    'next' => 'none'
+    'uuid' => $uuid,
+    'message' => 'Initializing process.',
+    'next' => 'upload'
     );
+$prog_conn->data = $process;
 
 try {
+    $prog_conn->Create2();
+
     if($_SERVER['CONTENT_LENGTH'] > 8388608) 
         throw new Exception("File exceeds size of 8M. Please try another file");
     // $file_name = $putdata->filename;
@@ -82,17 +89,21 @@ try {
     $file->size = $_FILES['InputFile']['size'];
 
     $file->save();
-    $process["result"] = "Done";
+    // $process["result"] = "Done";
     $process["message"] = "Uploaded";
     $process["next"] = "convert";
-    $process["uuid"] = $uuid;
+    $prog_conn->data = $process;
+    $prog_conn->Update2();
+    // $process["uuid"] = $uuid;
     // $session->set('upload_file_name', $file_name);
     new Event($user, "File \"$file_name\" was uploaded succesfully.", 6);
 } catch (Exception $ex) {
     new Event($user, $ex->getMessage());
     $process["message"] = $ex->getMessage();
-    $process["result"] = "Error";
-    echo json_encode($process);
+    // $process["result"] = "Error";
+    // echo json_encode($process);
+    $prog_conn->data = $process;
+    $prog_conn->Update2();
     die();
 }
 
@@ -131,17 +142,21 @@ try {
         throw new Exception("Could not save \"$file_name\" conversion to database. ".
             "Please contact the administrator with the following information: ". $uuid);
     }
-    $process["result"] = "ok";
+    // $process["result"] = "ok";
     $process["message"] = "Conversion finished.";
     $process["next"] = "stats";
-    $process["uuid"] = $uuid;
+    $prog_conn->data = $process;
+    $prog_conn->Update2();
+    // $process["uuid"] = $uuid;
     new Event($user, "Conversion of \"$file_name\" Finished.", 7);
 } catch (Exception $ex) {
     new Event($user, $ex->getMessage());
-    $process["result"] = "error";
+    // $process["result"] = "error";
     $process["message"] = $ex->getMessage();
+    $prog_conn->data = $process;
+    $prog_conn->Update2();
     // $session->set('upload_file_name', null);
-    echo json_encode($process);
+    // echo json_encode($process);
     die();
 }
 
@@ -182,17 +197,21 @@ try {
     if(!$conversion->saveData()) 
         throw new Exception("Internal Error. Cannot load JSON data into database for \"$file_name\". ($uuid)");
 
-    $process["result"] = "ok";
+    // $process["result"] = "ok";
     $process["message"] = "Statistics Generated.";
     $process["next"] = "links";
-    $process["uuid"] = $uuid;
+    $prog_conn->data = $process;
+    $prog_conn->Update2();
+    // $process["uuid"] = $uuid;
     new Event($user, "Statistics generated for \"$file_name\"", 8);
 } catch (Exception $ex) {
     error_log($ex->getMessage());
-    $process["result"] = "error";
+    // $process["result"] = "error";
     $process["message"] = $ex->getMessage();
+    $prog_conn->data = $process;
+    $prog_conn->Update2();
     new Event($user, $ex->getMessage());
-    echo json_encode($process);
+    // echo json_encode($process);
 }
 
 /* Start links procedure */
@@ -222,15 +241,19 @@ try {
         if($conn->CreateBulk() !== true) throw new Exception("DB error loading links. Details: ". $conn->mensaje);
     }
 
-    $process["result"] = "ok";
+    // $process["result"] = "ok";
     $process["message"] = "Links Generated.";
     $process["next"] = "DONE";
-    $process["uuid"] = $uuid;
+    $prog_conn->data = $process;
+    $prog_conn->Update2();
+    // $process["uuid"] = $uuid;
     new Event($user, "Links generated for \"$file_name\"", 8);
 } catch (Exception $ex) {
     error_log($ex->getMessage());
-    $process["result"] = "error";
+    // $process["result"] = "error";
     $process["message"] = $ex->getMessage();
+    $prog_conn->data = $process;
+    $prog_conn->Update2();
     new Event($user, $ex->getMessage());
-    echo json_encode($process);
+    // echo json_encode($process);
 }
