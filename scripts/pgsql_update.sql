@@ -765,3 +765,31 @@ BEGIN
             ADD COLUMN orphan integer NOT NULL DEFAULT 0;
     END IF;
 END$$;
+
+\echo '>> Add column to table settings: JWT lifetime in secs.'
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        select 1 from information_schema.columns  where table_name='settings' and column_name='jwt_lifetime_secs')
+    THEN
+        ALTER TABLE settings
+            ADD COLUMN jwt_lifetime_secs integer NOT NULL DEFAULT 300;
+    END IF;
+END$$;
+
+\echo '>> Add column to table settings: JWT secret.'
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        select 1 from information_schema.columns where table_name='settings' and column_name='jwt_secret')
+    THEN
+        ALTER TABLE settings
+            ADD COLUMN jwt_secret varchar(32) NOT NULL DEFAULT 'some_secret';
+    END IF;
+END$$;
+
+\echo '>> Initialize default settings values.'
+DO $$
+BEGIN
+   INSERT INTO settings(host_name) VALUES (0);
+END$$;
