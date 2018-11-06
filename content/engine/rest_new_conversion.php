@@ -11,7 +11,7 @@ require_once 'Config.php';
 
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: PUT');
+header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, 
     Access-Control-Allow-Methods, Content-Type,
     Access-Control-Allow-Headers');
@@ -20,7 +20,7 @@ $users_id = 1;
 $projectid = null;
 
 /* PUT data comes in on the stdin stream */
-$putdata = json_decode(file_get_contents("php://input"));
+// $putdata = json_decode(file_get_contents("php://input"));
 
 // echo $putdata->file;
 
@@ -48,18 +48,19 @@ $process = array(
     );
 
 try {
-    if(strlen($putdata->file) > 8388608) 
+    if($_SERVER['CONTENT_LENGTH'] > 8388608) 
         throw new Exception("File exceeds size of 8M. Please try another file");
-    $file_name = $putdata->filename;
+    // $file_name = $putdata->filename;
+    $file_name = $_FILES["file"]["name"];
     $file->CheckFile(); 
     $so = $file->_message;
     if($so != false) throw new Exception("File already exists. Please try another file");
     // $session->set('uuid', $uuid);
     $c->set_uuid($uuid);
-    syslog(LOG_INFO, "REST: Uploaded file ". $file_name. " to ". $c->f5_file());
-    if(!move_uploaded_file($file_name, $c->f5_file())) 
+    syslog(LOG_INFO, "REST: Uploaded file ". $_FILES['file']['tmp_name']. " to ". $c->f5_file());
+    if(!move_uploaded_file($_FILES['InputFile']['tmp_name'], $c->f5_file())) 
         throw new Exception("Unable to move file. Internal Error. Please contact the administrator. (". 
-            $file_name. ")");
+        $_FILES['InputFile']['tmp_name']. ")");
 
     $time = new TimeManager(); //get Date
     $time->Today_Date();
@@ -76,7 +77,7 @@ try {
     $file->filename = $file_name;
     $file->upload_time = $date;
     $file->users_id = $users_id;
-    $file->size = strlen($putdata->file);
+    $file->size = $_FILES['InputFile']['size'];
 
     $file->save();
     $process["result"] = "Done";
