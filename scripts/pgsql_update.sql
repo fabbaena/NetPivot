@@ -793,3 +793,14 @@ DO $$
 BEGIN
    INSERT INTO settings(host_name) VALUES (0);
 END$$;
+
+\echo '>> Add column to table files: conv_progress.'
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        select 1 from information_schema.columns where table_name='files' and column_name='conv_progress')
+    THEN
+        ALTER TABLE files
+            ADD COLUMN conv_progress varchar(128);
+    END IF;
+END$$;
