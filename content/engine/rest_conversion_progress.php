@@ -20,11 +20,12 @@ $uuid = $incoming->id;
 $conn = new CRUD();
 $conn->select = "conv_progress";
 $conn->from = "files";
-$conn->condition = "users_id=$users_id AND files_uuid='$uuid'";
+$conn->condition = "users_id=$users_id AND uuid='$uuid'";
 $conn->Read();
 
 if(count($conn->rows) != 0){
-    echo json_encode(rows[0]);
+    echo json_encode(['Conversion Progress' => $conn->rows[0]["conv_progress"]]);
+    // print_r($conn->rows);
 } else{
-    echo json_encode(['message' => 'No such id']);
+    echo json_encode(['message' => 'No such id.']);
 }
