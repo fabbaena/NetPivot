@@ -12,8 +12,8 @@
  */
 
 require_once dirname(__FILE__) .'/../model/AuthJwt.php';
-require_once dirname(__FILE__) .'../model/FileManager.php';
-require_once dirname(__FILE__) .'../model/Conversions.php';
+require_once dirname(__FILE__) .'/../model/FileManager.php';
+require_once dirname(__FILE__) .'/../model/Conversions.php';
 
 $jwt = AuthJwt::getTokenFromHeaders(getallheaders());
 $auth = new AuthJwt();
@@ -30,7 +30,8 @@ if($auth->validJwt($jwt)){
     $users_id = $auth->getUserId($jwt);
 
     // Obtain incoming request
-    $uuid = $_POST["id"];
+    $incoming = json_decode(file_get_contents("php://input"));
+    $uuid = $incoming->id;
 
     $fm = new FileManager(['users_id' => $users_id, 'uuid' => $uuid]);
     $conv = new Conversion(['users_id' => $users_id, 'files_uuid' => $uuid]);

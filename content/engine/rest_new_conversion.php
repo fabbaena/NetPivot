@@ -11,14 +11,14 @@
  */
 
 require_once dirname(__FILE__) .'/../model/AuthJwt.php';
-require_once dirname(__FILE__) .'../model/FileManager.php';
-require_once dirname(__FILE__) .'../model/UserList.php';
-require_once dirname(__FILE__) .'../model/UUID.php';
-require_once dirname(__FILE__) .'../model/TimeManager.php';
-require_once dirname(__FILE__) .'../model/Event.php';
-require_once dirname(__FILE__) .'../model/Conversions.php';
-require_once dirname(__FILE__) .'../model/Crud.php';
-require_once dirname(__FILE__) .'Config.php';
+require_once dirname(__FILE__) .'/../model/FileManager.php';
+require_once dirname(__FILE__) .'/../model/UserList.php';
+require_once dirname(__FILE__) .'/../model/UUID.php';
+require_once dirname(__FILE__) .'/../model/TimeManager.php';
+require_once dirname(__FILE__) .'/../model/Event.php';
+require_once dirname(__FILE__) .'/../model/Conversions.php';
+require_once dirname(__FILE__) .'/../model/Crud.php';
+require_once dirname(__FILE__) .'/Config.php';
 
 $jwt = AuthJwt::getTokenFromHeaders(getallheaders());
 $auth = new AuthJwt();
