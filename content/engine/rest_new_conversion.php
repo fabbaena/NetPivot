@@ -20,13 +20,7 @@ $users_id = 1;
 $projectid = null;
 
 $prog_conn = new CRUD();
-$prog_conn->insertInto = 'rest_progress';
-$prog_conn->update = 'rest_progress';
-
-/* PUT data comes in on the stdin stream */
-// $putdata = json_decode(file_get_contents("php://input"));
-
-// echo $putdata->file;
+$prog_conn->update = 'files';
 
 /* Start upload procedure */
 $c = new Config();
@@ -47,24 +41,14 @@ $file = new FileManager(array(
 
 echo json_encode(['uuid' => $uuid]);
 
-$process = array(
-    'uuid' => $uuid,
-    'message' => 'Initializing process.',
-    'next' => 'upload'
-    );
-$prog_conn->data = $process;
-
 try {
-    $prog_conn->Create2();
 
     if($_SERVER['CONTENT_LENGTH'] > 8388608) 
         throw new Exception("File exceeds size of 8M. Please try another file");
-    // $file_name = $putdata->filename;
     $file_name = $_FILES["file"]["name"];
     $file->CheckFile(); 
     $so = $file->_message;
     if($so != false) throw new Exception("File already exists. Please try another file");
-    // $session->set('uuid', $uuid);
     $c->set_uuid($uuid);
     syslog(LOG_INFO, "REST: Uploaded file ". $_FILES['file']['tmp_name']. " to ". $c->f5_file());
     if(!move_uploaded_file($_FILES['file']['tmp_name'], $c->f5_file())) 
@@ -79,7 +63,6 @@ try {
     //if(strpos($asciibin, "ASCII text") === false) {
     if(strpos($asciibin, "ASCII text") === false && strpos($asciibin, "Unicode text") === false) {
         unlink($c->f5_file());
-        // $session->delete("uuid");
         throw new Exception("Cannot process this type of file. Sorry.<br>File \"$file_name\" is of type $asciibin.");
     }
     $file->uuid = $uuid;
@@ -89,21 +72,16 @@ try {
     $file->size = $_FILES['InputFile']['size'];
 
     $file->save();
-    // $process["result"] = "Done";
-    $process["message"] = "Uploaded";
-    $process["next"] = "convert";
-    $prog_conn->data = $process;
-    $prog_conn->Update2();
-    // $process["uuid"] = $uuid;
-    // $session->set('upload_file_name', $file_name);
     new Event($user, "File \"$file_name\" was uploaded succesfully.", 6);
+
+    $prog_conn->set = "conv_progress='Uploaded'";
+    $prog_conn->condition = new Condition(new Column('uuid'), new Value($uuid));
+    $prog_conn->Update();
 } catch (Exception $ex) {
     new Event($user, $ex->getMessage());
-    $process["message"] = $ex->getMessage();
-    // $process["result"] = "Error";
-    // echo json_encode($process);
-    $prog_conn->data = $process;
-    $prog_conn->Update2();
+    $prog_conn->set = "conv_progress='" . $ex->getMessage() . "'";
+    $prog_conn->condition = new Condition(new Column('uuid'), new Value($uuid));
+    $prog_conn->Update();
     die();
 }
 
@@ -112,11 +90,6 @@ try {
 
 // $process = array();
 try {
-    // if(!isset($_GET['uuid'])) throw new Exception("Did not receive any file to convert.");
-    // $uuid = $_GET['uuid'];
-    // $projectid = get_int($_GET, 'projectid');
-
-    // $c = new Config($uuid);
     $c->convert_orphan(true);
 
     $pwd = exec($c->command(), $pwd_out,$pwd_error); //this is the command executed on the host  
@@ -142,34 +115,19 @@ try {
         throw new Exception("Could not save \"$file_name\" conversion to database. ".
             "Please contact the administrator with the following information: ". $uuid);
     }
-    // $process["result"] = "ok";
-    $process["message"] = "Conversion finished.";
-    $process["next"] = "stats";
-    $prog_conn->data = $process;
-    $prog_conn->Update2();
-    // $process["uuid"] = $uuid;
+    $prog_conn->set = "conv_progress='Conversion finished.'";
+    $prog_conn->Update();
     new Event($user, "Conversion of \"$file_name\" Finished.", 7);
 } catch (Exception $ex) {
     new Event($user, $ex->getMessage());
-    // $process["result"] = "error";
-    $process["message"] = $ex->getMessage();
-    $prog_conn->data = $process;
+    $prog_conn->set = "conv_progress='" . $ex->getMessage() . "'";
     $prog_conn->Update2();
-    // $session->set('upload_file_name', null);
-    // echo json_encode($process);
     die();
 }
 
 /* Start stats procedure */
 
 try {
-    // if(!isset($_GET['uuid'])) throw new Exception("Did not receive any file to generate stats.");
-    // $uuid = $_GET['uuid'];
-
-    // $conversion = new Conversion(array("files_uuid" => $uuid));
-    // $conversion->load('files_uuid');
-
-    // $c = new Config($uuid);
     $string = file_get_contents($c->json_file());
     if(strlen($string) < 5) throw new Exception("Internal Error. Stats couldn't be generated for \"$file_name\". ($uuid)");
     $json_a = json_decode($string, true);
@@ -197,33 +155,19 @@ try {
     if(!$conversion->saveData()) 
         throw new Exception("Internal Error. Cannot load JSON data into database for \"$file_name\". ($uuid)");
 
-    // $process["result"] = "ok";
-    $process["message"] = "Statistics Generated.";
-    $process["next"] = "links";
-    $prog_conn->data = $process;
-    $prog_conn->Update2();
-    // $process["uuid"] = $uuid;
+    $prog_conn->set = "conv_progress='Statistics Generated.'";
+    $prog_conn->Update();
     new Event($user, "Statistics generated for \"$file_name\"", 8);
 } catch (Exception $ex) {
     error_log($ex->getMessage());
-    // $process["result"] = "error";
-    $process["message"] = $ex->getMessage();
-    $prog_conn->data = $process;
-    $prog_conn->Update2();
+    $prog_conn->set = "conv_progress='" . $ex->getMessage() . "'";
+    $prog_conn->Update();
     new Event($user, $ex->getMessage());
-    // echo json_encode($process);
 }
 
 /* Start links procedure */
 
 try {
-    // if(!isset($_GET['uuid'])) throw new Exception("Did not receive any file to generate links.");
-    // $uuid = $_GET['uuid'];
-
-    // $conversion = new Conversion(array("files_uuid" => $uuid));
-    // $conversion->load('files_uuid');
-
-    // $c = new Config($uuid);
     $string = file_get_contents($c->f5nslink_file());
     if(strlen($string) < 5) throw new Exception("Internal Error. Links couldn't be generated for \"$file_name\". ($uuid)");
     $link_array = explode("\n", $string);
@@ -241,19 +185,12 @@ try {
         if($conn->CreateBulk() !== true) throw new Exception("DB error loading links. Details: ". $conn->mensaje);
     }
 
-    // $process["result"] = "ok";
-    $process["message"] = "Links Generated.";
-    $process["next"] = "DONE";
-    $prog_conn->data = $process;
-    $prog_conn->Update2();
-    // $process["uuid"] = $uuid;
+    $prog_conn->set = "conv_progress='Links Generated. Process ended.'";
+    $prog_conn->Update();
     new Event($user, "Links generated for \"$file_name\"", 8);
 } catch (Exception $ex) {
     error_log($ex->getMessage());
-    // $process["result"] = "error";
-    $process["message"] = $ex->getMessage();
-    $prog_conn->data = $process;
-    $prog_conn->Update2();
+    $prog_conn->set = "conv_progress='" . $ex->getMessage() . "'";
+    $prog_conn->Update();
     new Event($user, $ex->getMessage());
-    // echo json_encode($process);
 }
