@@ -1,29 +1,33 @@
 <?php
+require_once dirname(__FILE__) .'/../model/AuthJwt.php';
+require_once dirname(__FILE__) .'/../model/Conversions.php';
 
-header('Access-Control-Allow-Origin: *');
-header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST');
-header('Access-Control-Allow-Headers: Access-Control-Allow-Headers, 
-    Access-Control-Allow-Origin, Content-Type, 
-    Access-Control-Allow-Methods');
+$jwt = AuthJwt::getTokenFromHeaders(getallheaders());
+$auth = new AuthJwt();
+if ($auth->validJwt($jwt)){
+    header('Access-Control-Allow-Origin: *');
+    header('Content-Type: application/json');
+    header('Access-Control-Allow-Methods: POST');
+    header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,
+        Access-Control-Allow-Origin, Content-Type,
+        Access-Control-Allow-Methods');
 
-require_once '../model/Conversions.php';
+    $users_id = $auth->getUserId($jwt);
+    // Obtain incoming request
+    $uuid = $_POST["id"];
 
-$users_id = 1;
+    $conv = new Conversion(['files_uuid' => $uuid, 'users_id' => $users_id]);
 
-// Obtain incoming request
-$incoming = json_decode(file_get_contents("php://input"));
+    if($conv->load(['files_uuid', 'users_id'])){
 
-$uuid = $incoming->id;
+        readfile($conv->json_file);
 
-$conv = new Conversion(['files_uuid' => $uuid, 'users_id' => $users_id]);
+    } else{
+        echo json_encode([
+            'message' => 'No such conversion.'
+        ]);
+    }
 
-if($conv->load(['files_uuid', 'users_id'])){
-
-    readfile($conv->json_file);
-
-} else{
-    echo json_encode([
-        'message' => 'No such conversion.'
-    ]);
+}else{
+    header("HTTP/1.1 401 Unauthorized");
 }
