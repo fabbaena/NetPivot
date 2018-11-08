@@ -1,4 +1,15 @@
 <?php
+
+/**
+ * REST API METHOD
+ * 
+ * Download the generated conversion file for a particular file. 
+ * This is a POST meathod that accepts a JSON input with an 
+ * 'id' which is a string uuid.
+ * 
+ * @author  Andres Cubas <andresmcubas@gmail.com> 
+ */
+
 require_once dirname(__FILE__) .'/../model/AuthJwt.php';
 require_once dirname(__FILE__) .'/../model/Conversions.php';
 
