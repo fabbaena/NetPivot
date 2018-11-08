@@ -12,11 +12,8 @@ if ($auth->validJwt($jwt)){
         Access-Control-Allow-Methods');
 
     $users_id = $auth->getUserId($jwt);
-
     // Obtain incoming request
-    $incoming = json_decode(file_get_contents("php://input"));
-
-    $uuid = $incoming->id;
+    $uuid = $_POST["id"];
 
     $conv = new Conversion(['files_uuid' => $uuid, 'users_id' => $users_id]);
 
