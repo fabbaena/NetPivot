@@ -27,9 +27,7 @@ if($auth->validJwt($jwt)){
     header('Access-Control-Allow-Origin: *');
     header('Content-Type: application/json');
     header('Access-Control-Allow-Methods: POST');
-    header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, 
-        Access-Control-Allow-Methods, Content-Type,
-        Access-Control-Allow-Headers');
+    header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Access-Control-Allow-Methods, Content-Type, Access-Control-Allow-Headers');
 
     $users_id = 1;
     $projectid = null;
@@ -49,8 +47,8 @@ if($auth->validJwt($jwt)){
     }
 
     if($_SERVER["CONTENT_TYPE" != "multipart/form-data"]) {
-        echo json_encode(["message" => "content-type must be multipart/form-data"]);
         header("HTTP/1.1 400 Bad Request");
+        echo json_encode(["message" => "content-type must be multipart/form-data"]);
         return;
     }
     $uuid = new UUID(); //get UUID
