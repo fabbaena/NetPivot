@@ -67,7 +67,7 @@ if($auth->validJwt($jwt)){
 
         if($_SERVER['CONTENT_LENGTH'] > 8388608) 
             throw new Exception("File exceeds size of 8M. Please try another file");
-        $file_name = $_FILES["file"]["name"];
+        $file_name = $_FILES["InputFile"]["name"];
         $file->CheckFile(); 
         $so = $file->_message;
         if($so != false) throw new Exception("File already exists. Please try another file");
