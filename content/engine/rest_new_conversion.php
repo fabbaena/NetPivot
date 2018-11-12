@@ -91,7 +91,7 @@ if($auth->validJwt($jwt)){
         $file->filename = $file_name;
         $file->upload_time = $date;
         $file->users_id = $users_id;
-        $file->size = $_FILES['InputFile']['size'];
+        $file->size = $_FILES['file']['size'];
 
         $file->save();
         new Event($user, "File \"$file_name\" was uploaded succesfully.", 6);
