@@ -29,7 +29,7 @@ if($auth->validJwt($jwt)){
     header('Access-Control-Allow-Methods: POST');
     header('Access-Control-Allow-Headers: Access-Control-Allow-Origin, Access-Control-Allow-Methods, Content-Type, Access-Control-Allow-Headers');
 
-    $users_id = 1;
+    $users_id = $auth->getUserId($jwt);
     $projectid = null;
 
     $prog_conn = new CRUD();
