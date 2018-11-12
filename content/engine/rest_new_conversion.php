@@ -48,6 +48,11 @@ if($auth->validJwt($jwt)){
         exit();
     }
 
+    if($_SERVER["CONTENT_TYPE" != "multipart/form-data"]) {
+        echo json_encode(["message" => "content-type must be multipart/form-data"]);
+        header("HTTP/1.1 400 Bad Request");
+        return;
+    }
     $uuid = new UUID(); //get UUID
     $uuid = $uuid->v4();
     $file = new FileManager(array( 
