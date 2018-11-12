@@ -46,7 +46,7 @@ if($auth->validJwt($jwt)){
         exit();
     }
 
-    $ct = explode(';', $_SERVER["CONTENT_TYPE"])
+    $ct = explode(';', $_SERVER["CONTENT_TYPE"]);
     if($ct[0] != "multipart/form-data") {
         header("HTTP/1.1 400 Bad Request");
         echo json_encode([
