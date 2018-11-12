@@ -119,10 +119,8 @@ class FileList {
 		$db = new Crud();
 		$db->select = '*';
 		$db->from = 'files';
-		if($this->users_id != 20)
-			$db->condition = new Condition('users_id', '=', $this->users_id);
-		else
-			$db->condition = new Condition('users_id', '>', $this->users_id);
+		
+		$db->condition = new Condition('users_id', '=', $this->users_id);
 		$db->orderby = array('column' => 'upload_time', 'direction' => 'DESC');
 		$db->Read5();
 
