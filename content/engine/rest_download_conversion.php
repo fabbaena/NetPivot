@@ -24,7 +24,8 @@ if ($auth->validJwt($jwt)){
 
     $users_id = $auth->getUserId($jwt);
     // Obtain incoming request
-    $uuid = $_POST["id"];
+    $incoming = json_decode(file_get_contents("php://input"));
+    $uuid = $incoming->id;
 
     $conv = new Conversion(['files_uuid' => $uuid, 'users_id' => $users_id]);
 
