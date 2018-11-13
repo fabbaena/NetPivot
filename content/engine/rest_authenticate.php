@@ -2,8 +2,10 @@
 
 require_once dirname(__FILE__) .'/../model/AuthJwt.php';
 
-$username = get_username($_POST);
-$password = get_password($_POST);
+ // Obtain incoming request
+$incoming = json_decode(file_get_contents("php://input"));
+$username = $incoming->username;
+$password = $incoming->password;
 
 $auth = new AuthJwt();
 $token = $auth->signIn($username,$password);
