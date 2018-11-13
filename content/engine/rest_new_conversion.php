@@ -61,7 +61,7 @@ if($auth->validJwt($jwt)){
         '_path_files' => $c->path_files(), 
         'uuid' => $uuid));
 
-    echo json_encode(['uuid' => $uuid]);
+    echo json_encode(['id' => $uuid]);
 
     try {
 
