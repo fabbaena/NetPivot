@@ -84,10 +84,10 @@ class ReportModule {
             $m->load('id');
             $m->loadChildren();
 
-            foreach ($m->$t["items"] as &$o) {
+            foreach ($m->{$t["items"]} as &$o) {
                 if($m->name == 'ltm' && $o->name == 'rule') continue;
-                $p_converted = ($o->$t["attribute_count"] && $o->$t["attribute_count"] > 0) ?
-                        round($o->$t["attribute_converted"] / $o->$t["attribute_count"] * 100) : 0;
+                $p_converted = ($o->{$t["attribute_count"]} && $o->{$t["attribute_count"]} > 0) ?
+                        round($o->{$t["attribute_converted"]} / $o->{$t["attribute_count"]} * 100) : 0;
 
                 $og[$o->name]["name"] = $o->name;
                 //$og[$o->name]["attribute_count"] = $o->$t["attribute_count"];

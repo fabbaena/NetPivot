@@ -51,16 +51,16 @@ if(!isset($npmodules2[$module]["object_groups"]) || $c->ignore_cache()) {
     $m->load('id');
     $m->loadChildren();
 
-    foreach($m->$t["items"] as &$o) {
-        $p_converted = ($o->$t["attribute_count"] && $o->$t["attribute_count"] > 0) ?
-                        round($o->$t["attribute_converted"] / $o->$t["attribute_count"] * 100) : 0;
+    foreach($m->{$t["items"]} as &$o) {
+        $p_converted = ($o->{$t["attribute_count"]} && $o->{$t["attribute_count"]} > 0) ?
+                        round($o->{$t["attribute_converted"]} / $o->{$t["attribute_count"]} * 100) : 0;
         if($module == 'rule') {
             $og[$o->name]["id"]              = $o->id;
         }
 
         $og[$o->name]["name"]                = $o->name;
-        $og[$o->name]["attribute_count"]     = $o->$t["attribute_count"];
-        $og[$o->name]["attribute_converted"] = $o->$t["attribute_converted"];
+        $og[$o->name]["attribute_count"]     = $o->{$t["attribute_count"]};
+        $og[$o->name]["attribute_converted"] = $o->{$t["attribute_converted"]};
         $og[$o->name]["attribute_ommited"]   = 0;
         $og[$o->name]["orphan"]              = $o->orphan;
         $og[$o->name]["object_count"]        = $feature ? $o->objects : 1;

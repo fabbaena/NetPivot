@@ -146,7 +146,7 @@ class PDF extends FPDF {
         // Logo
         $host = $_SERVER["HTTP_HOST"];
 
-        $this->Image('http://' . $host . '/images/logocitrix-netpivot.png', 10, 6, 60);
+        $this->Image('https://' . $host . '/images/logocitrix-netpivot.png', 10, 6, 60);
 
         
         // Arial bold 12
