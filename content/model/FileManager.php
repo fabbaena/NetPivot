@@ -68,7 +68,11 @@ class FileManager extends NPObject {
 		$db->condition = "uuid='". $this->uuid. "'";
 		$db->Delete();
 		$this->id = null;
-		return true;
+		if($db->mensaje === TRUE) {
+			return true;
+		} else {
+			return $db->mensaje;
+		}
 	}
 
 
