@@ -110,7 +110,7 @@ class FileList {
 	public $users_id;
 	public $count;
 
-	function __construct($record = null) {
+	function __construct($record = null, $condition = null) {
 		if(isset($record)) {
 			foreach($this as $key => $value) {
 				if(isset($record[$key])) $this->$key = $record[$key];
@@ -123,7 +123,14 @@ class FileList {
 		$db->select = '*';
 		$db->from = 'files';
 		
-		$db->condition = new Condition('users_id', '=', $this->users_id);
+		if(!isset($condition) || count($condition) != 3) {
+			$db->condition = new Condition('users_id', '=', $this->users_id);
+		} else {
+			$col = $condition[0];
+			$op = $condition[1];
+			$val = $condition[2];
+			$db->condition = new Condition($col, $op, $val);
+		}
 		$db->orderby = array('column' => 'upload_time', 'direction' => 'DESC');
 		$db->Read5();
 
