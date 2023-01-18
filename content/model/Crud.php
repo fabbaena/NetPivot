@@ -455,11 +455,11 @@ class Crud {
         $sql = "DELETE FROM $deleteFrom $condition";
         $consulta = $this->_conn->prepare($sql);
         if (!$consulta) {
-            $this->mensaje = errorInfo();
+            $this->mensaje = $this->_conn->errorInfo();
             return FALSE;
         }
         if(!$consulta->execute()) {
-            $this->mensaje = errorInfo();
+            $this->mensaje = $this->_conn->errorInfo();
             return FALSE;
         }
         return TRUE;
