@@ -14,7 +14,13 @@ if [ $(id -u) != "0" ]; then
 fi
 
 if [ -z "$1" ]; then
-    echo "Please provide a date."
+    echo "Please provide a date." >&2
+    usage
+fi
+
+which php > /dev/null
+if [ "$?" != "0" ]; then
+    echo "PHP is needed for this script to run properly." >&2
     usage
 fi
 
@@ -23,6 +29,6 @@ startdate=$1
 uuids=$(php ${DIR}/filelist.php $startdate)
 for f in $uuids; do
     set -e
-    php ${DIR}/filedelete $f
+    php ${DIR}/filedelete.php $f
     set +e
 done
