@@ -456,10 +456,13 @@ class Crud {
         $consulta = $this->_conn->prepare($sql);
         if (!$consulta) {
             $this->mensaje = errorInfo();
-        } else {
-            $consulta->execute();
-            $this->mensaje = TRUE;
+            return FALSE;
         }
+        if(!$consulta->execute()) {
+            $this->mensaje = errorInfo();
+            return FALSE;
+        }
+        return TRUE;
     }
 
     /**
