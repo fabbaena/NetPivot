@@ -111,17 +111,18 @@ class FileList {
 	public $count;
 
 	function __construct($record = null) {
+		$condition=null;
 		if(isset($record)) {
 			foreach($this as $key => $value) {
 				if(isset($record[$key])) {
-					if($key == "condition") {
-						$condition = $value;
-					} else {
-						$this->$key = $record[$key];
-					}
+					$this->$key = $record[$key];
 				}
 			}
+			if(isset($record["condition"]) {
+				$condition = $record["condition"];
+			}
 		}
+
 		$this->count = 0;
 		$this->files = [];
 
