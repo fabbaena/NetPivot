@@ -118,7 +118,7 @@ class FileList {
 					$this->$key = $record[$key];
 				}
 			}
-			if(isset($record["condition"]) {
+			if(isset($record["condition"])) {
 				$condition = $record["condition"];
 			}
 		}
