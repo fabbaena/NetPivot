@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once '../content/model/FileManager.php';
+require_once dirname(__FILE__) .'../content/model/FileManager.php';
 
 if(!isset($argv[1])) {
     print("Error - UUID of the conversion is needed.\n");
