@@ -110,10 +110,16 @@ class FileList {
 	public $users_id;
 	public $count;
 
-	function __construct($record = null, $condition = null) {
+	function __construct($record = null) {
 		if(isset($record)) {
 			foreach($this as $key => $value) {
-				if(isset($record[$key])) $this->$key = $record[$key];
+				if(isset($record[$key])) {
+					if($key != "condition") {
+						$condition = $value;
+					} else {
+						$this->$key = $record[$key];
+					}
+				}
 			}
 		}
 		$this->count = 0;
