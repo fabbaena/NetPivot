@@ -114,7 +114,7 @@ class FileList {
 		if(isset($record)) {
 			foreach($this as $key => $value) {
 				if(isset($record[$key])) {
-					if($key != "condition") {
+					if($key == "condition") {
 						$condition = $value;
 					} else {
 						$this->$key = $record[$key];
