@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__) .'../content/model/FileManager.php';
+require_once dirname(__FILE__) ./'../content/model/FileManager.php';
 
 if(!isset($argv[1])) {
     print("Error - define a start date.\n");
