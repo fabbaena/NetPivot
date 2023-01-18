@@ -20,7 +20,7 @@ fi
 
 startdate=$1
 
-$uuids=$(php ${DIR}/filelist.php $startdate)
+uuids=$(php ${DIR}/filelist.php $startdate)
 for f in $uuids; do
     set -e
     php ${DIR}/filedelete $f
