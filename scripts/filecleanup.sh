@@ -25,7 +25,9 @@ if [ "$?" != "0" ]; then
 fi
 
 days=$1
+set -e
 startdate=$(date --date="$(date) -${days}days" +%F)
+set +e
 
 uuids=$(php ${DIR}/filelist.php $startdate)
 for f in $uuids; do
