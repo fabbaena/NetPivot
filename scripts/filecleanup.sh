@@ -3,8 +3,8 @@
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 usage() {
-    echo "USAGE: $0 <date>" >&2
-    echo "  This script will delete files from the system that are older than <date>." >&2
+    echo "USAGE: $0 <number of days>" >&2
+    echo "  This script will delete files from the system that are older than <number of days>." >&2
     exit 1
 }
 
@@ -24,7 +24,8 @@ if [ "$?" != "0" ]; then
     usage
 fi
 
-startdate=$1
+days=$1
+startdate=$(date --date="$(date) -${days}days" +%F)
 
 uuids=$(php ${DIR}/filelist.php $startdate)
 for f in $uuids; do
